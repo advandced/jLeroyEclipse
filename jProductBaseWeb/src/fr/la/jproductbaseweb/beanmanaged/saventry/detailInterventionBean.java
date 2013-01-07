@@ -85,7 +85,25 @@ public class detailInterventionBean implements Serializable {
 				return String.valueOf(weeks);
 
 			} else {
-				return "different de 0";
+
+				int weeks = 0;
+
+				DateTime dateExped = new DateTime(this.listAfterSaleReport.get(
+						this.indexActive - 1).getExpeditionDate());
+
+				DateTime dateTime2 = null;
+
+				if (this.listAfterSaleReport.get(this.indexActive)
+						.getArrivalDate() == null) {
+					dateTime2 = new DateTime(new Date());
+				} else {
+					dateTime2 = new DateTime(this.listAfterSaleReport.get(
+							this.indexActive).getArrivalDate());
+				}
+
+				weeks = this.numberofweekbetween(dateExped, dateTime2);
+
+				return String.valueOf(weeks);
 			}
 		} else {
 			return "erreur";
