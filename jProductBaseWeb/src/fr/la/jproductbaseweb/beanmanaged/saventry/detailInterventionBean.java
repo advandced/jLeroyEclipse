@@ -93,8 +93,8 @@ public class detailInterventionBean implements Serializable {
 				DateTime dateTime2 = new DateTime(this.listAfterSaleReport.get(this.indexActive).getArrivalDate());
 
 				int weeks = Weeks.weeksBetween(dateTime1, dateTime2).getWeeks();
-				
-				System.out.println("NUMBER WEEK : " + weeks);
+
+				this.nombreSemaineFonctionnel = String.valueOf(weeks);
 				
 			} else {
 				this.nombreSemaineFonctionnel = "Date code incorrect";
