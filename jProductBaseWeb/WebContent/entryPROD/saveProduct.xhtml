@@ -1,0 +1,262 @@
+
+<ui:composition xmlns="http://www.w3c.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:cc="http://java.sun.com/jsf/composite" template="entryPROD.xhtml">
+
+    <ui:define name="content">
+        <h:form id="form">
+            <p:growl id="messages" />
+
+            <f:facet name="header">
+                <h:outputText value="FORMULAIRE DE RECHERCHE DE PRODUITS" />
+            </f:facet>
+            <p:commandButton value="Afficher Produits OK"
+                             action="#{gestSaveProductBean.displayProduct}" process="@form"
+                             update=":form tab:productSearched">
+            </p:commandButton>
+
+            <p:commandButton value="Enregistrement Selection"
+                             action="#{gestSaveProductBean.saveProduct}">
+
+            </p:commandButton>
+
+
+            <h:form id="tab" rendered="#{gestSaveProductBean.result}">
+                <p:contextMenu for="productSearched">
+                    <p:menuitem value="Detail" icon="ui-icon-search"
+                                action="#{gestSearchProduct.detailAction}"
+                                oncomplete="productDialog.show()" process="@form"
+                                update=":form:formDial"></p:menuitem>
+                </p:contextMenu>
+
+                <p:dataTable id="productSearched" var="product"
+                             value="#{gestSaveProductBean.productBeanList}">
+
+                    <f:facet name="header">
+                        <h:outputText value="ELEMENTS" />
+                    </f:facet>
+
+                    <p:column headerText="SELECTION">
+                        <p:selectBooleanCheckbox value="#{product.selectedProduct}">
+                        </p:selectBooleanCheckbox>
+
+                    </p:column>
+
+                    <p:column headerText="Modele">
+                        <h:outputText
+                            value="#{product.productConf.productConfModel.reference}" />
+                    </p:column>
+
+                    <p:column headerText="Famille">
+                        <h:outputText value="#{product.productConf.productFamily.name}" />
+                    </p:column>
+
+                    <p:column headerText="Numero de serie">
+                        <h:outputText value="#{product.serialNumber}" />
+                    </p:column>
+
+                    <p:column headerText="Date Code">
+                        <h:outputText value="#{product.datecode}" />
+                    </p:column>
+
+                    <p:column headerText="Configuration">
+                        <h:outputText
+                            value="#{product.productConf.reference}~#{product.productConf.majorIndex}~#{product.productConf.minorIndex}" />
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+            <h:form id="formDial">
+                <p:dialog id="dialProd" widgetVar="productDialog" width="800"
+                          height="600">
+
+                    <p:panelGrid id="display">
+                        <f:facet name="header">
+                            <p:row>
+                                <p:column colspan="7">
+                                    <h:outputText value="DETAILS" />
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column colspan="1">
+                                    <h:outputText value="Configuration" />
+                                </p:column>
+                                <p:column colspan="1">
+                                    <h:outputText value="Numero de Serie" />
+                                </p:column>
+                                <p:column colspan="1">
+                                    <h:outputText value="Date code" />
+                                </p:column>
+                                <p:column colspan="1">
+                                    <h:outputText value="Adresse Mac" />
+                                </p:column>
+                                <p:column colspan="1">
+                                    <h:outputText value="Code fournisseur" />
+                                </p:column>
+                                <p:column colspan="1">
+                                    <h:outputText value="Etat" />
+                                </p:column>
+                            </p:row>
+                        </f:facet>
+                        <p:row>
+                            <p:column>
+                                <h:outputText value="#{gestSearchProduct.configuration}" />
+                            </p:column>
+                            <p:column>
+                                <p:inputText value="#{gestSearchProduct.serialNumber}" />
+                            </p:column>
+                            <p:column>
+                                <p:inputText value="#{gestSearchProduct.dateCode}" />
+                            </p:column>
+                            <p:column>
+                                <p:inputText value="#{gestSearchProduct.macAdress}" />
+                            </p:column>
+                            <p:column>
+                                <p:inputText value="#{gestSearchProduct.supplierCode}" />
+                            </p:column>
+                            <p:column>
+                                <p:selectOneMenu value="#{gestSearchProduct.state}">
+                                    <f:selectItem itemLabel="actif" itemValue="1" />
+                                    <f:selectItem itemLabel="inactif" itemValue="0" />
+
+                                </p:selectOneMenu>
+                            </p:column>
+                        </p:row>
+                    </p:panelGrid>
+
+                    <p:tabView id="tabViewCard">
+                        <p:ajax event="tabChange" process="@this" update="tabViewCard"
+                                Listener="#{gestSearchProduct.onTabChange}" />
+                        <p:tab id="tabView" title="Carte installees">
+                            <p:dataTable value="#{gestSearchProduct.elementList}"
+                                         var="elementCard">
+
+                                <f:facet name="header">
+                                    <h:outputText value="ELEMENTS" />
+                                </f:facet>
+
+                                <p:column headerText="Configuration">
+                                    <h:outputText value="#{elementCard.productConf.reference}" />
+                                </p:column>
+                                <p:column headerText="Identifiable">
+                                    <p:selectBooleanCheckbox disabled="true"
+                                                             value="#{elementCard.productConf.identifiable}"></p:selectBooleanCheckbox>
+                                </p:column>
+                                <p:column headerText="Numero de Serie">
+                                    <h:outputText value="#{elementCard.serialNumber}" />
+                                </p:column>
+                                <p:column headerText="Date code">
+                                    <h:outputText value="#{elementCard.datecode}" />
+                                </p:column>
+                                <p:column headerText="Code fournisseur">
+                                    <h:outputText value="#{elementCard.providerCode}" />
+                                </p:column>
+
+                            </p:dataTable>
+                        </p:tab>
+                        <p:tab id="tabList" title="Liste des Cartes">
+                            <p:dataTable value="#{gestSearchProduct.cardElementList}"
+                                         var="card" rowKey="#{card.idProduct}"
+                                         sselection="#{gestSearchProduct.selectedCardElement}"
+                                         selectionMode="single">
+                                <p:column headerText="SELECTION">
+                                    <p:selectBooleanCheckbox value="#{card.selectedElement}">
+                                        <p:ajax listener="#{gestSearchProduct.selectCheckBox}" />
+                                    </p:selectBooleanCheckbox>
+                                </p:column>
+                                <p:column headerText="Reference">
+                                    <h:outputText value="#{card.productConf.reference}" />
+                                </p:column>
+                                <p:column headerText="Indice majeur">
+                                    <h:outputText value="#{card.productConf.majorIndex}" />
+                                </p:column>
+                                <p:column headerText="Indice mineur">
+                                    <h:outputText value="#{card.productConf.minorIndex}" />
+                                </p:column>
+                                <p:column headerText="Identifiable">
+                                    <h:outputText value="#{card.productConf.identifiable}" />
+                                </p:column>
+                                <p:column headerText="Numero de serie">
+                                    <h:outputText value="#{card.serialNumber}" />
+                                </p:column>
+                                <p:column headerText="Date code">
+                                    <h:outputText value="#{card.datecode}" />
+                                </p:column>
+                            </p:dataTable>
+                        </p:tab>
+                    </p:tabView>
+
+
+                    <p:tabView id="tabViewSoft">
+                        <p:ajax event="tabChange" process="@this" update="tabViewSoft" />
+                        <p:tab id="tabView" title="Logiciels installes">
+
+                            <p:dataTable value="#{gestSearchProduct.softwareList}"
+                                         var="software">
+                                <f:facet name="header">
+                                    <p:row>
+                                        <p:column>
+                                            <h:outputText value="Logiciels" />
+                                        </p:column>
+                                    </p:row>
+                                </f:facet>
+                                <p:column headerText="Nom">
+                                    <h:outputText value="#{software.name}" />
+                                </p:column>
+                                <p:column headerText="version">
+                                    <h:outputText value="#{software.version}" />
+                                </p:column>
+
+                            </p:dataTable>
+
+                        </p:tab>
+
+                        <p:tab id="tabList" title="Liste des logiciels">
+
+                            <p:dataTable value="#{gestSearchProduct.softwareElementList}"
+                                         var="softwareElement">
+
+                                <f:facet name="header">
+
+                                    <p:row>
+                                        <p:column>
+                                            <h:outputText value="LOGICIELS" />
+                                        </p:column>
+                                    </p:row>
+                                </f:facet>
+                                <p:column headerText="SELECTION">
+
+                                    <p:selectBooleanCheckbox
+                                        value="#{softwareElement.selectedSoftware}">
+                                        <p:ajax listener="#{gestSearchProduct.selectSoftCheckBox}" />
+                                    </p:selectBooleanCheckbox>
+
+                                </p:column>
+
+                                <p:column headerText="Nom">
+                                    <h:outputText value="#{softwareElement.name}" />
+                                </p:column>
+
+                                <p:column headerText="Version">
+                                    <h:outputText value="#{softwareElement.version}" />
+                                </p:column>
+
+                            </p:dataTable>
+
+                        </p:tab>
+
+                    </p:tabView>
+
+                    <p:commandButton value="Modifier"
+                                     action="#{gestSearchProduct.modifyProduct}" update="@form"></p:commandButton>
+
+                </p:dialog>
+
+            </h:form>        </h:form>
+
+
+    </ui:define>
+
+</ui:composition>

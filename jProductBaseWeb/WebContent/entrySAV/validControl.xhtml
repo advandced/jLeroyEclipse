@@ -1,0 +1,60 @@
+<ui:composition xmlns="http://www.w3c.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:cc="http://java.sun.com/jsf/composite" template="entrySAV.xhtml">
+
+	<ui:define name="content">
+		<h:panelGroup>
+			<p:outputPanel id="panel1" autoUpdate="true">
+				<h:form id="tab" rendered="#{ValidControlBean.datafound}">
+					<p:messages id="messages" showDetail="true" autoUpdate="true" />
+					<p:dataTable id="validcontrol" var="report"
+						value="#{ValidControlBean.listAfterSaleReport}"
+						selection="#{ValidControlBean.selectedAfterSaleReport}"
+						rowKey="#{report.idAfterSaleReport}">
+
+						<p:column headerText="Reference PCM">
+							<h:outputText
+								value="#{report.product.productConf.productConfModel.reference}" />
+						</p:column>
+
+						<p:column headerText="Reference PC">
+							<h:outputText
+								value="#{report.product.productConf.reference} #{product.productConf.majorIndex}" />
+						</p:column>
+
+						<p:column headerText="Index PC">
+							<h:outputText value="#{report.product.productConf.majorIndex}" />
+						</p:column>
+
+						<p:column headerText="SerialNumber">
+							<h:outputText value="#{report.product.serialNumber}" />
+						</p:column>
+
+						<p:column headerText="Date Code">
+							<h:outputText value="#{report.product.datecode}" />
+						</p:column>
+
+						<p:column style="text-align:center;" headerText="Date Controle">
+							<p:calendar value="#{report.qualityControlDate}"
+								pattern="dd-MM-yyyy" />
+						</p:column>
+
+						<p:column headerText="Controle effectuer" selectionMode="multiple"
+							style="width:18px" />
+					</p:dataTable>
+
+					<p:commandButton value="Enregistrer" id="valid"
+						style="margin-left:700px;margin-top:20px;" update=":tab"
+						action="#{ValidControlBean.Enregistrer}" />
+
+				</h:form>
+				<h:form id="nodata" rendered="#{!ValidControlBean.datafound}">
+					<h:outputText value="Aucune donnee trouvee" />
+				</h:form>
+			</p:outputPanel>
+		</h:panelGroup>
+	</ui:define>
+</ui:composition>

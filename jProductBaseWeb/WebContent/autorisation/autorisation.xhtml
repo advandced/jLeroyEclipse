@@ -1,0 +1,76 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	template="/templates/AdminTemplate.xhtml">
+	<ui:define name="content">
+		<h1 style="text-align: center; margin-top: 0;">Gestion des
+			Autorisations</h1>
+		<h:body>
+			<h:form id="form">
+				<h:panelGrid style="margin:0" columns="2" cellpadding="5">
+					<p:selectOneMenu id="group"
+						value="#{autorisationBean.roleSelected}">
+						<f:selectItem itemLabel="Select Role" itemValue="" />
+						<f:selectItems value="#{autorisationBean.listRole}" />
+						<p:ajax update=":form2:" listener="#{autorisationBean.RoleChange}" />
+					</p:selectOneMenu>
+				</h:panelGrid>
+			</h:form>
+			<h:form id="form2">
+				<p:contextMenu for="form2" style="width:180px;">
+					<p:menuitem value="Detail" update=":form3:dialogDetail"
+						action="#{autorisationBean.showDetailAutorisation}" />
+				</p:contextMenu>
+				<p:dataTable id="autorisations" var="Autorisation"
+					rendered="#{autorisationBean.afficherTableau}"
+					value="#{autorisationBean.listAutorisation}"
+					rowKey="#{Autorisation.idautorisation}"
+					selection="#{autorisationBean.autorisationSelected}"
+					selectionMode="single">
+					<p:column style="text-align:center;" headerText="Ressource">
+						#{Autorisation.ressource.menu}
+					</p:column>
+					<p:column style="text-align:center;" headerText="Path">
+						#{Autorisation.ressource.path}
+					</p:column>
+					<p:column style="text-align:center;" headerText="Permission">
+						#{Autorisation.permission.name}
+					</p:column>
+				</p:dataTable>
+			</h:form>
+			<h:form id="form3">
+				<p:dialog header="Detail" closable="false" widgetVar="dialogDetail"
+					resizable="false" width="310" showEffect="clip" hideEffect="fold"
+					id="dialogDetail">
+					<p:messages id="messages" showDetail="true" autoUpdate="true" />
+					<h:panelGrid columns="2" cellpadding="4">
+						<h:outputText value="ID:" />
+						<h:outputText
+							value="#{autorisationBean.autorisationSelected.idautorisation}" />
+						<h:outputText value="Ressource:" />
+						<h:outputText
+							value="#{autorisationBean.autorisationSelected.ressource.menu}" />
+						<h:outputText value="Path:" />
+						<h:outputText
+							value="#{autorisationBean.autorisationSelected.ressource.path}" />
+						<h:outputText value="Permission: " />
+						<p:selectOneMenu id="permission"
+							value="#{autorisationBean.permissionSelected}">
+							<f:selectItems value="#{autorisationBean.listPermission}"
+								var="Permission" itemLabel="#{Permission}"
+								itemValue="#{Permission}" />
+						</p:selectOneMenu>
+					</h:panelGrid>
+					<p:commandButton value="Editer"
+					update=":form2"
+						style="margin-left:5px;width:130px;"
+						action="#{autorisationBean.EditAutorisation}" />
+					<p:commandButton value="Retour" style="width:130px;"
+						action="#{autorisationBean.hideDetailAutorisation}" />
+				</p:dialog>
+			</h:form>
+		</h:body>
+	</ui:define>
+</ui:composition>

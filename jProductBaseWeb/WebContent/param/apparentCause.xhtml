@@ -1,0 +1,100 @@
+
+<ui:composition xmlns="http://www.w3c.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:cc="http://java.sun.com/jsf/composite" template="params.xhtml">
+
+    <ui:define name="content">
+        <h:form id="form">
+            <p:growl id="message" showDetail="true" sticky="true" />
+
+            <p:contextMenu for="apparents">
+                <p:menuitem value="Modifier" icon="ui-icon-disk"
+                            action="#{gestApparentCauseBean.modify}" update=":form:display"
+                            oncomplete="appCauseDialog.show()">
+                </p:menuitem>
+                <p:menuitem value="Nouveau"
+                            action="#{gestApparentCauseBean.newApparentCause}"
+                            icon="ui-icon-arrowrefresh-1-w" update=":form:dialog"
+                            oncomplete="appCauseDialog.show()">
+                </p:menuitem>
+            </p:contextMenu>
+
+            <p:dataTable id="apparents" var="apparent"
+                         value="#{gestApparentCauseBean.apparentCauseList}"
+                         rowKey="#{apparent.idApparentCause}"
+                         selection="#{gestApparentCauseBean.selectedApparentCause}"
+                         selectionMode="single">
+
+                <f:facet name="header">
+                    <h:outputText value="GESTION DES CAUSES PROBABLES" />
+                </f:facet>
+
+                <p:column headerText="Description">
+                    <h:outputText value="#{apparent.description}" />
+                </p:column>
+
+                <p:column headerText="Etat">
+                    <h:outputText value="#{apparent.state}" />
+                </p:column>
+
+                <p:column headerText="Cause client assocee">
+                    <h:outputText value="#{apparent.apparentCauseCustomer}" />
+                </p:column>
+
+            </p:dataTable>
+
+            <p:dialog id="dialog" rendered="true"
+                      header="#{gestSoftware.action} Causes Probables"
+                      widgetVar="appCauseDialog" resizable="false" width="800"
+                      showEffect="clip" hideEffect="fold">
+
+                <h:panelGrid id="display" columns="2" cellpadding="4">
+
+                    <f:facet name="header">
+                        <p:graphicImage value="/images/entete.jpg" />
+
+                    </f:facet>
+
+                    <h:outputText value="Description: " />
+                    <p:inputText
+                        value="#{gestApparentCauseBean.descriptionApparentCause}" />
+
+                    <h:outputText value="Etat: " />
+                    <p:selectOneMenu
+                        value="#{gestApparentCauseBean.stateApparentCause}">
+                        <f:selectItem itemLabel="actif" itemValue="1" />
+                        <f:selectItem itemLabel="inactif" itemValue="0" />
+                    </p:selectOneMenu>
+
+                    <h:outputText value="Cause client associe : " />
+                    <p:selectOneMenu
+                        value="#{gestApparentCauseBean.apparentCauseCustomer}">
+
+                        <f:selectItems
+                            value="#{gestApparentCauseBean.apparentCauseClientList}"
+                            var="apparentCauseClient"
+                            itemLabel="#{apparentCauseClient.description}"
+                            itemValue="#{apparentCauseClient}" />
+                        <f:converter converterId="apparentCauseClientConverter" />
+                    </p:selectOneMenu>
+
+                    <p:commandButton value="Enregistrer"
+                                     actionListener="#{gestApparentCauseBean.buttonFormApparentCause}"
+                                     update="message,apparents">
+
+                    </p:commandButton>
+                    <p:commandButton value="Annuler"
+                                     actionListener="#{gestApparentCauseBean.quit}"></p:commandButton>
+
+                </h:panelGrid>
+
+            </p:dialog>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

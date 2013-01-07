@@ -1,0 +1,178 @@
+
+<ui:composition xmlns="http://www.w3c.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:cc="http://java.sun.com/jsf/composite"
+	template="ProductConfTemplate.xhtml">
+
+	<ui:define name="contentProductConfSoftware">
+		<h:panelGrid id="display" columns="2" cellpadding="4">
+
+			<f:facet name="header">
+				<p:graphicImage value="/images/entete.jpg" />
+
+			</f:facet>
+
+			<p:layout style="max-width:800px;min-height:600px;" id="layout">
+				<p:layoutUnit position="north" resizable="true" size="100"
+					minSize="40" maxSize="200">
+
+					<h:outputText value="Reference: " />
+					<p:inputText
+						value="#{gestConfigurationProductBean.referenceConfProduct}" />
+
+					<h:outputText value="Indice Majeur: " />
+					<p:inputText
+						value="#{gestConfigurationProductBean.majorIndexConfProduct}" />
+
+					<h:outputText value="Indice Mineur: " />
+					<p:inputText
+						value="#{gestConfigurationProductBean.minorIndexConfProduct}" />
+
+					<h:outputText value="Modele : " />
+					<p:selectOneMenu
+						value="#{gestConfigurationProductBean.selectedProductConfModel}">
+						<f:selectItem itemLabel="Select One" itemValue="" />
+						<f:selectItems
+							value="#{gestConfigurationProductBean.productConfModelList}"
+							var="productConf" itemLabel="#{productConf.reference}"
+							itemValue="#{productConf}" />
+					</p:selectOneMenu>
+
+					<h:outputText value="Identifiable : " />
+					<p:selectBooleanCheckbox
+						value="#{gestConfigurationProductBean.identifiableConfProduct}" />
+
+					<h:outputText value="Etat: " />
+					<p:selectOneMenu
+						value="#{gestConfigurationProductBean.stateConfProduct}">
+						<f:selectItem itemLabel="actif" itemValue="1" />
+						<f:selectItem itemLabel="inactif" itemValue="0" />
+					</p:selectOneMenu>
+
+					<h:outputText value="Famille : " />
+					<p:selectOneMenu
+						value="#{gestConfigurationProductBean.selectedProductFamily}">
+						<f:selectItem itemLabel="Select One" itemValue="" />
+						<f:selectItems
+							value="#{gestConfigurationProductBean.productFamilyList}"
+							var="productFam" itemLabel="#{productFam.name}"
+							itemValue="#{productFam}" />
+
+					</p:selectOneMenu>
+					<h:outputText value="Alimentation : " />
+					<p:selectOneMenu
+						value="#{gestConfigurationProductBean.selectedProductSupply}">
+						<f:selectItem itemLabel="Select One" itemValue="" />
+						<f:selectItems
+							value="#{gestConfigurationProductBean.productSupplyList}"
+							var="productSupply" itemLabel="#{productSupply.name}"
+							itemValue="#{productSupply}" />
+
+					</p:selectOneMenu>
+
+					<h:outputText value="Fiche suiveuse : " />
+					<p:selectOneMenu
+						value="#{gestConfigurationProductBean.selectedFollowingFormModel}">
+						<f:selectItem itemLabel="Select One" itemValue="" />
+						<f:selectItems
+							value="#{gestConfigurationProductBean.followingFormModelList}"
+							var="follFormModel" itemLabel="#{follFormModel.name}"
+							itemValue="#{follFormModel}" />
+
+					</p:selectOneMenu>
+
+
+				</p:layoutUnit>
+
+				<p:layoutUnit position="center">
+					<p:dataTable id="productConfs" var="productConf"
+						value="#{gestConfigurationProductBean.productConfsList}"
+						rowKey="#{productConf.idProductConf}">
+
+						<f:facet name="header">
+							<h:outputText value="ELEMENTS" />
+						</f:facet>
+
+						<p:column headerText="Reference">
+							<h:outputText value="#{productConf.reference}" />
+						</p:column>
+
+						<p:column headerText="Indice majeur">
+							<h:outputText value="#{productConf.majorIndex}" />
+						</p:column>
+
+						<p:column headerText="Indice majeur">
+							<h:outputText value="#{productConf.minorIndex}" />
+						</p:column>
+
+						<p:column headerText="Designation">
+							<h:outputText value="#{productConf.productConfModel.reference}" />
+						</p:column>
+
+						<p:column headerText="Identifiable">
+							<p:selectBooleanCheckbox disabled="true"
+								value="#{productConf.identifiable}" />
+						</p:column>
+
+						<!-- <f:facet name="footer">
+					<p:commandButton id="viewButton" value="modifier"
+						icon="ui-icon-search" action="#{gestOperatorBean.modify}"
+						update=":form:display" oncomplete="operatorDialog.show()" />
+
+				</f:facet> -->
+
+					</p:dataTable>
+					<p:commandButton value="Elements..."
+						action="#{gestConfigurationProductBean.buttonLogiciel}">
+
+					</p:commandButton>
+				</p:layoutUnit>
+
+				<p:layoutUnit position="south">
+
+					<p:dataTable id="softwares" var="software"
+						value="#{gestConfigurationProductBean.softwareList}"
+						rowKey="#{software.idSoftware}">
+
+						<f:facet name="header">
+							<h:outputText value="LOGICIELS" />
+						</f:facet>
+
+						<p:column headerText="Nom">
+							<h:outputText value="#{software.name}" />
+						</p:column>
+
+						<p:column headerText="Version">
+							<h:outputText value="#{software.version}" />
+						</p:column>
+
+						<!-- <f:facet name="footer">
+					<p:commandButton id="viewButton" value="modifier"
+						icon="ui-icon-search" action="#{gestOperatorBean.modify}"
+						update=":form:display" oncomplete="operatorDialog.show()" />
+
+				</f:facet> -->
+
+					</p:dataTable>
+
+					<p:commandButton value="Logiciels..."
+						action="#{gestConfigurationProductBean.buttonLogiciel}">
+
+					</p:commandButton>
+				</p:layoutUnit>
+
+			</p:layout>
+
+			<p:commandButton value="edit" action="#{gestTypeTestBean.buttonForm}">
+
+			</p:commandButton>
+			<p:commandButton value="Annuler"></p:commandButton>
+
+		</h:panelGrid>
+
+	</ui:define>
+
+</ui:composition>

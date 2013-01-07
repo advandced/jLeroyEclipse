@@ -1,0 +1,74 @@
+<ui:composition xmlns="http://www.w3c.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:cc="http://java.sun.com/jsf/composite" template="entrySAV.xhtml">
+
+	<ui:define name="content">
+		<h:panelGroup>
+			<p:outputPanel id="panel1" autoUpdate="true">
+				<h:form id="tab" rendered="#{DevisPrealableBean.datafound}">
+					<p:messages id="messages" showDetail="true" autoUpdate="true" />
+					<p:dataTable id="devisprealable" var="com"
+						value="#{DevisPrealableBean.listAfterSaleCom}"
+						rowKey="#{com.idAfterSaleCom}">
+
+						<p:column headerText="Type">  
+	            			<h:outputText value="#{com.afterSaleReport.product.productConf.productConfModel.reference}"/>
+	        			</p:column>
+
+						<p:column headerText="Ref LA">  
+							<h:outputText value="#{com.afterSaleReport.product.productConf.reference} #{com.afterSaleReport.product.productConf.majorIndex}"/>
+	           			</p:column>
+
+						<p:column headerText="Ref Client">
+							<h:outputText value="#{com.afterSaleReport.ecsNumber}"/>
+						</p:column>
+						
+						<p:column headerText="Date Code">  
+	           				<h:outputText value="#{com.afterSaleReport.product.datecode}"/>
+	        			</p:column>
+
+						<p:column headerText="SerialNumber">
+           					<h:outputText value="#{com.afterSaleReport.product.serialNumber}"/>
+	        			</p:column>
+	        			
+						<p:column style="text-align:center;" headerText="Date Analyse">
+							<h:outputText value="#{com.afterSaleReport.firstAnalyseDate}">
+								<f:convertDateTime pattern="dd-MM-yyyy" />
+							</h:outputText>
+						</p:column>
+
+						<p:column style="text-align:center;" headerText="N Devis">
+							<p:inputText value="#{com.quotationNumber}"
+								style="width:100;font-weight:bold" />
+						</p:column>
+
+						<p:column style="text-align:center;" headerText="Montant">
+							<p:inputText value="#{com.savPrice}"
+								style="width:100;font-weight:bold" />
+						</p:column>
+
+						<p:column style="text-align:center;" headerText="Date Devis">
+							<p:calendar value="#{com.quotationDate}" pattern="dd-MM-yyyy" />
+						</p:column>
+
+						<p:column style="text-align:center;" headerText="Commentaire">
+							<p:inputText value="#{com.quotationComment}"
+								style="width:200;font-weight:bold" />
+						</p:column>
+					</p:dataTable>
+
+					<p:commandButton value="Enregistrer" id="valid"
+						style="margin-left:700px;margin-top:20px;" update=":tab"
+						action="#{DevisPrealableBean.Enregistrer}" />
+
+				</h:form>
+				<h:form id="nodata" rendered="#{!DevisPrealableBean.datafound}">
+					<h:outputText value="Aucune donnee trouvee"/>
+				</h:form>
+			</p:outputPanel>
+		</h:panelGroup>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,1 @@
+<jsp:forward page="productType.jsf"></jsp:forward>

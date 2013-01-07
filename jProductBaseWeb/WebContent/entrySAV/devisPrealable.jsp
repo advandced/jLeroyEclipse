@@ -1,0 +1,1 @@
+<jsp:forward page="devisPrealable.jsf"></jsp:forward>

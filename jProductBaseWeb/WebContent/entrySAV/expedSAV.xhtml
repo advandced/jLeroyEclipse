@@ -1,0 +1,78 @@
+<ui:composition xmlns="http://www.w3c.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:cc="http://java.sun.com/jsf/composite" template="entrySAV.xhtml">
+
+	<ui:define name="content">
+		<h:form id="tab">
+			<p:messages id="messages" showDetail="true" autoUpdate="true" />
+			<p:dataTable id="expedsav" var="sav"
+				value="#{ExpedSAVBean.listAfterSaleCom}"
+				selection="#{ExpedSAVBean.selectedAfterSaleReport}"
+				rowKey="#{sav.idAfterSaleCom}">
+
+				<p:column headerText="Type">  
+	            <h:outputText value="#{sav.afterSaleReport.product.productConf.productConfModel.reference}"/>
+	        </p:column>
+
+				<p:column headerText="Ref LA">  
+	            <h:outputText value="#{sav.afterSaleReport.product.productConf.reference} #{product.productConf.majorIndex}"/>
+	        </p:column>
+
+				<p:column headerText="Ref Client">
+				</p:column>
+
+				<p:column headerText="Date-Code">
+	            <h:outputText value="#{sav.afterSaleReport.product.datecode}"/> 
+	        </p:column>
+
+				<p:column headerText="Numero Serie">  
+	            <h:outputText value="#{sav.afterSaleReport.product.serialNumber}"/>  
+	        </p:column>
+
+				<p:column headerText="Reparation">
+					<h:outputText value="#{sav.afterSaleReport.reparationDate}">
+						<f:convertDateTime pattern="dd-MM-yyyy" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="Controle Qualite">
+					<h:outputText value="#{sav.afterSaleReport.qualityControlDate}">
+						<f:convertDateTime pattern="dd-MM-yyyy" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="Numero Devis">  
+	            <h:outputText value="#{sav.quotationNumber}"/> 
+	        </p:column>
+
+				<p:column headerText="Date Devis">
+					<h:outputText value="#{sav.quotationDate}">
+						<f:convertDateTime pattern="dd-MM-yyyy" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="Numero Commande">  
+	            <h:outputText value="#{sav.savOrderNumber}"/>
+	        </p:column>
+
+				<p:column headerText="Expedition">
+					<p:calendar value="#{sav.afterSaleReport.expeditionDate}"
+						pattern="dd-MM-yyyy" />
+
+				</p:column>
+
+				<p:column selectionMode="multiple" style="width:18px" />
+
+			</p:dataTable>
+
+			<p:commandButton value="Enregistrer" id="valid"
+				style="margin-left:700px;margin-top:20px;" update=":tab"
+				action="#{ExpedSAVBean.Enregistrer}" />
+
+		</h:form>
+
+	</ui:define>
+</ui:composition>

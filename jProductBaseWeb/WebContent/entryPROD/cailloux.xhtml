@@ -1,0 +1,144 @@
+<ui:composition xmlns="http://www.w3c.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:cc="http://java.sun.com/jsf/composite" template="entryPROD.xhtml">
+
+    <ui:define name="content">
+        <p:outputPanel id="panel1" autoUpdate="true">
+            <h:form id="search">
+                <p:panel header="Recherche par Date reparation :"
+                         style="width:310px;">
+                    <p:messages id="messages" showDetail="true" autoUpdate="true" />
+                    <p:panelGrid columns="2">
+                        <h:outputText value="Date de debut" />
+                        <p:calendar value="#{CaillouxBean.debut}" pattern="dd-MM-yyyy" />
+                        <h:outputText value="Date de fin" />
+                        <p:calendar value="#{CaillouxBean.fin}" pattern="dd-MM-yyyy" />
+                    </p:panelGrid>
+                    <p:commandButton value="Recherche"
+                                     action="#{CaillouxBean.recherche}"
+                                     style="margin-top:3px;margin-left:100px" />
+                </p:panel>
+            </h:form>
+            <h:form id="tab" rendered="#{CaillouxBean.result}">
+                <p:dataTable id="aftersalecom" var="After"
+                             value="#{CaillouxBean.listAfterSaleCom}">
+
+                    <p:column style="text-align:center;width: auto;">
+                        <f:facet name="header">
+                            <h:outputText value="Produit" />
+                        </f:facet>
+                        <h:outputText
+                            value="#{After.afterSaleReport.product.productConf.productConfModel.reference}" />
+                    </p:column>
+
+                    <p:column style="text-align:center;width: auto;">
+                        <f:facet name="header">
+                            <h:outputText value="Numero de serie" />
+                        </f:facet>
+                        <h:outputText
+                            value="#{After.afterSaleReport.product.serialNumber}" />
+                    </p:column>
+
+                    <p:column style="text-align:center;width: auto;">
+                        <f:facet name="header">
+                            <h:outputText value="Date-code" />
+                        </f:facet>
+                        <h:outputText value="#{After.afterSaleReport.product.datecode}" />
+                    </p:column>
+
+                    <p:column style="text-align:center;width: auto;">
+                        <f:facet name="header">
+                            <h:outputText value="Date de livraison" />
+                        </f:facet>
+                        <h:outputText value="#{After.afterSaleReport.expeditionDate}">
+                            <f:convertDateTime pattern="dd-MM-yyyy" />
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column style="text-align:center;width: auto;">
+                        <f:facet name="header">
+                            <h:outputText value="Numero client" />
+                        </f:facet>
+                        <h:outputText value="#{After.afterSaleReport.ecsNumber}" />
+                    </p:column>
+
+                    <p:column style="text-align:center;width: auto;">
+                        <f:facet name="header">
+                            <h:outputText value="Arrive le" />
+                        </f:facet>
+                        <h:outputText value="#{After.afterSaleReport.arrivalDate}">
+                            <f:convertDateTime pattern="dd-MM-yyyy" />
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column style="text-align:center;width: auto;">
+                        <f:facet name="header">
+                            <h:outputText value="Repare le" />
+                        </f:facet>
+                        <h:outputText value="#{After.afterSaleReport.reparationDate}">
+                            <f:convertDateTime pattern="dd-MM-yyyy" />
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column style="text-align:center;width: auto;">
+                        <f:facet name="header">
+                            <h:outputText value="Nature non-conformite" />
+                        </f:facet>
+                        <h:outputText value="#{After.afterSaleReport.ncNature}" />
+                    </p:column>
+
+                    <p:column style="text-align:center;width: auto;">
+                        <f:facet name="header">
+                            <h:outputText value="TF" />
+                        </f:facet>
+                        <h:outputText value="#{After.afterSaleReport.functionnalTest}" />
+                    </p:column>
+
+                    <p:column style="text-align:center;width: auto;">
+                        <f:facet name="header">
+                            <h:outputText value="CV" />
+                        </f:facet>
+                        <h:outputText value="#{After.afterSaleReport.visualControl}" />
+                    </p:column>
+
+                    <p:column style="text-align:center;width: auto;"
+                              columnIndexVar="index">
+                        <f:facet name="header">
+                            <h:outputText value="Diagnostic" />
+                        </f:facet>
+                        <ui:repeat value="#{After.afterSaleReport.failures}"
+                                   var="failures">
+                            <h:outputText value="#{failures.product.productConf.reference}" />
+                        </ui:repeat>
+                    </p:column>
+
+                    <p:column style="text-align:center;width: auto;">
+                        <f:facet name="header">
+                            <h:outputText value="Cause probable" />
+                        </f:facet>
+                        <h:outputText
+                            value="#{After.afterSaleReport.apparentCause.description}" />
+                    </p:column>
+
+                    <p:column style="text-align:center;width: auto;">
+                        <f:facet name="header">
+                            <h:outputText value="Commentaires et actions diverses" />
+                        </f:facet>
+                        <h:outputText value="#{After.afterSaleReport.comment}" />
+                    </p:column>
+
+                </p:dataTable>
+                <p:panel header="Excel"
+                         style="margin-top:5px;margin-left:5px;width:60px;">
+                    <h:commandLink>
+                        <p:graphicImage value="/images/excel.png" />
+                        <p:dataExporter type="xls" target="aftersalecom" fileName="export" />
+                    </h:commandLink>
+                </p:panel>
+            </h:form>
+        </p:outputPanel>
+    </ui:define>
+</ui:composition>

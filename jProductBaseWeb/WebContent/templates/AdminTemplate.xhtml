@@ -1,0 +1,45 @@
+<h:html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<h:title> Gestion des droits. </h:title>
+</h:head>
+<h:body>
+	<p:layout fullPage="true">
+		<p:layoutUnit id="header" position="north" size="166"
+			style="text-align : center;border:0;">
+			<p:graphicImage value="/images/entete.jpg" />
+			<p:menubar>
+				<p:menuitem value="Utilisateur" url="/utilisateur/utilisateur.jsf"
+					icon="ui-icon-document" />
+
+				<p:menuitem value="Role" url="/role/role.jsf"
+					icon="ui-icon-document" />
+
+				<p:menuitem value="Ressource" url="/ressource/ressource.jsf"
+					icon="ui-icon-document" />
+
+				<p:menuitem value="Permission" url="/permission/permission.jsf"
+					icon="ui-icon-document" />
+
+				<p:menuitem value="Autorisation"
+					url="/autorisation/autorisation.jsf" icon="ui-icon-document" />
+
+				<p:menuitem value="Quitter" url="/general/login.jsf"
+					icon="ui-icon-close" />
+			</p:menubar>
+		</p:layoutUnit>
+
+		<p:layoutUnit id="content" position="center" style="border:0;">
+			<ui:insert name="content" />
+		</p:layoutUnit>
+
+		<p:layoutUnit id="footer" position="south" size="27"
+			style="text-align : center;border: 0;">
+			<h:outputLabel style="font-size: 9px;"
+				value="LEROY AUTOMATION WEB APPLICATION - JUSERRIGHT" />
+		</p:layoutUnit>
+	</p:layout>
+</h:body>
+</h:html>

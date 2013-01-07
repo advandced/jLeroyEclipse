@@ -1,0 +1,84 @@
+<ui:composition xmlns="http://www.w3c.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:cc="http://java.sun.com/jsf/composite" template="params.xhtml">
+
+    <ui:define name="content">
+        <h:form id="form">
+            <p:contextMenu for="productConfModels">
+                <p:menuitem value="Nouveau" icon="ui-icon-disk"
+                            action="#{productConfModelBean.createopenpopup}"
+                            update=":form:display">
+                </p:menuitem>
+                <p:menuitem value="Modifier"
+                            action="#{productConfModelBean.editopenpopup}"
+                            icon="ui-icon-disk" update=":form">
+                </p:menuitem>
+            </p:contextMenu>
+
+            <p:dataTable id="productConfModels" var="productConfModel"
+                         value="#{productConfModelBean.listProductConfModel}"
+                         rowKey="#{productConfModel.idProductConfModel}"
+                         selection="#{productConfModelBean.selectedProductConfModel}"
+                         selectionMode="single">
+
+                <f:facet name="header">
+                    <h:outputText value="GESTION DES PRODUCT CONF MODEL" />
+                </f:facet>
+
+                <p:column headerText="State">
+                    <h:outputText value="#{productConfModel.state}" />
+                </p:column>
+
+                <p:column headerText="Reference">
+                    <h:outputText value="#{productConfModel.reference}" />
+                </p:column>
+
+                <p:column headerText="Designation">
+                    <h:outputText value="#{productConfModel.designation}" />
+                </p:column>
+
+            </p:dataTable>
+
+            <p:dialog id="dialog" rendered="true"
+                      header="Following Form Model"
+                      widgetVar="ProductConfModelDialog" resizable="false" width="800"
+                      showEffect="clip" hideEffect="fold">
+
+                <p:messages id="message" showDetail="true" autoUpdate="true" />
+                <h:panelGrid id="display" columns="2" cellpadding="4">
+
+                    <f:facet name="header">
+                        <p:graphicImage value="/images/entete.jpg" />
+
+                    </f:facet>
+
+                    <h:outputText value="Reference : " />
+                    <p:inputText value="#{productConfModelBean.newProductConfModel.reference}" />
+
+                    <h:outputText value="Designation : " />
+                    <p:inputText value="#{productConfModelBean.newProductConfModel.designation}" />
+
+                    <h:outputText value="State : " />
+                    <p:selectOneMenu
+                        value="#{productConfModelBean.newProductConfModel.state}">
+                        <f:selectItem itemLabel="actif" itemValue="1" />
+                        <f:selectItem itemLabel="inactif" itemValue="0" />
+                    </p:selectOneMenu>
+
+                    <p:commandButton value="Enregistrer"
+                                     actionListener="#{productConfModelBean.createProductConfModel}"
+                                     update="message,productConfModels">
+
+                    </p:commandButton>
+                    <p:commandButton value="Annuler"
+                                     actionListener="#{productConfModelBean.exitpopup}"></p:commandButton>
+
+                </h:panelGrid>
+
+            </p:dialog>
+        </h:form>
+    </ui:define>
+</ui:composition>

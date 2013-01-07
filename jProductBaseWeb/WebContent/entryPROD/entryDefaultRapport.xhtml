@@ -1,0 +1,380 @@
+<ui:composition xmlns="http://www.w3c.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:cc="http://java.sun.com/jsf/composite" template="entryPROD.xhtml">
+
+    <ui:define name="content">
+
+        <h:form id="form">
+
+            <p:growl id="message" showDetail="true" sticky="true" />
+
+            <p:contextMenu for="defaultsRapports">
+                <p:menuitem value="Modifier" icon="ui-icon-search"
+                            action="#{gestRapportDefaults.detailAction}"
+                            oncomplete="productDialog.show()" process="@form"
+                            update=":formDial"></p:menuitem>
+            </p:contextMenu>
+
+            <p:dataTable id="defaultsRapports" var="default"
+                         value="#{gestRapportDefaults.productObjectList}"
+                         rowKey="#{default.idProductionFailureReport}"
+                         selection="#{gestRapportDefaults.selectedObject}"
+                         selectionMode="single">
+
+                <f:facet name="header">
+                    <h:outputText value="ELEMENTS" />
+                </f:facet>
+
+                <p:column headerText="Date">
+                    <h:outputText value="#{default.registrationDate}" />
+                </p:column>
+
+                <p:column headerText="Reference">
+                    <h:outputText value="#{default.product.productConf.reference}" />
+                </p:column>
+
+                <p:column headerText="Datecode">
+                    <h:outputText value="#{default.product.datecode}" />
+                </p:column>
+
+                <p:column headerText="N serie">
+                    <h:outputText value="#{default.product.serialNumber}" />
+                </p:column>
+
+                <p:column headerText="Code defaut">
+                    <h:outputText value="#{default.failureCode}" />
+                </p:column>
+
+            </p:dataTable>
+
+        </h:form>
+        <h:form id="formDial">
+            <p:dialog id="dialProd" widgetVar="productDialog">
+
+                <p:panelGrid id="display">
+                    <f:facet name="header">
+                        <p:graphicImage value="/images/entete.jpg" />
+                    </f:facet>
+                    <p:row width="100%">
+                        <p:column>
+
+                            <h:outputText value="Date rapport de defaut : " />
+                            <h:outputText
+                                value="#{gestRapportDefaults.selectedObject.registrationDate}" />
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column styleClass="ui-widget-header" style="text-align:center">
+                            <h:outputText value="PRODUIT" />
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column>
+                            <h:outputText value="Type de Produit   :  " />
+                            <h:outputText
+                                value="#{gestRapportDefaults.selectedObject.product.productConf.productConfModel.reference}" />
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="Numero Serie  : " />
+                            <h:outputText
+                                value="#{gestRapportDefaults.selectedObject.product.serialNumber}" />
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="Numero du testeur  : " />
+                            <h:outputText
+                                value="#{gestRapportDefaults.selectedObject.testerReport.tester.name}" />
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="Numero du rapport de test  : " />
+                            <h:outputText
+                                value="#{gestRapportDefaults.selectedObject.testerReport.testVersion}" />
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column styleClass="ui-widget-header" style="text-align:center">TEST</p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column>
+                            <h:outputText value="Type de Test   :  " />
+                            <h:outputText
+                                value="#{gestRapportDefaults.selectedObject.testerReport.testType.name}" />
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="Operateur : " />
+                            <h:outputText
+                                value="#{gestRapportDefaults.selectedObject.testerReport.operatorCode}" />
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="Numero Testeur : " />
+                            <h:outputText
+                                value="#{gestRapportDefaults.selectedObject.testerReport.tester.name}" />
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="Numero du rapport de test : " />
+                            <h:outputText
+                                value="#{gestRapportDefaults.selectedObject.testerReport.testVersion}" />
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column colspan="6">
+                            <h:outputText value="Defaut apparent : " />
+                            <p:inputTextarea id="failureReportComment" cols="100"
+                                             value="#{gestRapportDefaults.selectedObject.failureReportComment.comment}">
+                                <p:ajax event="click" listener="#{gestRapportDefaults.test}">
+                                    <f:attribute name="action" value="delete" />
+                                </p:ajax>
+                                <p:ajax event="keyup" update="copyComment" />
+                            </p:inputTextarea>
+
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column styleClass="ui-widget-header" style="text-align:center">DIAGNOSTIC</p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column id="failures" colspan="6">
+                            <p:contextMenu for="dialProd">
+                                <p:menuitem value="New Failure" icon="ui-icon-search"
+                                            action="#{gestRapportDefaults.newFailure(false)}"
+                                            process="@this" update="listFailure">
+                                </p:menuitem>
+
+                                <p:menuitem value="Delete" icon="ui-icon-close"
+                                            action="#{gestRapportDefaults.deleteFailure}" process="@this"
+                                            update="listFailure" />
+
+                                <p:menuitem id="refreshFailure" value="Refresh"
+                                            icon="ui-icon-arrowrefresh-1-w" process="@this"
+                                            update="listFailure" />
+                            </p:contextMenu>
+
+                            <p:dataTable id="listFailure" editable="true"
+                                         value="#{gestRapportDefaults.selectedObject.failures}"
+                                         var="failure" selection="#{gestRapportDefaults.selectedFailure}"
+                                         rowKey="#{failure.idFailure}" selectionMode="single">
+                                <p:ajax event="rowEdit" update="@this,listFailure,:form:message"
+                                        listener="#{gestRapportDefaults.editCardRow}" />
+                                <p:ajax event="rowSelect"
+                                        listener="#{gestRapportDefaults.selectedFailure}" />
+
+                                <p:column headerText="Date">
+                                    <p:cellEditor>
+                                        <f:facet name="output">
+                                            <h:outputText value="#{failure.diagnosisDate}" />
+                                        </f:facet>
+                                        <f:facet name="input">
+                                            <p:calendar value="#{failure.diagnosisDate}" id="popupCal" />
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column id="refTopo" headerText="Repere Topo">
+                                    <p:cellEditor>
+                                        <f:facet name="output">
+                                            <h:outputText value="#{failure.elementsChanged}" size="5">
+                                            </h:outputText>
+                                        </f:facet>
+                                        <f:facet name="input">
+                                            <p:inputText value="#{gestRapportDefaults.topoRef}" size="5">
+                                                <p:ajax update="@this" />
+                                            </p:inputText>
+
+                                            <p:commandButton value="add"
+                                                             action="#{gestRapportDefaults.addTopo}"
+                                                             update="refTopo,viewTopo"
+                                                             process="@this,listFailure,refTopo">
+                                            </p:commandButton>
+
+                                            <p:selectOneMenu id="viewTopo"
+                                                             value="#{gestRapportDefaults.elementChangedSelected}">
+                                                <p:ajax update="@this" />
+                                                <f:selectItems value="#{failure.elementsChanged}"
+                                                               var="elementChanged" itemLabel="#{elementChanged.code}"
+                                                               itemValue="#{elementChanged.code}"></f:selectItems>
+                                            </p:selectOneMenu>
+                                            <p:commandButton value="del"
+                                                             action="#{gestRapportDefaults.delTopo}"
+                                                             update="refTopo,viewTopo" process="@this,refTopo">
+                                            </p:commandButton>
+
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+
+                                <p:column headerText="Operateur">
+                                    <p:cellEditor>
+                                        <f:facet name="output">
+                                            <h:outputText value="#{failure.operator}" />
+                                        </f:facet>
+                                        <f:facet name="input">
+
+                                            <p:selectOneMenu id="viewOperator"
+                                                             value="#{failure.operator.idOperator}">
+
+                                                <f:selectItems value="#{gestRapportDefaults.operatorList}"
+                                                               var="operator" itemLabel="#{operator.lastName}"
+                                                               itemValue="#{operator.idOperator}"></f:selectItems>
+                                            </p:selectOneMenu>
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+
+                                <p:column headerText="Ref Carte">
+                                    <p:cellEditor>
+                                        <f:facet name="output">
+                                            <h:outputText
+                                                value="#{failure.product.productConf.reference}" />
+                                        </f:facet>
+                                        <f:facet name="input">
+                                            <p:selectOneMenu
+                                                value="#{failure.product.productConf.reference}">
+                                                <f:selectItems
+                                                    value="#{gestRapportDefaults.selectedObject.product.productComponents}"
+                                                    var="productChanged"
+                                                    itemLabel="#{productChanged.productConf.reference}"
+                                                    itemValue="#{productChanged.productConf.reference}"></f:selectItems>
+                                            </p:selectOneMenu>
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+
+                                <p:column headerText="Date Code">
+                                    <p:cellEditor>
+                                        <f:facet name="output">
+                                            <h:outputText value="#{failure.product.datecode}" />
+                                        </f:facet>
+                                        <f:facet name="input">
+                                            <p:inputText value="#{failure.product.datecode}" />
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="N Serie">
+                                    <p:cellEditor>
+                                        <f:facet name="output">
+                                            <h:outputText value="#{failure.product.serialNumber}" />
+                                        </f:facet>
+                                        <f:facet name="input">
+                                            <p:inputText value="#{failure.product.serialNumber}" />
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+
+                                <p:column headerText="Code Defaut">
+                                    <p:cellEditor>
+                                        <f:facet name="output">
+                                            <h:outputText value="#{failure.failureCode}" />
+                                        </f:facet>
+                                        <f:facet name="input">
+                                            <p:inputText value="#{failure.failureCode}" />
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+
+                                <p:column headerText="Origine">
+
+                                    <p:cellEditor>
+                                        <f:facet name="output">
+                                            <p:selectBooleanCheckbox disabled="true"
+                                                                     value="#{failure.beyondRepair}" />
+                                        </f:facet>
+                                        <f:facet name="input">
+                                            <p:selectBooleanCheckbox value="#{failure.beyondRepair}" />
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+
+                                <p:column headerText="Carte Remplacee">
+                                    <p:cellEditor>
+                                        <f:facet name="output">
+                                            <p:selectBooleanCheckbox disabled="true"
+                                                                     value="#{failure.dismantleCard}" />
+                                        </f:facet>
+                                        <f:facet name="input">
+                                            <p:selectBooleanCheckbox value="#{failure.dismantleCard}" />
+                                        </f:facet>
+                                    </p:cellEditor>
+
+                                </p:column>
+
+                                <p:column headerText="Face">
+                                    <p:cellEditor>
+                                        <f:facet name="output">
+                                            <h:outputText value="#{failure.cardFace}" />
+                                        </f:facet>
+                                        <f:facet name="input">
+                                            <p:selectOneMenu value="#{failure.cardFace}">
+                                                <f:selectItem itemLabel="Face Composants" itemValue="FC" />
+                                                <f:selectItem itemLabel="Face Soudure" itemValue="FS" />
+                                            </p:selectOneMenu>
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="Type Composant">
+                                    <p:cellEditor>
+                                        <f:facet name="output">
+                                            <h:outputText value="#{failure.manufacturingTechnique}" />
+                                        </f:facet>
+                                        <f:facet name="input">
+                                            <p:selectOneMenu value="#{failure.manufacturingTechnique}">
+                                                <f:selectItem itemLabel="Composant traditionnel"
+                                                              itemValue="PTH" />
+                                                <f:selectItem itemLabel="Composant CMS" itemValue="CMS" />
+                                            </p:selectOneMenu>
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="Options" style="width:50px">
+                                    <p:commandLink id="rowEditLink"
+                                                   actionListener="#{gestRapportDefaults.editRow}" ajax="true">
+                                        <f:attribute name="selectedFailure" value="#{failure}" />
+                                        <p:rowEditor update="listFailure" />
+                                    </p:commandLink>
+
+                                </p:column>
+
+                            </p:dataTable>
+
+                        </p:column>
+                    </p:row>
+                    <p:row>
+
+                        <p:column colspan="6">
+                            <h:outputText value="Commentaires : " />
+
+                            <p:inputTextarea id="copyComment" cols="100"
+                                             value="#{gestRapportDefaults.selectedObject.failureReportComment.comment}"
+                                             disabled="true">
+
+
+                            </p:inputTextarea>
+                            <p:separator id="separator" />
+                            <h:outputText value="Code defaut : " />
+                            <p:inputText
+                                value="#{gestRapportDefaults.selectedObject.failureCode}" />
+
+                        </p:column>
+                    </p:row>
+
+                </p:panelGrid>
+
+                <p:commandButton value="Valider"
+                                 actionListener="#{gestRapportDefaults.modifyProduct}"
+                                 update=":form:message,:form:defaultsRapports"></p:commandButton>
+
+                <p:commandButton value="Annuler"
+                                 actionListener="#{gestRapportDefaults.quit}"></p:commandButton>
+
+                <p:commandButton value="Cloturer"
+                                 action="#{gestRapportDefaults.closeProduct}"
+                                 update=":form:message,:form:defaultsRapports"></p:commandButton>
+
+            </p:dialog>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

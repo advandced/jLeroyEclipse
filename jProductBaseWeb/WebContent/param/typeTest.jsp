@@ -1,0 +1,1 @@
+<jsp:forward page="typeTest.jsf"></jsp:forward>

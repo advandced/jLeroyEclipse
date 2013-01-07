@@ -1,0 +1,137 @@
+<ui:composition xmlns="http://www.w3c.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:cc="http://java.sun.com/jsf/composite" template="entrySAV.xhtml">
+
+	<ui:define name="content">
+		<h:form id="form">
+			<p:contextMenu for="form" style="width:180px;">
+				<p:menuitem value="Detail" update=":form2:dialogDetailCom"
+					action="#{RecapComBean.showDetail}" />
+				<p:menuitem value="Edition" update=":form3:dialogEditCom"
+					action="#{RecapComBean.showEdit}" />
+			</p:contextMenu>
+
+			<p:dataTable var="After" value="#{RecapComBean.listAfterSaleCom}"
+				rowKey="#{After.idAfterSaleCom}" paginator="true" rows="25"
+				paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+				rowsPerPageTemplate="25,50,100"
+				selection="#{RecapComBean.selectedAfterSaleCom}"
+				selectionMode="single" id="aftersalecoms">
+
+				<p:column id="NumDevColumn" style="text-align:center;"
+					headerText="Numero Devis" sortBy="#{After.quotationNumber}">
+					<h:outputText value="#{After.quotationNumber}" />
+				</p:column>
+
+				<p:column id="DateDevisColumn" style="text-align:center;"
+					headerText="Date Devis" sortBy="#{After.quotationDate}">
+					<h:outputText value="#{After.quotationDate}">
+						<f:convertDateTime pattern="dd-MM-yyyy" />
+					</h:outputText>
+				</p:column>
+
+				<p:column id="MontantDevisColumn" style="text-align:center;"
+					headerText="Montant Devis" sortBy="#{After.savPrice}">
+					<h:outputText value="#{After.savPrice}" />
+				</p:column>
+
+				<p:column id="CommDevisColumn" style="text-align:center;"
+					headerText="Commentaire Devis" sortBy="#{After.quotationComment}">
+					<h:outputText value="#{After.quotationComment}" />
+				</p:column>
+
+				<p:column id="NumSAVColumn" style="text-align:center;"
+					headerText="Numero SAV" sortBy="#{After.savOrderNumber}">
+					<h:outputText value="#{After.savOrderNumber}" />
+				</p:column>
+
+				<p:column id="SavOrderColumn" style="text-align:center;"
+					headerText="Date SAV" sortBy="#{After.savOrderDate}">
+					<h:outputText value="#{After.savOrderDate}">
+						<f:convertDateTime pattern="dd-MM-yyyy" />
+					</h:outputText>
+				</p:column>
+
+				<p:column id="OrderCommentColumn" style="text-align:center;"
+					headerText="Commentaire SAV" sortBy="#{After.orderComment}">
+					<h:outputText value="#{After.orderComment}" />
+				</p:column>
+
+			</p:dataTable>
+		</h:form>
+		<h:form id="form2">
+			<p:dialog header="Detail Commerce" closable="false"
+				widgetVar="dialogDetailCom" resizable="false" width="400"
+				showEffect="clip" hideEffect="fold" id="dialogDetailCom">
+				<p:messages id="messages" showDetail="true" autoUpdate="true" />
+				<h:panelGrid columns="2" cellpadding="4">
+					<h:outputText value="N Devis:" />
+					<h:outputText
+						value="#{RecapComBean.selectedAfterSaleCom.quotationNumber}" />
+					<h:outputText value="Date Devis:" />
+					<h:outputText
+						value="#{RecapComBean.selectedAfterSaleCom.quotationDate}" />
+					<h:outputText value="Montant:" />
+					<h:outputText value="#{RecapComBean.selectedAfterSaleCom.savPrice}" />
+					<h:outputText value="Commentaire Devis:" />
+					<h:outputText
+						value="#{RecapComBean.selectedAfterSaleCom.quotationComment}" />
+					<h:outputText value="N SAV:" />
+					<h:outputText
+						value="#{RecapComBean.selectedAfterSaleCom.savOrderNumber}" />
+					<h:outputText value="Date SAV:" />
+					<h:outputText
+						value="#{RecapComBean.selectedAfterSaleCom.savOrderDate}" />
+					<h:outputText value="Commentaire SAV:" />
+					<h:outputText
+						value="#{RecapComBean.selectedAfterSaleCom.orderComment}" />
+				</h:panelGrid>
+				<p:commandButton value="Retour" style="margin-left:130;width:130px;"
+					update=":form:aftersalecoms" action="#{RecapComBean.hideDetail}" />
+			</p:dialog>
+		</h:form>
+		<h:form id="form3">
+			<p:dialog header="Edition Commerce" closable="false"
+				widgetVar="dialogEditCom" resizable="false" width="310"
+				showEffect="clip" hideEffect="fold" id="dialogEditCom">
+				<p:messages id="messages" showDetail="true" autoUpdate="true" />
+				<h:panelGrid columns="2" cellpadding="4">
+					<h:outputText value="N Devis:" />
+					<h:inputText
+						value="#{RecapComBean.selectedAfterSaleCom.quotationNumber}"
+						style="width:165;" />
+					<h:outputText value="Date Devis:" />
+					<p:calendar
+						value="#{RecapComBean.selectedAfterSaleCom.quotationDate}"
+						pattern="dd-MM-yyyy" style="width:165;" />
+					<h:outputText value="Montant:" />
+					<h:inputText value="#{RecapComBean.selectedAfterSaleCom.savPrice}"
+						style="width:165;" />
+					<h:outputText value="Commentaire Devis:" />
+					<h:inputText
+						value="#{RecapComBean.selectedAfterSaleCom.quotationComment}"
+						style="width:165;" />
+					<h:outputText value="N SAV:" />
+					<h:inputText
+						value="#{RecapComBean.selectedAfterSaleCom.savOrderNumber}"
+						style="width:165;" />
+					<h:outputText value="Date SAV:" />
+					<p:calendar
+						value="#{RecapComBean.selectedAfterSaleCom.savOrderDate}"
+						pattern="dd-MM-yyyy" style="width:165;" />
+					<h:outputText value="Commentaire SAV:" />
+					<h:inputText
+						value="#{RecapComBean.selectedAfterSaleCom.orderComment}"
+						style="width:165;" />
+				</h:panelGrid>
+				<p:commandButton value="Edition" style="margin-left:13;width:130px;"
+					action="#{RecapComBean.update}" update=":form:aftersalecoms" />
+				<p:commandButton value="Retour" style="width:130px;"
+					update=":form:aftersalecoms" action="#{RecapComBean.hideEdit}" />
+			</p:dialog>
+		</h:form>
+	</ui:define>
+</ui:composition>

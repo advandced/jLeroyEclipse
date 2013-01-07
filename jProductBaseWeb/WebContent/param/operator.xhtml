@@ -1,0 +1,108 @@
+
+<ui:composition xmlns="http://www.w3c.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:cc="http://java.sun.com/jsf/composite" template="params.xhtml">
+
+    <ui:define name="content">
+        <h:form id="form">
+            <p:growl id="message" showDetail="true" sticky="true" />
+            <p:contextMenu for="operators">
+                <p:menuitem value="Modifier" icon="ui-icon-disk"
+                            action="#{gestOperatorBean.modify}" update=":form:display"
+                            oncomplete="operatorDialog.show()">
+                    <f:setPropertyActionListener target="#{gestOperatorBean.action}"
+                                                 value="Modifier" />
+                </p:menuitem>
+                <p:menuitem value="Nouveau" action="#{gestOperatorBean.newOperator}"
+                            icon="ui-icon-arrowrefresh-1-w" update=":form:dialog"
+                            oncomplete="operatorDialog.show()">
+                    <f:setPropertyActionListener target="#{gestOperatorBean.action}"
+                                                 value="Creer" />
+                </p:menuitem>
+            </p:contextMenu>
+
+            <p:dialog id="dialog" rendered="true"
+                      header="#{gestOperatorBean.action} Operateur"
+                      widgetVar="operatorDialog" resizable="false" width="800"
+                      showEffect="clip" hideEffect="fold">
+
+                <h:panelGrid id="display" columns="2" cellpadding="4">
+
+                    <f:facet name="header">
+                        <p:graphicImage value="/images/entete.jpg" />
+
+                    </f:facet>
+
+                    <h:outputLabel value="Nom:" />
+                    <p:inputText value="#{gestOperatorBean.lastNameOP}" />
+
+                    <h:outputText value="Prenom:" />
+                    <p:inputText value="#{gestOperatorBean.firstNameOP}" />
+
+                    <h:outputText value="Code:" />
+                    <p:inputText value="#{gestOperatorBean.codeOP}" />
+
+                    <h:outputText value="Etat: " />
+                    <p:selectOneMenu value="#{gestOperatorBean.stateOP}">
+                        <f:selectItem itemLabel="actif" itemValue="1" />
+                        <f:selectItem itemLabel="inactif" itemValue="0" />
+                    </p:selectOneMenu>
+
+                    <p:commandButton value="Enregistrer"
+                                     actionListener="#{gestOperatorBean.buttonFormOperator}"
+                                     update="message,operators">
+
+                    </p:commandButton>
+                    <p:commandButton value="Annuler"
+                                     actionListener="#{gestOperatorBean.quit}">
+
+                    </p:commandButton>
+
+                </h:panelGrid>
+
+            </p:dialog>
+
+            <p:dataTable id="operators" var="operator"
+                         value="#{gestOperatorBean.operatorList}"
+                         rowKey="#{operator.idOperator}"
+                         selection="#{gestOperatorBean.selectedOp}" selectionMode="single">
+
+                <f:facet name="header">
+                    <h:outputText value="GESTION DES OPERATEURS" />
+
+                </f:facet>
+
+                <p:column headerText="Nom">
+                    <h:outputText value="#{operator.firstName}" />
+                </p:column>
+
+                <p:column headerText="Prenom">
+                    <h:outputText value="#{operator.lastName}" />
+                </p:column>
+
+                <p:column headerText="Code">
+                    <h:outputText value="#{operator.code}" />
+                </p:column>
+
+                <p:column headerText="Etat">
+                    <h:outputText value="#{operator.state}" />
+                </p:column>
+
+            </p:dataTable>
+
+            <p:panel header="Excel"
+                     style="margin-top:5px;margin-left:5px;width:60px;">
+                <h:commandLink>
+                    <p:graphicImage value="/images/excel.png" />
+                    <p:dataExporter type="xls" target="operators" fileName="operateurs" />
+                </h:commandLink>
+            </p:panel>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,1 @@
+<jsp:forward page="params.jsf"></jsp:forward>

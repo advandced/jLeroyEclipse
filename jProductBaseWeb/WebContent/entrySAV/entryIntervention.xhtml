@@ -1,0 +1,62 @@
+<ui:composition xmlns="http://www.w3c.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:t="http://myfaces.apache.org/tomahawk"
+                xmlns:cc="http://java.sun.com/jsf/composite" template="entrySAV.xhtml">
+
+    <ui:define name="content">
+        <h:form id="form">
+            <p:growl id="message" showDetail="true" sticky="true" />
+
+            <f:facet name="header">
+                <h:outputText value="SELECTION DU PRODUIT RETOUR SAV" />
+            </f:facet>
+
+            <p:contextMenu for="productSearched">
+                <p:menuitem value="Intervention" icon="ui-icon-search" action="#{gestSearchSAV.detailAction}" process="@form"/>
+            </p:contextMenu>
+
+            <p:dataTable id="productSearched" var="product" style="margin-top:5px;"
+                         value="#{gestSearchSAV.products}" rowKey="#{product.idProduct}"
+                         selection="#{gestSearchSAV.selectedObject}" selectionMode="single"
+                         paginator="true" rows="25"
+                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="25,50,200,500,1000" lazy="true">
+
+                <f:facet name="header">
+                    <h:outputText value="Liste des Interventions" />
+                </f:facet>
+                
+                <p:column headerText="Modele" filterBy="#{product.productConf.productConfModel.reference}">
+                    <h:outputText value="#{product.productConf.productConfModel.reference}" />
+                </p:column>
+
+                <p:column headerText="Famille" filterBy="#{product.productConf.productFamily.name}">
+                    <h:outputText value="#{product.productConf.productFamily.name}" />
+                </p:column>
+
+                <p:column headerText="Numero de serie" filterBy="#{product.serialNumber}">
+                    <h:outputText value="#{product.serialNumber}" />
+                </p:column>
+
+                <p:column headerText="Date Code" filterBy="#{product.datecode}">
+                    <h:outputText value="#{product.datecode}" />
+                </p:column>
+
+                <p:column headerText="Reference" filterBy="#{product.productConf.reference}">
+                    <h:outputText value="#{product.productConf.reference}" />
+                </p:column>
+
+                <p:column headerText="Indice Majeur" filterBy="#{product.productConf.majorIndex}">
+                    <h:outputText value="#{product.productConf.majorIndex}" />
+                </p:column>
+
+                <p:column headerText="Indice Mineur" filterBy="#{product.productConf.minorIndex}">
+                    <h:outputText value="#{product.productConf.minorIndex}" />
+                </p:column>
+            </p:dataTable>
+        </h:form>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,331 @@
+
+<ui:composition xmlns="http://www.w3c.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:cc="http://java.sun.com/jsf/composite" template="params.xhtml">
+
+    <ui:define name="content">
+        <h:form id="form">
+            <p:growl id="message" showDetail="true" sticky="true" />
+            <p:contextMenu for="productConfModels">
+                <p:menuitem value="Modifier" icon="ui-icon-disk"
+                            action="#{gestConfigurationProductBean.selectedModify}"
+                            update=":form:dialog" oncomplete="confProd.show()">
+                </p:menuitem>
+                <p:menuitem value="Nouveau"
+                            action="#{gestConfigurationProductBean.selectedCreate}"
+                            icon="ui-icon-arrowrefresh-1-w" update=":form:dialog"
+                            oncomplete="confProd.show()">
+                </p:menuitem>
+            </p:contextMenu>
+
+            <p:dataTable id="productConfModels" var="productConfModel"
+                         value="#{gestConfigurationProductBean.listProductConf}"
+                         rowKey="#{productConfModel.idProductConf}"
+                         selection="#{gestConfigurationProductBean.selectedObject}"
+                             selectionMode="single" paginator="true" rows="50"
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             rowsPerPageTemplate="50,200,500,1000" lazy="true">
+
+
+                <f:facet name="header">
+                    <h:outputText value="GESTION DES CONFIGURATIONS DES PRODUITS" />
+                </f:facet>
+
+                <p:column headerText="Reference"  filterBy="#{productConfModel.reference}">
+                    <h:outputText value="#{productConfModel.reference}" />
+                </p:column>
+
+                <p:column headerText="Indice majeur" filterBy="#{productConfModel.majorIndex}">
+                    <h:outputText value="#{productConfModel.majorIndex}" />
+                </p:column>
+
+                <p:column headerText="Indice mineur" filterBy="#{productConfModel.minorIndex}">
+                    <h:outputText value="#{productConfModel.minorIndex}" />
+                </p:column>
+
+                <p:column headerText="Etat" filterBy="#{productConfModel.state}">
+                    <h:outputText value="#{productConfModel.state}" />
+                </p:column>
+
+                <p:column headerText="Famille" filterBy="#{productConfModel.productFamily}">
+                    <h:outputText value="#{productConfModel.productFamily}" />
+                </p:column>
+
+                <p:column headerText="Alimentation" filterBy="#{productConfModel.productSupply}">
+                    <h:outputText value="#{productConfModel.productSupply}" />
+                </p:column>
+
+                <p:column headerText="Identifiable">
+                    <p:selectBooleanCheckbox disabled="true"
+                                             value="#{productConfModel.identifiable}" />
+                </p:column>
+
+                <p:column headerText="Fiche Suiveuse">
+                    <h:outputText value="#{productConfModel.followingForm.name}" />
+                </p:column>
+
+            </p:dataTable>
+
+            <p:dialog id="dialog" rendered="true" onHide="tabViewElement.select(0), softwareTabView.select(0)"
+                      header="#{gestSoftware.action} Configuration des produits"
+                      widgetVar="confProd" resizable="false" showEffect="clip"
+                      hideEffect="fold" closable="false">
+
+                    <p:panelGrid>
+                        <p:row>
+                            <p:column styleClass="ui-widget-header"
+                                      style="text-align:center"><h:outputText value="Reference"/></p:column>
+                            <p:column styleClass="ui-widget-header"
+                                      style="text-align:center"><h:outputText value="Indice Majeur"/></p:column>
+                            <p:column styleClass="ui-widget-header"
+                                      style="text-align:center"><h:outputText value="Indice Mineur"/></p:column>
+                            <p:column styleClass="ui-widget-header"
+                                      style="text-align:center" colspan="2"><h:outputText value="Modele"/></p:column>
+                        </p:row>
+                        <p:row>
+
+                            <p:column>
+                                <p:inputText
+                                    value="#{gestConfigurationProductBean.referenceConfProduct}" />
+                            </p:column>
+
+                            <p:column>
+                                <p:inputText
+                                    value="#{gestConfigurationProductBean.majorIndexConfProduct}" />
+                            </p:column>
+                            <p:column>
+                                <p:inputText
+                                    value="#{gestConfigurationProductBean.minorIndexConfProduct}" />
+                            </p:column>
+                            <p:column colspan="2">
+                                <p:selectOneMenu
+                                    value="#{gestConfigurationProductBean.selectedProductConfModel}">
+
+                                    <f:selectItems
+                                        value="#{gestConfigurationProductBean.productConfModelList}"
+                                        var="productConf" itemLabel="#{productConf.reference}"
+                                        itemValue="#{productConf}" />
+                                    <f:converter converterId="productConfModelConverter" />
+                                </p:selectOneMenu>
+                            </p:column>
+
+                        </p:row>
+
+                        <p:row>
+
+                            <p:column styleClass="ui-widget-header"
+                                      style="text-align:center"><h:outputText value="Identifiable"/></p:column>
+                            <p:column styleClass="ui-widget-header"
+                                      style="text-align:center"><h:outputText value="Etat"/></p:column>
+                            <p:column styleClass="ui-widget-header"
+                                      style="text-align:center"><h:outputText value="Famille"/></p:column>
+                            <p:column styleClass="ui-widget-header"
+                                      style="text-align:center"><h:outputText value="Alimentation"/></p:column>
+                            <p:column styleClass="ui-widget-header"
+                                      style="text-align:center"><h:outputText value="Fiche Suiveuse"/></p:column>
+                        </p:row>
+
+                        <p:row>
+
+
+                            <p:column>
+                                <p:selectBooleanCheckbox
+                                    value="#{gestConfigurationProductBean.identifiableConfProduct}" />
+                            </p:column>
+
+                            <p:column>
+                                <p:selectOneMenu
+                                    value="#{gestConfigurationProductBean.stateConfProduct}">
+                                    <f:selectItem itemLabel="actif" itemValue="1" />
+                                    <f:selectItem itemLabel="inactif" itemValue="0" />
+
+                                </p:selectOneMenu>
+                            </p:column>
+                            <p:column>
+                                <p:selectOneMenu
+                                    value="#{gestConfigurationProductBean.selectedProductFamily}">
+
+                                    <f:selectItems
+                                        value="#{gestConfigurationProductBean.productFamilyList}"
+                                        var="productFam" itemLabel="#{productFam.name}"
+                                        itemValue="#{productFam}" />
+                                    <f:converter
+                                        converterId="configurationProductFamilyConverter" />
+                                </p:selectOneMenu>
+                            </p:column>
+                            <p:column>
+                                <p:selectOneMenu
+                                    value="#{gestConfigurationProductBean.selectedProductSupply}">
+                                    <f:selectItem itemLabel="" itemValue="" />
+                                    <f:selectItems
+                                        value="#{gestConfigurationProductBean.productSupplyList}"
+                                        var="productSupply" itemLabel="#{productSupply.name}"
+                                        itemValue="#{productSupply}" />
+                                    <f:converter converterId="productSupplyConverter"/>
+                                </p:selectOneMenu>
+                            </p:column>
+
+                            <p:column>
+                                <p:selectOneMenu
+                                    value="#{gestConfigurationProductBean.selectedFollowingFormModel}">
+                                    <f:selectItem itemLabel="" itemValue="" />
+                                    <f:selectItems
+                                        value="#{gestConfigurationProductBean.followingFormModelList}"
+                                        var="follFormModel" itemLabel="#{follFormModel.name}"
+                                        itemValue="#{follFormModel}" />
+                                    <f:converter converterId="followingFormModelConverter" />
+                                </p:selectOneMenu>
+                            </p:column>
+
+                        </p:row>
+                    </p:panelGrid>
+
+                    <p:tabView id="tabViewElement"  style="margin-top: 5px;max-height:400px;overflow-y: scroll;overflow-x: hidden;" widgetVar="tabViewElement" dynamic="true" activeIndex="0">
+                        <p:ajax event="tabChange"
+                                listener="#{gestConfigurationProductBean.onTabChangeElement}"
+                                update="tabViewElement" />
+
+                        <p:tab id="idTabElementView" title="Elements Sectionnes">
+
+                            <p:dataTable id="productConfs" var="productConf"
+                                         value="#{gestConfigurationProductBean.productConfsList}"
+                                         rowKey="#{productConf.idProductConf}" >
+
+                                <f:facet name="header">
+                                    <h:outputText value="ELEMENTS" />
+                                </f:facet>
+
+                                <p:column headerText="Reference">
+                                    <h:outputText value="#{productConf.reference}" />
+                                </p:column>
+
+                                <p:column headerText="Indice majeur">
+                                    <h:outputText value="#{productConf.majorIndex}" />
+                                </p:column>
+
+                                <p:column headerText="Indice mineur">
+                                    <h:outputText value="#{productConf.minorIndex}" />
+                                </p:column>
+
+                                <p:column headerText="Designation">
+                                    <h:outputText
+                                        value="#{productConf.productConfModel.reference}" />
+                                </p:column>
+
+
+                                <p:column headerText="Identifiable">
+                                    <p:selectBooleanCheckbox disabled="true"
+                                                             value="#{productConf.identifiable}" />
+                                </p:column>
+
+
+                            </p:dataTable>
+                        </p:tab>
+
+                        <p:tab id="tabSelectedElement" title="Choisir Elements"   style="margin-top: 5px;max-height:400px;overflow-y: scroll;overflow-x: hidden;">
+                            <p:dataTable id="cardsElements" var="cardElement" widgetVar="cardsElements" 
+                                         value="#{gestConfigurationProductBean.cardElementList}">
+
+                                <f:facet name="header">
+                                    <h:outputText value="ELEMENTS" />
+                                </f:facet>
+
+                                <p:column headerText="Selection">
+                                    <p:selectBooleanCheckbox
+                                        value="#{cardElement.selectedElement}">
+                                        <p:ajax
+                                            listener="#{gestConfigurationProductBean.checkBoxElement}" />
+                                    </p:selectBooleanCheckbox>
+                                </p:column>
+
+                                <p:column headerText="Reference">
+                                    <h:outputText value="#{cardElement.reference}" />
+                                </p:column>
+
+                                <p:column headerText="Indice majeur">
+                                    <h:outputText value="#{cardElement.majorIndex}" />
+                                </p:column>
+
+                                <p:column headerText="Indice mineur">
+                                    <h:outputText value="#{cardElement.minorIndex}" />
+                                </p:column>
+
+                                <p:column headerText="Designation">
+                                    <h:outputText
+                                        value="#{cardElement.productConfModel.reference}" />
+                                </p:column>
+
+
+                                <p:column headerText="Identifiable">
+                                    <p:selectBooleanCheckbox disabled="true"
+                                                             value="#{cardElement.identifiable}" />
+                                </p:column>
+                            </p:dataTable>
+                        </p:tab>
+                    </p:tabView>
+
+                    <p:tabView id="softwareTabView" widgetVar="softwareTabView" style="margin-top: 5px;max-height:200px;overflow-y: scroll;overflow-x: hidden;">
+                        <p:ajax event="tabChange" 
+                                listener="#{gestConfigurationProductBean.onTabChangeSoftware}"
+                                update="softwareTabView" />
+                        <p:tab id="idSoftwareView" title="Logiciels selectionnes">
+                            <p:dataTable id="softwares" var="software"
+                                         value="#{gestConfigurationProductBean.softwareList}"
+                                         rowKey="#{software.idSoftware}">
+
+                                <f:facet name="header">
+                                    <h:outputText value="LOGICIELS" />
+                                </f:facet>
+
+                                <p:column headerText="Nom">
+                                    <h:outputText value="#{software.name}" />
+                                </p:column>
+
+                                <p:column headerText="Version">
+                                    <h:outputText value="#{software.version}" />
+                                </p:column>
+
+                            </p:dataTable>
+                        </p:tab>
+
+                        <p:tab id="idSelectedSoftwareView" title="Choisir Logiciels">
+                            <p:dataTable id="softwaresSelected" var="softwareSelected"
+                                         value="#{gestConfigurationProductBean.softwareElementList}"
+                                         rowKey="#{softwareSelected.idSoftware}">
+
+                                <f:facet name="header">
+                                    <h:outputText value="LOGICIELS" />
+                                </f:facet>
+
+                                <p:column headerText="Selection">
+                                    <p:selectBooleanCheckbox
+                                        value="#{softwareSelected.selectedSoftware}">
+                                        <p:ajax
+                                            listener="#{gestConfigurationProductBean.checkBoxSoftware}" />
+                                    </p:selectBooleanCheckbox>
+                                </p:column>
+                                <p:column headerText="Nom">
+                                    <h:outputText value="#{softwareSelected.name}" />
+                                </p:column>
+
+                                <p:column headerText="Version">
+                                    <h:outputText value="#{softwareSelected.version}" />
+                                </p:column>
+                            </p:dataTable>
+                        </p:tab>
+                    </p:tabView>
+                    <h:panelGrid columns="2">
+                        <p:commandButton value="Enregistrer"
+                                         actionListener="#{gestConfigurationProductBean.buttonForm}"
+                                         update="message,productConfModels" />
+
+                        <p:commandButton value="Annuler"
+                                         actionListener="#{gestConfigurationProductBean.closepopup}" />
+                    </h:panelGrid>
+            </p:dialog>
+        </h:form>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,90 @@
+
+<ui:composition xmlns="http://www.w3c.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:cc="http://java.sun.com/jsf/composite" template="params.xhtml">
+
+	<ui:define name="content">
+		<h:form id="form">
+			<p:growl id="message" showDetail="true" sticky="true" />
+			<p:contextMenu for="apparents">
+				<p:menuitem value="Modifier" icon="ui-icon-disk"
+					action="#{gestApparentCauseCustomerBean.selectedModify}"
+					update=":form:display" oncomplete="appCauseCustomerDialog.show()">
+				</p:menuitem>
+				<p:menuitem value="Nouveau"
+					action="#{gestApparentCauseCustomerBean.selectedCreate}"
+					icon="ui-icon-arrowrefresh-1-w" update=":form:dialog"
+					oncomplete="appCauseCustomerDialog.show()">
+				</p:menuitem>
+			</p:contextMenu>
+
+			<p:dataTable id="apparents" var="apparentCustomer"
+				value="#{gestApparentCauseCustomerBean.apparentCauseCustomerList}"
+				rowKey="#{apparentCustomer.idApparentCauseCustomer}"
+				selection="#{gestApparentCauseCustomerBean.selectedApparentCustomerCause}"
+				selectionMode="single">
+
+				<f:facet name="header">
+					<h:outputText value="GESTION DES CAUSES PROBABLES CLIENT" />
+				</f:facet>
+
+				<p:column headerText="Description">
+					<h:outputText value="#{apparentCustomer.description}" />
+				</p:column>
+
+				<p:column headerText="Etat">
+					<h:outputText value="#{apparentCustomer.state}" />
+				</p:column>
+
+				<!-- <f:facet name="footer">
+					<p:commandButton id="viewButton" value="modifier"
+						icon="ui-icon-search" action="#{gestOperatorBean.modify}"
+						update=":form:display" oncomplete="operatorDialog.show()" />
+
+				</f:facet> -->
+
+			</p:dataTable>
+
+			<p:dialog id="dialog" rendered="true"
+				header="#{gestSoftware.action} Causes Probables"
+				widgetVar="appCauseCustomerDialog" resizable="false" width="800"
+				showEffect="clip" hideEffect="fold">
+
+				<h:panelGrid id="display" columns="2" cellpadding="4">
+
+					<f:facet name="header">
+						<p:graphicImage value="/images/entete.jpg" />
+
+					</f:facet>
+
+					<h:outputText value="Description: " />
+					<p:inputText
+						value="#{gestApparentCauseCustomerBean.descriptionApparentCauseCustomer}" />
+
+					<h:outputText value="Etat: " />
+					<p:selectOneMenu
+						value="#{gestApparentCauseCustomerBean.stateApparentCauseCustomer}">
+						<f:selectItem itemLabel="actif" itemValue="1" />
+						<f:selectItem itemLabel="inactif" itemValue="0" />
+					</p:selectOneMenu>
+
+					<p:commandButton value="Enregistrer"
+						actionListener="#{gestApparentCauseCustomerBean.buttonFormApparentCauseCustomer}"
+						update="message,apparents">
+
+					</p:commandButton>
+					<p:commandButton value="Annuler"
+						actionListener="#{gestApparentCauseCustomerBean.quit}"></p:commandButton>
+
+				</h:panelGrid>
+
+			</p:dialog>
+
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

@@ -1,0 +1,1 @@
+<jsp:forward page="ValidControl.jsf"></jsp:forward>

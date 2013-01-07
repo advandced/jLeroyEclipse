@@ -1,0 +1,116 @@
+<ui:composition xmlns="http://www.w3c.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:cc="http://java.sun.com/jsf/composite" template="entrySAV.xhtml">
+
+	<ui:define name="content">
+
+		<h:form id="form">
+			<p:growl id="message" showDetail="true" sticky="true" />
+			<p:menubar>
+				<p:submenu label="File" icon="ui-icon-document">
+					<p:submenu label="New" icon="ui-icon-contact">
+						<p:menuitem value="Project" url="#" />
+						<p:menuitem value="Other" url="#" />
+					</p:submenu>
+					<p:menuitem value="Open" url="#" />
+					<p:separator />
+					<p:menuitem value="Quit" url="#" />
+				</p:submenu>
+
+				<p:menuitem value="Quit" url="index.jsf" icon="ui-icon-close" />
+			</p:menubar>
+
+			<f:facet name="header">
+				<h:outputText value="SELECTION DU PRODUIT RETOUR SAV" />"
+        </f:facet>
+			<p:panelGrid>
+				<f:facet name="header">
+					<p:row>
+						<p:column>
+							<h:outputText value="Modele" />
+						</p:column>
+						<p:column>
+							<h:outputText value="Indice Maj." />
+						</p:column>
+						<p:column>
+							<h:outputText value="Indice Min." />
+						</p:column>
+						<p:column>
+							<h:outputText value="Numero de serie" />
+						</p:column>
+						<p:column>
+							<h:outputText value="Date code" />
+						</p:column>
+					</p:row>
+				</f:facet>
+				<p:row>
+					<p:column>
+						<p:inputText id="reference" value="#{gestSearchSAV.model}" />
+					</p:column>
+					<p:column>
+						<p:inputText id="indMajor" value="#{gestSearchSAV.majorIndex}" />
+					</p:column>
+					<p:column>
+						<p:inputText id="indMinor" value="#{gestSearchSAV.minorIndex}" />
+					</p:column>
+					<p:column>
+						<p:inputText id="serialNumber"
+							value="#{gestSearchSAV.serialNumber}" />
+					</p:column>
+					<p:column>
+						<p:inputText id="dateCode" value="#{gestSearchSAV.dateCode}" />
+					</p:column>
+				</p:row>
+
+			</p:panelGrid>
+			<p:commandButton value="Rechercher"
+				action="#{gestSearchSAV.searchProduct}" process="@form"
+				update=":form productSearched">
+			</p:commandButton>
+			<p:commandButton value="Annuler"></p:commandButton>
+
+			<p:contextMenu for="productSearched">
+				<p:menuitem value="Intervention" icon="ui-icon-search"
+					action="#{gestSearchSAV.clickIntervention}"
+					oncomplete="productDialog.show()" process="@form"></p:menuitem>
+			</p:contextMenu>
+
+			<p:dataTable id="productSearched" var="product"
+				value="#{gestSearchSAV.products}" rowKey="#{product.idProduct}"
+				selection="#{gestSearchSAV.selectedObject}" selectionMode="single"
+				paginator="true" rows="50"
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				rowsPerPageTemplate="50,200,500,1000">
+
+				<f:facet name="header">
+					<h:outputText value="ELEMENTS" />
+				</f:facet>
+
+				<p:column headerText="Modele">
+					<h:outputText
+						value="#{product.productConf.productConfModel.reference}" />
+				</p:column>
+
+				<p:column headerText="Famille">
+					<h:outputText value="#{product.productConf.productFamily.name}" />
+				</p:column>
+
+				<p:column headerText="Numero de serie">
+					<h:outputText value="#{product.serialNumber}" />
+				</p:column>
+
+				<p:column headerText="Date Code">
+					<h:outputText value="#{product.datecode}" />
+				</p:column>
+
+				<p:column headerText="Configuration">
+					<h:outputText
+						value="#{product.productConf.reference}~#{product.productConf.majorIndex}~#{product.productConf.minorIndex}" />
+				</p:column>
+			</p:dataTable>
+		</h:form>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,33 @@
+
+<html xmlns="http://www.w3c.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+
+</h:head>
+<h:body>
+	<f:view>
+		<p:layout id="LayoutProductConf" fullPage="true">
+
+			<p:layoutUnit id="layoutNorth" position="north" height="75"
+				resizable="true" collapsible="true" header="Top">
+				<ui:insert name="contentProductConfForm"></ui:insert>
+
+			</p:layoutUnit>
+
+			<p:layoutUnit position="center" height="75" header="center"
+				resizable="true" collapsible="true">
+				<ui:insert name="contentProductConfElements"></ui:insert>
+			</p:layoutUnit>
+
+			<p:layoutUnit position="south" width="200" header="Left"
+				resizable="true" closable="true" collapsible="true">
+				<ui:insert name="contentProductConfSoftware"></ui:insert>
+			</p:layoutUnit>
+
+		</p:layout>
+	</f:view>
+</h:body>
+</html>

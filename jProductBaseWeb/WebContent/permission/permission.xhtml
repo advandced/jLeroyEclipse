@@ -1,0 +1,83 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/entryPROD/entryPROD.xhtml">
+	<ui:define name="content">
+		<h1 style="text-align: center; margin-top: 0;">Gestion des
+			Permission</h1>
+		<h:form id="form">
+			<p:contextMenu for="form" style="width:210px;">
+				<p:menuitem value="Ajout Permission"
+					update=":form2:dialogAddPermission"
+					oncomplete="dialogAddPermission.show()" />
+				<p:menuitem value="Modifier Permission"
+					update=":form3:dialogEditPermission"
+					oncomplete="dialogEditPermission.show()" />
+			</p:contextMenu>
+
+			<p:dataTable id="permissions" var="Permission"
+				value="#{permissionBean.listPermission}"
+				rowKey="#{Permission.idpermission}"
+				selection="#{permissionBean.permissionSelected}"
+				selectionMode="single">
+
+				<p:column style="text-align:center;" headerText="ID Permission">
+				#{Permission.idpermission}
+			</p:column>
+
+				<p:column style="text-align:center;" headerText="Nom">
+				#{Permission.name}
+			</p:column>
+
+			</p:dataTable>
+		</h:form>
+		<h:form id="form2">
+			<p:dialog header="Ajout Permission" closable="false"
+				widgetVar="dialogAddPermission" resizable="false" width="310"
+				showEffect="clip" hideEffect="fold" id="dialogAddPermission">
+				<p:messages id="messages" showDetail="true" autoUpdate="true" />
+				<h:panelGrid columns="2" cellpadding="4">
+					<h:outputText value="ID Perm:" />
+					<p:inputText value="#{permissionBean.newPermission.idpermission}"
+						disabled="true" style="width:195;font-weight:bold" />
+					<h:outputText value="Nom:" />
+					<p:inputText value="#{permissionBean.newPermission.name}"
+						style="width:195;font-weight:bold" />
+				</h:panelGrid>
+
+				<p:commandButton value="Ajouter"
+					style="margin-left:5px;width:130px;" update=":form:permissions"
+					action="#{permissionBean.addPermission}" />
+
+				<p:commandButton value="Retour" style="width:130px;"
+					action="#{permissionBean.closeAddPermission}" />
+			</p:dialog>
+		</h:form>
+		<h:form id="form3">
+			<p:dialog header="Edition Permission" closable="false"
+				widgetVar="dialogEditPermission" resizable="false" width="310"
+				showEffect="clip" hideEffect="fold" id="dialogEditPermission">
+				<p:messages id="messages" showDetail="true" autoUpdate="true" />
+				<h:panelGrid columns="2" cellpadding="4">
+					<h:outputText value="ID Perm:" />
+					<p:inputText value="#{permissionBean.permissionSelected.idpermission}"
+						disabled="true" style="width:195;font-weight:bold" />
+					<h:outputText value="Nom:" />
+					<p:inputText value="#{permissionBean.permissionSelected.name}"
+						style="width:195;font-weight:bold" />
+				</h:panelGrid>
+
+				<p:commandButton value="Editer"
+					style="margin-left:5px;width:130px;" update=":form:permissions"
+					action="#{permissionBean.editPermission}" />
+				<p:commandButton value="Supprimer"
+					style="margin-left:5px;width:130px;" update=":form:permissions"
+					action="#{permissionBean.delPermission}" />
+
+				<p:commandButton value="Retour" style="width:130px;"
+					action="#{permissionBean.closeEditPermission}" />
+			</p:dialog>
+		</h:form>
+	</ui:define>
+</ui:composition>

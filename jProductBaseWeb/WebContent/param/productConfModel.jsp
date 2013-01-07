@@ -1,0 +1,1 @@
+<jsp:forward page="productConfModel.jsf"></jsp:forward>

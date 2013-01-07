@@ -1,0 +1,153 @@
+<ui:composition xmlns="http://www.w3c.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:t="http://myfaces.apache.org/tomahawk"
+                xmlns:cc="http://java.sun.com/jsf/composite" template="entryPROD.xhtml">
+
+    <ui:define name="content">
+        <h:form id="form">
+            <p:growl id="message" showDetail="true" sticky="true" />
+
+            <f:facet name="header">
+                <h:outputText value="FORMULAIRE DE RECHERCHE DE CARTES" />
+            </f:facet>
+
+            <p:contextMenu for="tab:productSearched">
+                <p:menuitem value="Detail" icon="ui-icon-search"
+                            action="#{gestSearchCard.detailAction}"
+                            oncomplete="productDialog.show()" process="@form"
+                            update=":formDial"></p:menuitem>
+            </p:contextMenu>
+
+            <h:form id="tab">
+                <p:dataTable id="productSearched" var="product"
+                             value="#{gestSearchCard.products}" rowKey="#{product.idProduct}"
+                             selection="#{gestSearchCard.selectedObject}" selectionMode="single"
+                             paginator="true" rows="50" style="margin-top: 5px;"
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             rowsPerPageTemplate="50,200,500,1000" lazy="true">
+
+                    <f:facet name="header">
+                        <h:outputText value="Recherche Carte" />
+                    </f:facet>
+
+                    <p:column headerText="Modele" style="text-align: center;" filterBy="#{product.productConf.productConfModel.reference}">
+                        <h:outputText value="#{product.productConf.productConfModel.reference}" />
+                    </p:column>
+
+                    <p:column headerText="Famille" style="text-align: center;" filterBy="#{product.productConf.productFamily.name}">
+                        <h:outputText value="#{product.productConf.productFamily.name}" />
+                    </p:column>
+
+                    <p:column headerText="Reference" style="text-align: center;" filterBy="#{product.productConf.reference}">
+                        <h:outputText value="#{product.productConf.reference}" />
+                    </p:column>
+
+                    <p:column headerText="Index Majeur" style="text-align: center;" filterBy="#{product.productConf.majorIndex}">
+                        <h:outputText value="#{product.productConf.majorIndex}" />
+                    </p:column>
+
+                    <p:column headerText="Index Mineur" style="text-align: center;" filterBy="#{product.productConf.minorIndex}">
+                        <h:outputText value="#{product.productConf.minorIndex}" />
+                    </p:column>
+
+                    <p:column headerText="Numero de serie" style="text-align: center;" filterBy="#{product.serialNumber}">
+                        <h:outputText value="#{product.serialNumber}" />
+                    </p:column>
+
+                    <p:column headerText="Date Code" style="text-align: center;" filterBy="#{product.datecode}">
+                        <h:outputText value="#{product.datecode}" />
+                    </p:column>
+
+                    <p:column headerText="Adresse MAC" style="text-align: center;" filterBy="#{product.macAddress}">
+                        <h:outputText value="#{product.macAddress}" />
+                    </p:column>
+
+                    <p:column headerText="Code fournisseur" style="text-align: center;" filterBy="#{product.providerCode}">
+                        <h:outputText value="#{product.providerCode}" />
+                    </p:column>
+
+                    <p:column headerText="Etat" style="text-align: center;" filterBy="#{product.state}">
+                        <h:outputText value="#{product.state}" />
+                    </p:column>
+
+                    <p:column headerText="Montes sur">
+                        <h:outputText value="#{product.mother.productConf.reference} #{product.mother.productConf.majorIndex} #{product.mother.productConf.minorIndex} #{product.mother.serialNumber} #{product.mother.datecode}" />
+                    </p:column>
+
+                </p:dataTable>
+            </h:form>
+        </h:form>
+        <h:form id="formDial">
+            <p:dialog id="dialProd" widgetVar="productDialog">
+
+                <p:panelGrid id="display">
+                    <f:facet name="header">
+                        <p:row>
+                            <p:column colspan="7">
+                                <h:outputText value="DETAILS" />
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column colspan="1">
+                                <h:outputText value="Configuration" />
+                            </p:column>
+                            <p:column colspan="1">
+                                <h:outputText value="Numero de Serie" />
+                            </p:column>
+                            <p:column colspan="1">
+                                <h:outputText value="Date code" />
+                            </p:column>
+                            <p:column colspan="1">
+                                <h:outputText value="Adresse Mac" />
+                            </p:column>
+                            <p:column colspan="1">
+                                <h:outputText value="Code fournisseur" />
+                            </p:column>
+                            <p:column colspan="1">
+                                <h:outputText value="Etat" />
+                            </p:column>
+                        </p:row>
+                    </f:facet>
+                    <p:row>
+                        <p:column>
+                            <h:outputText value="#{gestSearchCard.configuration}" />
+                        </p:column>
+                        <p:column>
+                            <p:inputText value="#{gestSearchCard.serialNumber}" />
+                        </p:column>
+                        <p:column>
+                            <p:inputText value="#{gestSearchCard.dateCode}" />
+                        </p:column>
+                        <p:column>
+                            <p:inputText value="#{gestSearchCard.macAdress}" />
+                        </p:column>
+                        <p:column>
+                            <p:inputText value="#{gestSearchCard.supplierCode}" />
+                        </p:column>
+                        <p:column>
+                            <p:selectOneMenu value="#{gestSearchCard.state}">
+                                <f:selectItem itemLabel="actif" itemValue="1" />
+                                <f:selectItem itemLabel="inactif" itemValue="0" />
+
+                            </p:selectOneMenu>
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>
+
+                <p:commandButton value="Enregistrer"
+                                 actionListener="#{gestSearchCard.modifyProduct}"
+                                 update=":form:message" style="margin-top: 5px;"/>
+
+                <p:commandButton value="Annuler"
+                                 actionListener="#{gestSearchCard.quit}" style="margin-top: 5px;"/>
+
+            </p:dialog>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

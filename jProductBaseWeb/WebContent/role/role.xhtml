@@ -1,0 +1,140 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	template="/templates/AdminTemplate.xhtml">
+	<ui:define name="content">
+		<h1 style="text-align: center; margin-top: 0;">Gestion des Roles</h1>
+		<h:form id="form">
+			<p:contextMenu for="form" style="width:180px;">
+				<p:menuitem value="Ajout Utilisateur" update=":form2:dialogAddUser"
+					action="#{roleBean.showAddUser}" />
+				<p:menuitem value="Edition Utilisateur"
+					update=":form5:dialogEditUser" action="#{roleBean.showEditUser}" />
+				<p:menuitem value="Cree un Role" update=":form3:dialogAddRole"
+					action="#{roleBean.showAddRole}" />
+				<p:menuitem value="Edition Role" update=":form4:dialogEditRole"
+					action="#{roleBean.showEditRole}" />
+			</p:contextMenu>
+
+			<p:dataTable id="roles" var="Role" value="#{roleBean.listRole}"
+				rowKey="#{Role.idrole}" selection="#{roleBean.roleSelected}"
+				selectionMode="single">
+
+				<p:column style="text-align:center;width:200px;" headerText="Nom">
+					#{Role.name}
+				</p:column>
+
+				<p:column style="text-align:center;" headerText="Liste Utilisateur">
+					#{Role.listUser}
+				</p:column>
+
+			</p:dataTable>
+		</h:form>
+		<h:form id="form2">
+			<p:dialog header="Ajout Utilisateur" closable="false"
+				widgetVar="dialogAddUtilisateur" resizable="false" width="310"
+				showEffect="clip" hideEffect="fold" id="dialogAddUser">
+
+				<p:messages id="messages" showDetail="true" autoUpdate="true" />
+
+				<h:outputText rendered="#{roleBean.msgError}"
+					value="Tous les utilisateurs sont déja présent dans ce groupe." />
+				<h:panelGrid id="displayAdd" columns="2" cellpadding="4">
+					<h:outputText value="Utilisateur: "
+						rendered="#{roleBean.userFound}" />
+					<p:selectOneMenu id="menu" value="#{roleBean.userAdd}"
+						rendered="#{roleBean.userFound}">
+						<f:selectItems value="#{roleBean.listUserAdd}" var="User"
+							itemLabel="#{User}" itemValue="#{User}" />
+					</p:selectOneMenu>
+				</h:panelGrid>
+
+				<p:commandButton value="Ajouter"
+					style="margin-left:5px;width:130px;"
+					rendered="#{roleBean.userFound}"
+					update="displayAdd, menu, :form:roles"
+					action="#{roleBean.addUserRole}" />
+
+				<p:commandButton value="Retour" style="width:130px;"
+					update=":form:roles" action="#{roleBean.closeAddUser}" />
+
+			</p:dialog>
+		</h:form>
+		<h:form id="form3">
+			<p:dialog header="Creation Role" closable="false"
+				widgetVar="dialogAddRole" resizable="false" width="310"
+				showEffect="clip" hideEffect="fold" id="dialogAddRole">
+				<p:messages id="messages" showDetail="true" autoUpdate="true" />
+				<h:panelGrid id="displayAdd" columns="2">
+					<h:outputText value="Nom Role:" />
+					<p:inputText value="#{roleBean.role}"
+						style="font-weight:bold" />
+				</h:panelGrid>
+				<p:commandButton style="margin-left:50;" value="Cree"
+					update=":form:roles" action="#{roleBean.addRole}" />
+				<p:commandButton value="Retour" update=":form:roles"
+					action="#{roleBean.closeAddRole}" />
+			</p:dialog>
+		</h:form>
+		<h:form id="form4">
+			<p:dialog header="Edition Role" closable="false"
+				widgetVar="dialogEditRole" resizable="false" width="310"
+				showEffect="clip" hideEffect="fold" id="dialogEditRole">
+				<p:messages id="messages" showDetail="true" autoUpdate="true" />
+				<h:panelGrid id="displayAdd" columns="2">
+					<h:outputText value="Nom Role:" />
+					<p:inputText value="#{roleBean.role}"
+						style="font-weight:bold" />
+				</h:panelGrid>
+				<p:commandButton style="margin-left:6px;width:130px;"
+					value="Modifier" update=":form:roles"
+					action="#{roleBean.updateRole}" />
+				<p:commandButton style=";width:130px;"
+					value="Supprimer" update=":form:roles"
+					action="#{roleBean.delRole}" />
+				<p:commandButton style="margin-left:75; width:130px;" value="Retour"
+					update=":form:roles" action="#{roleBean.closeEditRole}" />
+
+			</p:dialog>
+
+			<p:confirmDialog id="confirmDialog" appendToBody="true"
+				message="Voulez-vous vraiment supprimer ce Role ?"
+				header="Confirmation" severity="alert" widgetVar="confirmation">
+
+				<p:commandButton id="confirm" value="Oui"
+					actionListener="#{roleBean.delRole}"
+					oncomplete="confirmation.hide()" update=":form:roles" />
+				<p:commandButton id="decline" value="Non"
+					onclick="confirmation.hide()" type="button" />
+
+			</p:confirmDialog>
+		</h:form>
+		<h:form id="form5">
+			<p:dialog header="Edition Utilisateur" closable="false"
+				widgetVar="dialogEditUser" resizable="false" width="230"
+				showEffect="clip" hideEffect="fold" id="dialogEditUser">
+				<h:outputText rendered="#{roleBean.msgError}"
+					value="Aucun utilisateur dans ce Role" />
+				<p:dataTable id="users" var="User" style="width:190px; margin:auto;"
+					rendered="#{roleBean.dataFound}"
+					value="#{roleBean.listUserForRole}" rowKey="#{User.iduser}"
+					selection="#{roleBean.userSelected}" selectionMode="single">
+
+					<p:column style="text-align:center;" headerText="Nom">
+					#{User.login}
+				</p:column>
+
+				</p:dataTable>
+				<p:commandButton value="Supprimer" rendered="#{roleBean.dataFound}"
+					style="margin-top:5px;margin-left:31px;width:130px;"
+					update="users, :form:roles" action="#{roleBean.delUserFromRole}" />
+				<p:commandButton value="Retour"
+					style="margin-left:31px;width:130px;" update=":form:roles"
+					action="#{roleBean.closeEditUser}" />
+
+			</p:dialog>
+		</h:form>
+	</ui:define>
+</ui:composition>

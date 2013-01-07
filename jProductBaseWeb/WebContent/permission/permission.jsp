@@ -1,0 +1,1 @@
+<jsp:forward page="permission.jsf"></jsp:forward>

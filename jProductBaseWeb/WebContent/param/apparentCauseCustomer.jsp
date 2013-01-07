@@ -1,0 +1,1 @@
+<jsp:forward page="apparentCauseCustomer.jsf"></jsp:forward>

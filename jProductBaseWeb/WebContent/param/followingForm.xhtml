@@ -1,0 +1,95 @@
+<ui:composition xmlns="http://www.w3c.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:cc="http://java.sun.com/jsf/composite" template="params.xhtml">
+
+    <ui:define name="content">
+        <h:form id="form">
+            <p:contextMenu for="followingForms">
+                <p:menuitem value="Nouveau" icon="ui-icon-disk"
+                            action="#{followingFormBean.createopenpopup}"
+                            update=":form:display">
+                </p:menuitem>
+                <p:menuitem value="Modifier"
+                            action="#{followingFormBean.editopenpopup}"
+                            icon="ui-icon-disk" update=":form">
+                </p:menuitem>
+                <p:menuitem value="Supprimer"
+                            action="#{followingFormBean.deleteFollowing}"
+                            icon="ui-icon-arrowrefresh-1-w" update=":form">
+                </p:menuitem>
+            </p:contextMenu>
+
+            <p:dataTable id="followingForms" var="followingForm"
+                         value="#{followingFormBean.listFollowingForm}"
+                         rowKey="#{followingForm.idFollowingFormmodel}"
+                         selection="#{followingFormBean.selectedFollowingForm}"
+                         selectionMode="single">
+
+                <f:facet name="header">
+                    <h:outputText value="GESTION DES FOLLOWING FORM MODEL" />
+                </f:facet>
+
+                <p:column headerText="State">
+                    <h:outputText value="#{followingForm.state}" />
+                </p:column>
+
+                <p:column headerText="Name">
+                    <h:outputText value="#{followingForm.name}" />
+                </p:column>
+
+                <p:column headerText="Version">
+                    <h:outputText value="#{followingForm.version}" />
+                </p:column>
+
+                <p:column headerText="JasperReport">
+                    <h:outputText value="#{followingForm.jasperReport}" />
+                </p:column>
+
+            </p:dataTable>
+
+            <p:dialog id="dialog" rendered="true"
+                      header="Following Form Model"
+                      widgetVar="FollowingFormModelDialog" resizable="false" width="800"
+                      showEffect="clip" hideEffect="fold">
+
+                <p:messages id="message" showDetail="true" autoUpdate="true" />
+                <h:panelGrid id="display" columns="2" cellpadding="4">
+
+                    <f:facet name="header">
+                        <p:graphicImage value="/images/entete.jpg" />
+
+                    </f:facet>
+
+                    <h:outputText value="Name : " />
+                    <p:inputText value="#{followingFormBean.newFollowingForm.name}" />
+
+                    <h:outputText value="Version : " />
+                    <p:inputText value="#{followingFormBean.newFollowingForm.version}" />
+
+                    <h:outputText value="JasperReport : " />
+                    <p:inputText value="#{followingFormBean.newFollowingForm.jasperReport}" />
+
+                    <h:outputText value="State : " />
+                    <p:selectOneMenu
+                        value="#{followingFormBean.newFollowingForm.state}">
+                        <f:selectItem itemLabel="actif" itemValue="1" />
+                        <f:selectItem itemLabel="inactif" itemValue="0" />
+                    </p:selectOneMenu>
+
+                    <p:commandButton value="Enregistrer"
+                                     actionListener="#{followingFormBean.createFollowing}"
+                                     update="message,followingForms">
+
+                    </p:commandButton>
+                    <p:commandButton value="Annuler"
+                                     actionListener="#{followingFormBean.exitpopup}"></p:commandButton>
+
+                </h:panelGrid>
+
+            </p:dialog>
+        </h:form>
+    </ui:define>
+</ui:composition>

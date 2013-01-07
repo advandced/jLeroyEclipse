@@ -1,0 +1,1 @@
+<jsp:forward page="searchCards.jsf"></jsp:forward>

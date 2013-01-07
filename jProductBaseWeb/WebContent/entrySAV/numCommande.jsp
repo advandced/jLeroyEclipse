@@ -1,0 +1,1 @@
+<jsp:forward page="numCommande.jsf"></jsp:forward>

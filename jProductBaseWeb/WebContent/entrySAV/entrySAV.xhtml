@@ -1,0 +1,48 @@
+<html xmlns="http://www.w3c.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    <h:head>
+        <link type="text/css" rel="stylesheet"
+              href="#{request.contextPath}/css/default.css" />
+        <link type="text/css" rel="stylesheet"
+              href="#{request.contextPath}/css/syntaxhighlighter.css"></link>
+        <style type="text/css">
+            .ui-tabs .ui-tabs-panel {
+                padding: 0px !important;
+            }
+
+        </style>
+    </h:head>
+    <h:body>
+        <p:layout id="layoutParams" fullPage="true">
+
+            <p:layoutUnit id="layoutNorth" position="north"
+                          style="text-align:center;" size="160">
+                <h:form>
+                    <h:graphicImage value="/images/entete.jpg" />
+
+                    <p:growl id="messages" />
+
+                    <p:menubar model="#{index.modelMenu}" style="margin-top:5px;"
+                               autoSubmenuDisplay="true" />
+                </h:form>
+            </p:layoutUnit>
+
+            <p:layoutUnit position="west" width="180" resizable="false"
+                          closable="false" style="margin-top:0px;">
+                <h:form style="margin-top:0px;">
+                    <p:menu model="#{entrySAVBean.modelMenu}" style="margin-top:0px;"
+                            autoSubmenuDisplay="true" />
+                </h:form>
+            </p:layoutUnit>
+
+            <p:layoutUnit position="center" id="panelCenterParam">
+                <ui:insert name="content"></ui:insert>
+            </p:layoutUnit>
+
+        </p:layout>
+    </h:body>
+
+</html>

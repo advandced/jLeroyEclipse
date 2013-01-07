@@ -1,0 +1,119 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	template="/templates/AdminTemplate.xhtml">
+	<ui:define name="content">
+		<h1 style="text-align: center; margin-top: 0;">Gestion des
+			Ressources</h1>
+		<h:form id="form">
+			<p:contextMenu for="form" style="width:180px;">
+				<p:menuitem value="Ajout Ressource"
+					update=":form2:dialogAddRessource"
+					action="#{ressourceBean.showAddRessource}" />
+				<p:menuitem value="Edition Ressource"
+					update=":form3:dialogEditRessource"
+					action="#{ressourceBean.showEditRessource}" />
+			</p:contextMenu>
+
+			<p:dataTable id="rsr" var="Ressource"
+				value="#{ressourceBean.listRessource}"
+				rowKey="#{Ressource.idressource}"
+				selection="#{ressourceBean.ressourceSelected}"
+				selectionMode="single">
+
+				<p:column style="text-align:center;" headerText="Path">
+					<h:outputText value="#{Ressource.path}" />
+				</p:column>
+
+				<p:column style="text-align:center;" headerText="Menu">
+					<h:outputText value="#{Ressource.menu}" />
+				</p:column>
+
+				<p:column style="text-align:center;" headerText="managedBean">
+					<h:outputText value="#{Ressource.managedBean}" />
+				</p:column>
+
+				<p:column style="text-align:center;" headerText="Description">
+					<h:outputText value="#{Ressource.description}" />
+				</p:column>
+
+				<p:column style="text-align:center;" headerText="Sous-Menu de">
+					<h:outputText value="#{Ressource.ressourceMere.menu}" />
+				</p:column>
+
+			</p:dataTable>
+		</h:form>
+		<h:form id="form2">
+			<p:dialog header="Ajout Ressource" closable="false"
+				widgetVar="dialogAddRessource" resizable="false" width="310"
+				showEffect="clip" hideEffect="fold" id="dialogAddRessource">
+				<p:messages id="messages" showDetail="true" autoUpdate="true" />
+				<h:panelGrid columns="2" cellpadding="4">
+					<h:outputText value="Path:" />
+					<p:inputText value="#{ressourceBean.path}"
+						style="width:195;font-weight:bold" />
+					<h:outputText value="Menu:" />
+					<p:inputText value="#{ressourceBean.menu}"
+						style="width:195;font-weight:bold" />
+					<h:outputText value="Bean:" />
+					<p:inputText value="#{ressourceBean.managedBean}"
+						style="width:195;font-weight:bold" />
+					<h:outputText value="Desc:" />
+					<p:inputText value="#{ressourceBean.description}"
+						style="width:195;font-weight:bold" />
+					<h:outputText value="Sous menu de:" />
+					<p:selectOneMenu id="menu" style="width:195;font-weight:bold"
+						value="#{ressourceBean.idmereselect}">
+						<f:selectItem itemLabel="" itemValue="" />
+						<f:selectItems value="#{ressourceBean.listMenuRessource}"
+							var="Ressource" itemLabel="#{Ressource}" itemValue="#{Ressource}" />
+					</p:selectOneMenu>
+				</h:panelGrid>
+
+				<p:commandButton value="Ajouter"
+					style="margin-left:5px;width:130px;" update=":form:rsr"
+					action="#{ressourceBean.addRessource}" />
+
+				<p:commandButton value="Retour" style="width:130px;"
+					action="#{ressourceBean.closeAddRessource}" />
+			</p:dialog>
+		</h:form>
+		<h:form id="form3">
+			<p:dialog header="Edition de la Ressource" closable="false"
+				widgetVar="dialogEditRessource" resizable="false" width="310"
+				showEffect="clip" hideEffect="fold" id="dialogEditRessource">
+				<p:messages id="messages" showDetail="true" autoUpdate="true" />
+				<h:panelGrid columns="2" cellpadding="4">
+					<h:outputText value="Path:" />
+					<p:inputText value="#{ressourceBean.ressourceSelected.path}"
+						style="width:195;font-weight:bold" />
+					<h:outputText value="Menu:" />
+					<p:inputText value="#{ressourceBean.ressourceSelected.menu}"
+						style="width:195;font-weight:bold" />
+					<h:outputText value="Bean:" />
+					<p:inputText value="#{ressourceBean.ressourceSelected.managedBean}"
+						style="width:195;font-weight:bold" />
+					<h:outputText value="Desc:" />
+					<p:inputText value="#{ressourceBean.ressourceSelected.description}"
+						style="width:195;font-weight:bold" />
+					<h:outputText value="Sous menu de:" />
+					<p:selectOneMenu id="menu" style="width:195;font-weight:bold"
+						value="#{ressourceBean.idmereselect}">
+						<f:selectItem itemLabel="" itemValue="" />
+						<f:selectItems value="#{ressourceBean.listMenuRessource}"
+							var="Ressource" itemLabel="#{Ressource}" itemValue="#{Ressource}" />
+					</p:selectOneMenu>
+				</h:panelGrid>
+
+				<p:commandButton value="Editer" style="margin-left:5px;width:130px;"
+					update=":form:rsr" action="#{ressourceBean.editRessource}" />
+				<p:commandButton value="Supprimer" style="width:130px;"
+					update=":form:rsr" action="#{ressourceBean.delRessource}" />
+				<p:commandButton value="Retour" style="margin-left:75;width:130px;"
+					action="#{ressourceBean.closeEditRessource}" />
+			</p:dialog>
+		</h:form>
+	</ui:define>
+</ui:composition>
