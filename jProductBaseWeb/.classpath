@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JSF 2.1 (Mojarra 2.1.6-FCS)">
 		<attributes>
@@ -17,7 +16,27 @@
 			<attribute name="owner.project.facets" value="java"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/Joffrey/workspace/jProductBaseWeb/WebContent/WEB-INF/lib/primefaces-3.2.jar">
+	<classpathentry kind="lib" path="C:/Users/Joffrey/git/jLeroyEclipse/jProductBaseWeb/WebContent/WEB-INF/lib/primefaces-3.2.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/Joffrey/git/jLeroyEclipse/jProductBaseWeb/WebContent/WEB-INF/lib/jdom-1.1.2.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/Joffrey/git/jLeroyEclipse/jProductBaseWeb/WebContent/WEB-INF/lib/importDynTesteurData.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/Joffrey/git/jLeroyEclipse/jProductBaseWeb/WebContent/WEB-INF/lib/jasperreports-4.7.0.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/Joffrey/git/jLeroyEclipse/jProductBaseWeb/WebContent/WEB-INF/lib/joda-time-2.1.jar">
 		<attributes>
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>

@@ -7,11 +7,123 @@
 
     <ui:define name="content">
     	<h:form>
-    	<f:metadata>
-     		<f:viewParam name="idIntervention" value="#{detailInterventionBean.idIntervention}"/>
-   		</f:metadata>
-    	intervention
-    	<h:outputText value="#{detailInterventionBean.idIntervention}"/>
+	    	<f:metadata>
+	     		<f:viewParam name="idIntervention" value="#{detailInterventionBean.idIntervention}"/>
+	   		</f:metadata>
+	    	<h:outputText style="text-align:center;font-size:25px;font-weight:bold;margin-top:0;" value="Detail Intervention"/>
+	    	<p:tabView id="tabViewAfterSaleReport" style="margin-top:5px;"
+	    				value="#{detailInterventionBean.listAfterSaleReport}" var="afterSaleReport"
+	    				activeIndex="#{detailInterventionBean.indexActive}" dynamic="true">
+ 		
+                <p:ajax event="tabChange" listener="#{detailInterventionBean.onChangeTab}" immediate="true" process="@this">
+                    <f:setPropertyActionListener value="#{afterSaleReport}" target="#{detailInterventionBean.selectedAfterSaleReport}" />
+                </p:ajax>
+                    
+	            <p:tab title="#{detailInterventionBean.headerInterventon}">
+	             	<p:panelGrid id="displayProduct" style="width: 100%;margin-top: 5px;">
+	                    <f:facet name="header">
+	                        <p:row>
+	                            <p:column colspan="7">
+	                                <h:outputText value="INFORMATIONS DU PRODUIT" />
+	                            </p:column>
+	                        </p:row>
+	                        <p:row>
+	                            <p:column colspan="1">
+	                                <h:outputText value="Reference produit Leroy" />
+	                            </p:column>
+	                            <p:column colspan="1">
+	                                <h:outputText value="Indice entrant" />
+	                            </p:column>
+	                            <p:column colspan="1">
+	                                <h:outputText value="Indice sortant" />
+	                            </p:column>
+	                            <p:column colspan="1">
+	                                <h:outputText value="Numero de serie" />
+	                            </p:column>
+	                            <p:column colspan="1">
+	                                <h:outputText value="Date Code" />
+	                            </p:column>
+	                            <p:column colspan="1">
+	                                <h:outputText value="Reference produit client" />
+	                            </p:column>
+	                        </p:row>
+	                    </f:facet>
+	                    <p:row>
+	                        <p:column style="text-align:center;">
+	                            <h:outputText value="#{afterSaleReport.product.productConf.productConfModel.reference}" />
+	                        </p:column>
+	                        <p:column style="text-align:center;">
+	                            <h:outputText value="#{afterSaleReport.majorIndexIn}" />
+	                        </p:column>
+	                        <p:column style="text-align:center;">
+	                            <p:inputText id="indiceOut" value="#{afterSaleReport.majorIndexOut}" />
+	                        </p:column>
+	                        <p:column style="text-align:center;">
+	                            <h:outputText value="#{afterSaleReport.product.serialNumber}" />
+	                        </p:column>
+	                        <p:column style="text-align:center;">
+	                            <h:outputText value="#{afterSaleReport.product.datecode}" />
+	                        </p:column>
+	                        <p:column style="text-align:center;">
+	                            <h:outputText value="#{afterSaleReport.product.productConf.reference}" />
+	                        </p:column>
+	                    </p:row>
+	                </p:panelGrid>
+	                 <p:panelGrid id="panelReceiptProduct" style="width: 100%;margin-top: 5px;">
+	                     <f:facet name="header">
+	                         <p:row>
+	                             <p:column colspan="6">
+	                                 <h:outputText value="INFOS RENSEIGNEES A RECEPTION DU PRODUIT" />
+	                             </p:column>
+	                         </p:row>
+	                         <p:row>
+	                             <p:column colspan="1">
+	                                 <h:outputText value="Date Arrivee" />
+	                             </p:column>
+	                             <p:column colspan="1">
+	                                 <h:outputText value="Nombre retour en SAV" />
+	                             </p:column>
+	                             <p:column colspan="1">
+	                                 <h:outputText value="Nombre semaines fonctionnement" />
+	                             </p:column>
+	                             <p:column colspan="1">
+	                                 <h:outputText value="Demandeur" />
+	                             </p:column>
+	                             <p:column colspan="1">
+	                                 <h:outputText value="Numero d'ECS" />
+	                             </p:column>
+	                         </p:row>
+	                     </f:facet>
+	                     <p:row>
+	                         <p:column >
+	                             <p:calendar style="text-align:center;" value="#{afterSaleReport.arrivalDate}" id="popupCal" pattern="dd/MM/yyyy" />
+	                         </p:column>
+	                         <p:column style="text-align:center;">
+	                             <h:outputText value="#{detailInterventionBean.indexActive + 1}" />
+	                         </p:column>
+	                         <p:column style="text-align:center;">
+	                             <h:outputText value="#{detailInterventionBean.nombreSemaineFonctionnel}" />
+	                         </p:column>
+	                         <p:column style="text-align:center;">
+	                             <p:inputText value="#{afterSaleReport.asker}" />
+	                         </p:column>
+	                         <p:column style="text-align:center;">
+	                             <p:inputText value="#{afterSaleReport.ecsNumber}" />
+	                         </p:column>
+	                     </p:row>
+	                     <p:row style="margin-top: 5px;">
+	                         <p:column styleClass="ui-widget-header" style="text-align:center;" colspan="6">
+	                             <h:outputText value="Nature de la non conformite" />
+	                         </p:column>
+	                     </p:row>
+	                     <p:row>
+	                         <p:column colspan="6">
+	                             <p:inputTextarea style="width: 100%;" value="#{afterSaleReport.ncNature}" />
+	                         </p:column>
+	                     </p:row>
+	                 </p:panelGrid>
+	            </p:tab>
+			</p:tabView>
 		</h:form>
     </ui:define>
 </ui:composition>

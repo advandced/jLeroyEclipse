@@ -20,7 +20,7 @@ public class ConnectionUserRight {
 
 	public Connection getCnx() throws SQLException, NamingException {
 		if (null == this.cnx) {
-			this.cnx = connectionPool.getConnection("jdbc/_leroyUserRight");
+			this.cnx = connectionPool.getConnection("java:comp/env/jdbc/_leroyUserRight");
 		} else {
 			// Connexion already open
 		}
