@@ -111,6 +111,11 @@ public class AfterSaleReport implements Serializable {
 		this.qualityControlDate = qualityControlDate;
 	}
 	
+	public AfterSaleReport(int idafterSAleReport, Product product){
+		this.idAfterSaleReport = idafterSAleReport;
+		this.product = product;
+	}
+	
 	public AfterSaleReport(){}
 	
 	public void addFailure(Failure failure) {

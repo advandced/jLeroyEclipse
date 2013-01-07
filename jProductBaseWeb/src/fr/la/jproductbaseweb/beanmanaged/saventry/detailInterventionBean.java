@@ -51,7 +51,6 @@ public class detailInterventionBean implements Serializable {
 			}
 		}
 		this.indexActive = _tabView.getActiveIndex();
-		this.calculateweek();
 		this.selectedAfterSaleReport = this.listAfterSaleReport
 				.get(indexActive);
 		if (this.selectedAfterSaleReport.getArrivalDate() == null) {
@@ -60,50 +59,82 @@ public class detailInterventionBean implements Serializable {
 		}
 	}
 
-	public int calculateweek() {
-		if (this.indexActive == 0) {
-			String datecode = this.listAfterSaleReport.get(this.indexActive)
-					.getProduct().getDatecode();
+	public String calculateweek() {
+		if (this.listAfterSaleReport.get(this.indexActive).getProduct() != null) {
+			if (this.indexActive == 0) {
+				String datecode = this.listAfterSaleReport
+						.get(this.indexActive).getProduct().getDatecode();
 
-			char[] stringArray;
+				Date date = this.getdatefromdatecode(datecode);
 
-			// convert string into array using toCharArray() method of string
-			// class
-			stringArray = datecode.toCharArray();
-			if (stringArray.length == 4) {
-				String semaine = Character.toString(stringArray[2])
-						+ Character.toString(stringArray[3]);
-				String annee = "20" + Character.toString(stringArray[0])
-						+ Character.toString(stringArray[1]);
-				System.out.println("DATE LOLILOL : " + semaine + " " + annee);
-				// We know week number and year.
-				int week = Integer.parseInt(semaine);
-				int year = Integer.parseInt(annee);
+				int weeks = 0;
 
-				// Get calendar, clear it and set week number and year.
-				Calendar calendar = Calendar.getInstance();
-				calendar.clear();
-				calendar.set(Calendar.WEEK_OF_YEAR, week);
-				calendar.set(Calendar.YEAR, year);
-
-				// Now get the first day of week.
-				Date date = calendar.getTime();
-				
 				DateTime dateTime1 = new DateTime(date);
-				DateTime dateTime2 = new DateTime(this.listAfterSaleReport.get(this.indexActive).getArrivalDate());
+				DateTime dateTime2 = null;
 
-				int weeks = Weeks.weeksBetween(dateTime1, dateTime2).getWeeks();
+				if (this.listAfterSaleReport.get(this.indexActive)
+						.getArrivalDate() == null) {
+					dateTime2 = new DateTime(new Date());
+				} else {
+					dateTime2 = new DateTime(this.listAfterSaleReport.get(
+							this.indexActive).getArrivalDate());
+				}
 
-				this.nombreSemaineFonctionnel = String.valueOf(weeks);
-				
+				weeks = this.numberofweekbetween(dateTime1, dateTime2);
+
+				return String.valueOf(weeks);
+
 			} else {
-				this.nombreSemaineFonctionnel = "Date code incorrect";
+				return "different de 0";
 			}
-
 		} else {
-
+			return "erreur";
 		}
-		return 0;
+	}
+
+	public int numberofweekbetween(DateTime date1, DateTime date2) {
+
+		DateTime dateTime1 = new DateTime(date1);
+		DateTime dateTime2 = new DateTime(date2);
+
+		int weeks = Weeks.weeksBetween(dateTime1, dateTime2).getWeeks();
+
+		return weeks;
+	}
+
+	public Date getdatefromdatecode(String datecode) {
+
+		char[] stringArray;
+
+		stringArray = datecode.toCharArray();
+		if (stringArray.length == 4) {
+			String semaine = Character.toString(stringArray[2])
+					+ Character.toString(stringArray[3]);
+			String suffix = "";
+			if (stringArray[0] == 9) {
+				suffix = "19";
+			} else {
+				suffix = "20";
+			}
+			String annee = suffix + Character.toString(stringArray[0])
+					+ Character.toString(stringArray[1]);
+			// We know week number and year.
+			int week = Integer.parseInt(semaine);
+			int year = Integer.parseInt(annee);
+
+			// Get calendar, clear it and set week number and year.
+			Calendar calendar = Calendar.getInstance();
+			calendar.clear();
+			calendar.set(Calendar.WEEK_OF_YEAR, week);
+			calendar.set(Calendar.YEAR, year);
+
+			// Now get the first day of week.
+			Date date = calendar.getTime();
+
+			return date;
+		} else {
+			return null;
+		}
 	}
 
 	public int getIdIntervention() {
@@ -115,7 +146,8 @@ public class detailInterventionBean implements Serializable {
 		try {
 			this.listAfterSaleReport = moduleGlobal
 					.getAfterSaleReports(this.idIntervention);
-			this.listAfterSaleReport.add(new AfterSaleReport());
+			this.listAfterSaleReport.add(new AfterSaleReport(0,
+					this.moduleGlobal.getProduct(this.idIntervention)));
 			this.compteur = this.listAfterSaleReport.size();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -138,12 +170,10 @@ public class detailInterventionBean implements Serializable {
 	}
 
 	public int getIndexActive() {
-		System.out.println("IndexActive Value = " + indexActive);
 		return indexActive;
 	}
 
 	public void setIndexActive(int indexActive) {
-		System.out.println("IndexActive Value = " + indexActive);
 		this.indexActive = indexActive;
 	}
 
@@ -179,6 +209,7 @@ public class detailInterventionBean implements Serializable {
 	}
 
 	public String getNombreSemaineFonctionnel() {
+		this.nombreSemaineFonctionnel = this.calculateweek();
 		return nombreSemaineFonctionnel;
 	}
 
