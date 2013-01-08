@@ -63,9 +63,10 @@ public class ApparentCauseClientConverter implements Converter {
 	@Override
 	public String getAsString(FacesContext arg0, UIComponent arg1, Object arg2) {
 		if (arg2 == null) {
+			System.out.println(1);
 			return null;
 		} else {
-
+			System.out.println(2);
 			return String.valueOf(((ApparentCauseCustomer) arg2)
 					.getIdApparentCauseCustomer());
 		}

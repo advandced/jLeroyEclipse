@@ -1,245 +1,434 @@
 <ui:composition xmlns="http://www.w3c.org/1999/xhtml"
-                xmlns:f="http://java.sun.com/jsf/core"
-                xmlns:h="http://java.sun.com/jsf/html"
-                xmlns:p="http://primefaces.org/ui"
-                xmlns:ui="http://java.sun.com/jsf/facelets"
-                xmlns:cc="http://java.sun.com/jsf/composite" template="entrySAV.xhtml">
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:cc="http://java.sun.com/jsf/composite" template="entrySAV.xhtml">
 
-    <ui:define name="content">
-    	<h:form>
-	    	<f:metadata>
-	     		<f:viewParam name="idIntervention" value="#{detailInterventionBean.idIntervention}"/>
-	   		</f:metadata>
-	   		<p:commandButton value="Retour" style="margin-right:690px;margin-left:5px;" action="/entrySAV/entryIntervention.xhtml?faces-redirect=true"/>
-	    	<h:outputText style="font-size:25px;font-weight:bold;" value="Detail Intervention"/>
-	    	<p:tabView id="tabViewAfterSaleReport" style="margin-top:5px;"
-	    				value="#{detailInterventionBean.listAfterSaleReport}" var="afterSaleReport"
-	    				activeIndex="#{detailInterventionBean.indexActive}" dynamic="true">
- 		
-                <p:ajax event="tabChange" listener="#{detailInterventionBean.onChangeTab}" immediate="true" process="@this">
-                    <f:setPropertyActionListener value="#{afterSaleReport}" target="#{detailInterventionBean.selectedAfterSaleReport}" />
-                </p:ajax>
-                    
-	            <p:tab title="#{detailInterventionBean.headerInterventon}">
-	             	<p:panelGrid id="displayProduct" style="width: 100%;margin-top: 5px;">
-	                    <f:facet name="header">
-	                        <p:row>
-	                            <p:column colspan="7">
-	                                <h:outputText value="INFORMATIONS DU PRODUIT" />
-	                            </p:column>
-	                        </p:row>
-	                        <p:row>
-	                            <p:column colspan="1">
-	                                <h:outputText value="Reference produit Leroy" />
-	                            </p:column>
-	                            <p:column colspan="1">
-	                                <h:outputText value="Indice entrant" />
-	                            </p:column>
-	                            <p:column colspan="1">
-	                                <h:outputText value="Indice sortant" />
-	                            </p:column>
-	                            <p:column colspan="1">
-	                                <h:outputText value="Numero de serie" />
-	                            </p:column>
-	                            <p:column colspan="1">
-	                                <h:outputText value="Date Code" />
-	                            </p:column>
-	                            <p:column colspan="1">
-	                                <h:outputText value="Reference produit client" />
-	                            </p:column>
-	                        </p:row>
-	                    </f:facet>
-	                    <p:row>
-	                        <p:column style="text-align:center;">
-	                            <h:outputText value="#{afterSaleReport.product.productConf.productConfModel.reference}" />
-	                        </p:column>
-	                        <p:column style="text-align:center;">
-	                            <h:outputText value="#{afterSaleReport.majorIndexIn}" />
-	                        </p:column>
-	                        <p:column style="text-align:center;">
-	                            <p:inputText id="indiceOut" value="#{afterSaleReport.majorIndexOut}" />
-	                        </p:column>
-	                        <p:column style="text-align:center;">
-	                            <h:outputText value="#{afterSaleReport.product.serialNumber}" />
-	                        </p:column>
-	                        <p:column style="text-align:center;">
-	                            <h:outputText value="#{afterSaleReport.product.datecode}" />
-	                        </p:column>
-	                        <p:column style="text-align:center;">
-	                            <h:outputText value="#{afterSaleReport.product.productConf.reference}" />
-	                        </p:column>
-	                    </p:row>
-	                </p:panelGrid>
-	                 <p:panelGrid id="panelReceiptProduct" style="width: 100%;margin-top: 5px;">
-	                     <f:facet name="header">
-	                         <p:row>
-	                             <p:column colspan="6">
-	                                 <h:outputText value="INFOS RENSEIGNEES A RECEPTION DU PRODUIT" />
-	                             </p:column>
-	                         </p:row>
-	                         <p:row>
-	                             <p:column colspan="1">
-	                                 <h:outputText value="Date Arrivee" />
-	                             </p:column>
-	                             <p:column colspan="1">
-	                                 <h:outputText value="Nombre retour en SAV" />
-	                             </p:column>
-	                             <p:column colspan="1">
-	                                 <h:outputText value="Nombre semaines fonctionnement" />
-	                             </p:column>
-	                             <p:column colspan="1">
-	                                 <h:outputText value="Demandeur" />
-	                             </p:column>
-	                             <p:column colspan="1">
-	                                 <h:outputText value="Numero d'ECS" />
-	                             </p:column>
-	                         </p:row>
-	                     </f:facet>
-	                     <p:row>
-	                         <p:column >
-	                             <p:calendar style="text-align:center;" value="#{afterSaleReport.arrivalDate}" id="popupCal" pattern="dd/MM/yyyy" />
-	                         </p:column>
-	                         <p:column style="text-align:center;">
-	                             <h:outputText value="#{detailInterventionBean.indexActive + 1}" />
-	                         </p:column>
-	                         <p:column style="text-align:center;">
-	                             <h:outputText value="#{detailInterventionBean.nombreSemaineFonctionnel}" />
-	                         </p:column>
-	                         <p:column style="text-align:center;">
-	                             <p:inputText value="#{afterSaleReport.asker}" />
-	                         </p:column>
-	                         <p:column style="text-align:center;">
-	                             <p:inputText value="#{afterSaleReport.ecsNumber}" />
-	                         </p:column>
-	                     </p:row>
-	                     <p:row style="margin-top: 5px;">
-	                         <p:column styleClass="ui-widget-header" style="text-align:center;" colspan="6">
-	                             <h:outputText value="Nature de la non conformite" />
-	                         </p:column>
-	                     </p:row>
-	                     <p:row>
-	                         <p:column colspan="6">
-	                             <p:inputTextarea style="width: 100%;" value="#{afterSaleReport.ncNature}" />
-	                         </p:column>
-	                     </p:row>
-	                 </p:panelGrid>
-	                 <p:panelGrid id="panelIntervention" style="width: 100%;">
+	<ui:define name="content">
+		<h:form id="formDial">
+			<f:metadata>
+				<f:viewParam name="idIntervention"
+					value="#{detailInterventionBean.idIntervention}" />
+			</f:metadata>
+			<p:commandButton value="Retour"
+				style="margin-right:690px;margin-left:5px;"
+				action="/entrySAV/entryIntervention.xhtml?faces-redirect=true" />
+			<h:outputText style="font-size:25px;font-weight:bold;"
+				value="Detail Intervention" />
+			<p:tabView id="tabViewAfterSaleReport" style="margin-top:5px;"
+				value="#{detailInterventionBean.listAfterSaleReport}"
+				var="afterSaleReport"
+				activeIndex="#{detailInterventionBean.indexActive}" dynamic="true">
+				<p:ajax event="tabChange"
+					listener="#{detailInterventionBean.onChangeTab}" immediate="true"
+					process="@this">
+					<f:setPropertyActionListener value="#{afterSaleReport}"
+						target="#{detailInterventionBean.selectedAfterSaleReport}" />
+				</p:ajax>
+				<p:tab title="#{detailInterventionBean.headerInterventon}">
+					<p:messages id="messagesProduit" showDetail="true"
+						autoUpdate="true" />
+					<p:panelGrid id="displayProduct"
+						style="width: 100%;margin-top: 10px;">
+						<f:facet name="header">
+							<p:row>
+								<p:column colspan="7">
+									<h:outputText value="INFORMATIONS DU PRODUIT" />
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column colspan="1">
+									<h:outputText value="Reference produit Leroy" />
+								</p:column>
+								<p:column colspan="1">
+									<h:outputText value="Indice entrant" />
+								</p:column>
+								<p:column colspan="1">
+									<h:outputText value="Indice sortant" />
+								</p:column>
+								<p:column colspan="1">
+									<h:outputText value="Numero de serie" />
+								</p:column>
+								<p:column colspan="1">
+									<h:outputText value="Date Code" />
+								</p:column>
+								<p:column colspan="1">
+									<h:outputText value="Reference produit client" />
+								</p:column>
+							</p:row>
+						</f:facet>
+						<p:row>
+							<p:column style="text-align:center;">
+								<h:outputText
+									value="#{afterSaleReport.product.productConf.productConfModel.reference}" />
+							</p:column>
+							<p:column style="text-align:center;">
+								<h:outputText value="#{afterSaleReport.majorIndexIn}" />
+							</p:column>
+							<p:column style="text-align:center;">
+								<p:inputText id="indiceOut"
+									value="#{afterSaleReport.majorIndexOut}" />
+							</p:column>
+							<p:column style="text-align:center;">
+								<h:outputText value="#{afterSaleReport.product.serialNumber}" />
+							</p:column>
+							<p:column style="text-align:center;">
+								<h:outputText value="#{afterSaleReport.product.datecode}" />
+							</p:column>
+							<p:column style="text-align:center;">
+								<h:outputText
+									value="#{afterSaleReport.product.productConf.reference}" />
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+					<p:panelGrid id="panelReceiptProduct"
+						style="width: 100%;margin-top: 10px;">
+						<f:facet name="header">
+							<p:row>
+								<p:column colspan="6">
+									<h:outputText value="INFOS RENSEIGNEES A RECEPTION DU PRODUIT" />
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column colspan="1">
+									<h:outputText value="Date Arrivee" />
+								</p:column>
+								<p:column colspan="1">
+									<h:outputText value="Nombre retour en SAV" />
+								</p:column>
+								<p:column colspan="1">
+									<h:outputText value="Nombre semaines fonctionnement" />
+								</p:column>
+								<p:column colspan="1">
+									<h:outputText value="Demandeur" />
+								</p:column>
+								<p:column colspan="1">
+									<h:outputText value="Numero d'ECS" />
+								</p:column>
+							</p:row>
+						</f:facet>
+						<p:row>
+							<p:column style="text-align:center;">
+								<p:calendar style="text-align:center;"
+									value="#{afterSaleReport.arrivalDate}" id="popupCal"
+									pattern="dd/MM/yyyy" />
+							</p:column>
+							<p:column style="text-align:center;">
+								<h:outputText value="#{detailInterventionBean.indexActive + 1}" />
+							</p:column>
+							<p:column style="text-align:center;">
+								<h:outputText
+									value="#{detailInterventionBean.nombreSemaineFonctionnel}" />
+							</p:column>
+							<p:column style="text-align:center;">
+								<p:inputText value="#{afterSaleReport.asker}" />
+							</p:column>
+							<p:column style="text-align:center;">
+								<p:inputText value="#{afterSaleReport.ecsNumber}" />
+							</p:column>
+						</p:row>
+						<p:row style="margin-top: 5px;">
+							<p:column styleClass="ui-widget-header"
+								style="text-align:center;" colspan="6">
+								<h:outputText value="Nature de la non conformite" />
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column colspan="6">
+								<p:inputTextarea style="width: 100%;"
+									value="#{afterSaleReport.ncNature}" />
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+					<p:panelGrid id="panelIntervention"
+						style="width: 100%;margin-top: 10px;">
+						<f:facet name="header">
+							<p:row>
+								<p:column colspan="7">
+									<h:outputText value="INFOS UNE FOIS L'INTERVENTION REALISEE" />
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column colspan="1">
+									<h:outputText value="Date reparation" />
+								</p:column>
+								<p:column colspan="1">
+									<h:outputText value="Date Controle qualite" />
+								</p:column>
+								<p:column colspan="1">
+									<h:outputText value="Date expedition" />
+								</p:column>
+								<p:column colspan="1">
+									<h:outputText value="TF" />
+								</p:column>
+								<p:column colspan="1">
+									<h:outputText value="CV" />
+								</p:column>
+								<p:column colspan="1">
+									<h:outputText value="Intervenant" />
+								</p:column>
+							</p:row>
+						</f:facet>
+						<p:row>
+							<p:column style="text-align:center;">
+								<p:calendar value="#{afterSaleReport.reparationDate}"
+									id="popupCalRep" pattern="dd/MM/yyyy" />
+							</p:column>
+							<p:column style="text-align:center;">
+								<p:calendar value="#{afterSaleReport.qualityControlDate}"
+									id="popupCalQual" pattern="dd/MM/yyyy" />
+							</p:column>
+							<p:column style="text-align:center;">
+								<p:calendar value="#{afterSaleReport.expeditionDate}"
+									id="popupCalExp" pattern="dd/MM/yyyy" />
+							</p:column>
+							<p:column style="text-align:center;">
+								<p:selectOneMenu value="#{afterSaleReport.functionnalTest}">
+									<f:selectItem itemLabel="Select One" itemValue="-1" />
+									<f:selectItem itemLabel="OK" itemValue="1" />
+									<f:selectItem itemLabel="KO" itemValue="0" />
+								</p:selectOneMenu>
+							</p:column>
+							<p:column style="text-align:center;">
+								<p:selectOneMenu value="#{afterSaleReport.visualControl}">
+									<f:selectItem itemLabel="Select One" itemValue="-1" />
+									<f:selectItem itemLabel="OK" itemValue="1" />
+									<f:selectItem itemLabel="KO" itemValue="0" />
+								</p:selectOneMenu>
+							</p:column>
+							<p:column style="text-align:center;">
+								<p:inputText value="#{afterSaleReport.intervenant}" />
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column styleClass="ui-widget-header" colspan="2">
+								<h:outputText value="Cause Probable LAI" />
+							</p:column>
+							<p:column styleClass="ui-widget-header" colspan="2">
+								<h:outputText value="Cause Probable Client" />
+							</p:column>
+							<p:column styleClass="ui-widget-header" colspan="2">
+								<h:outputText value="Fiche d'intervention" />
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column colspan="2">
+								<p:selectOneMenu id="selectLAICause"
+									value="#{afterSaleReport.apparentCause}">
+									<f:selectItem itemLabel="" itemValue="0" />
+									<f:selectItems value="#{detailInterventionBean.listLAICause}"
+										var="appCause" itemLabel="#{appCause.description}"
+										itemValue="#{appCause}" />
+									<f:converter converterId="apparentCauseLAIConverter" />
+									<p:ajax update="@this" />
+								</p:selectOneMenu>
+							</p:column>
+							<p:column colspan="2">
+								<p:selectOneMenu id="selectCustomerCause"
+									value="#{detailInterventionBean.selectedApparentCauseCustomer}">
+									<f:selectItem itemLabel="" itemValue="0" />
+									<f:selectItems
+										value="#{detailInterventionBean.listCustormerCause}" />
+									<f:converter converterId="apparentCauseClientConverter" />
+									<p:ajax update="selectLAICause"
+										listener="#{detailInterventionBean.handleCauseClientChange}" />
+								</p:selectOneMenu>
+							</p:column>
+							<p:column colspan="2">
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column styleClass="ui-widget-header" colspan="6">
+								<h:outputText value="Commentaire et actions diverses" />
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column colspan="6">
+								<p:inputTextarea style="width: 100%;"
+									value="#{afterSaleReport.comment}" />
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+					<p:panelGrid id="panelFailureIntervention"
+						style="width: 100%;margin-top: 10px;">
+						<p:messages id="messages" showDetail="true" autoUpdate="true" />
 
-                                <f:facet name="header">
-                                    <p:row>
-                                        <p:column colspan="7">
-                                            <h:outputText value="INFOS UNE FOIS L'INTERVENTION REALISEE" />
-                                        </p:column>
-                                    </p:row>
-                                    <p:row>
-                                        <p:column colspan="1">
-                                            <h:outputText value="Date reparation" />
-                                        </p:column>
-                                        <p:column colspan="1">
-                                            <h:outputText value="Date Controle qualite" />
-                                        </p:column>
-                                        <p:column colspan="1">
-                                            <h:outputText value="Date expedition" />
-                                        </p:column>
-                                        <p:column colspan="1">
-                                            <h:outputText value="TF" />
-                                        </p:column>
-                                        <p:column colspan="1">
-                                            <h:outputText value="CV" />
-                                        </p:column>
-                                        <p:column colspan="1">
-                                            <h:outputText value="Intervenant" />
-                                        </p:column>
-                                    </p:row>
+						<f:facet name="header">
+							<p:row>
+								<p:column colspan="6">
+									<h:outputText value="INFOS SUR L'INTERVENTION" />
+								</p:column>
+							</p:row>
+						</f:facet>
+					</p:panelGrid>
+					<p:contextMenu for="panelFailureIntervention">
+						<p:menuitem value="New Failure" icon="ui-icon-search"
+							action="#{detailInterventionBean.newFailure(false)}"
+							process="@this" update="listFailure">
+							<f:setPropertyActionListener value="#{afterSaleReport}"
+								target="#{detailInterventionBean.selectedAfterSaleReport}" />
+						</p:menuitem>
+						<p:menuitem id="refreshFailure" value="Refresh"
+							icon="ui-icon-arrowrefresh-1-w" process="@this"
+							update="listFailure" />
+					</p:contextMenu>
+					<p:dataTable id="listFailure" editable="true"
+						value="#{afterSaleReport.failures}" var="failure"
+						rowKey="#{failure.product.idProduct}" selectionMode="single">
+						<p:ajax event="rowEdit"
+							update="@this,:formDial:tabViewAfterSaleReport:messages"
+							listener="#{detailInterventionBean.editCardRow}">
+						</p:ajax>
+						<p:ajax event="rowSelect"
+							listener="#{detailInterventionBean.selectedFailure}">
+							<f:attribute name="selectedFailure" value="#{failure}" />
+						</p:ajax>
+						<p:column headerText="Diagnostic et analyse">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{failure.product.productConf.reference}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:selectOneMenu value="#{failure.product.idProduct}">
+										<f:selectItems
+											value="#{detailInterventionBean.selectedObject.productComponents}"
+											var="productChanged"
+											itemLabel="#{productChanged.productConf.getReference()}"
+											itemValue="#{productChanged.idProduct}">
+										</f:selectItems>
+										<p:ajax update="dateCodeProduct,serialNumberProduct"
+											listener="#{detailInterventionBean.selectedProductFailure}" />
+									</p:selectOneMenu>
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+						<p:column headerText="Date Code">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{failure.product.datecode}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="dateCodeProduct"
+										value="#{failure.product.datecode}" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+						<p:column headerText="N Serie">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{failure.product.serialNumber}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="serialNumberProduct"
+										value="#{failure.product.serialNumber}" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+						<p:column id="refTopo" headerText="Repere Topo">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{failure.elementsChanged}" size="5">
+									</h:outputText>
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText value="#{detailInterventionBean.topoRef}" size="5">
+										<p:ajax update="@this" />
+									</p:inputText>
+									<p:commandButton value="add"
+										action="#{detailInterventionBean.addTopo}"
+										update="refTopo,viewTopo,:formDial:tabViewAfterSaleReport:messages"
+										process="@this,listFailure,refTopo">
+									</p:commandButton>
+									<p:selectOneMenu id="viewTopo"
+										value="#{detailInterventionBean.elementChangedSelected}">
+										<p:ajax update="@this" />
+										<f:selectItems value="#{failure.elementsChanged}"
+											var="elementChanged" itemLabel="#{elementChanged.code}"
+											itemValue="#{elementChanged.code}"></f:selectItems>
+									</p:selectOneMenu>
+									<p:commandButton value="del"
+										action="#{detailInterventionBean.delTopo}"
+										update="refTopo,viewTopo" process="@this,refTopo">
+									</p:commandButton>
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+						<p:column headerText="Fonction">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{failure.failureCause}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText value="#{failure.failureCause}" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+						<p:column headerText="Type de defaut">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{failure.failureCode}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText value="#{failure.failureCode}" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+						<p:column headerText="Code Imputation">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{failure.imputationCode}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText value="#{failure.imputationCode}" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+						<p:column headerText="Carte remplacee">
+							<p:cellEditor>
+								<f:facet name="output">
+									<p:selectBooleanCheckbox disabled="true"
+										value="#{failure.dismantleCard}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:selectBooleanCheckbox value="#{failure.dismantleCard}" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+						<p:column headerText="Supprimer">
+							<p:cellEditor>
+								<f:facet name="output">
+									<p:selectBooleanCheckbox disabled="true"
+										value="#{detailInterventionBean.deleteCard}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:selectBooleanCheckbox
+										value="#{detailInterventionBean.deleteCard}" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+						<p:column headerText="Options" style="width:50px">
+							<p:commandLink id="rowEditLink"
+								actionListener="#{detailInterventionBean.editRow}" ajax="true"
+								update="dateCodeProduct,serialNumberProduct">
+								<f:attribute name="selectedFailure" value="#{failure}" />
+								<p:rowEditor update="listFailure" />
+							</p:commandLink>
+						</p:column>
+					</p:dataTable>
 
-                                </f:facet>
-                                <p:row>
+					<p:commandButton value="Enregistrer" style="margin-top:10px;"
+						actionListener="#{detailInterventionBean.modifyProduct}"
+						process="@this,displayProduct,panelReceiptProduct,panelIntervention,listFailure"
+						update="@form">
+						<f:attribute name="selectedAfterSaleReport"
+							value="#{afterSaleReport}" />
+					</p:commandButton>
 
-                                    <p:column>
-                                        <p:calendar value="#{afterSaleReport.reparationDate}"
-                                                    id="popupCalRep" pattern="dd/MM/yyyy" />
-                                    </p:column>
-                                    <p:column>
-                                        <p:calendar value="#{afterSaleReport.qualityControlDate}"
-                                                    id="popupCalQual" pattern="dd/MM/yyyy" />
-                                    </p:column>
-                                    <p:column>
-                                        <p:calendar value="#{afterSaleReport.expeditionDate}"
-                                                    id="popupCalExp" pattern="dd/MM/yyyy" />
-                                    </p:column>
-                                    <p:column>
-                                        <p:selectOneMenu value="#{afterSaleReport.functionnalTest}">
-                                            <f:selectItem itemLabel="Select One" itemValue="-1" />
-                                            <f:selectItem itemLabel="OK" itemValue="1" />
-                                            <f:selectItem itemLabel="KO" itemValue="0" />
-                                        </p:selectOneMenu>
-                                    </p:column>
-                                    <p:column>
-                                        <p:selectOneMenu value="#{afterSaleReport.visualControl}">
-                                            <f:selectItem itemLabel="Select One" itemValue="-1" />
-                                            <f:selectItem itemLabel="OK" itemValue="1" />
-                                            <f:selectItem itemLabel="KO" itemValue="0" />
-                                        </p:selectOneMenu>
-                                    </p:column>
-
-                                    <p:column>
-
-                                        <p:inputText value="#{afterSaleReport.intervenant}" />
-
-                                    </p:column>
-
-                                </p:row>
-                                <p:row>
-                                    <p:column styleClass="ui-widget-header" colspan="2">
-                                        <h:outputText
-                                            value="Cause Probable Client" />
-                                    </p:column>
-                                    <p:column styleClass="ui-widget-header" colspan="2">
-                                        <h:outputText
-                                            value="Cause Probable LAI" />
-                                    </p:column>
-                                    <p:column styleClass="ui-widget-header" colspan="2">
-                                        <h:outputText value="Fiche d'intervention" />
-                                    </p:column>
-                                </p:row>
-
-                                <p:row>
-                                    <p:column colspan="2">
-
-                                        <p:selectOneMenu id="selectCustomerCause" value="#{gestSearchSAV.selectedApparentCauseCustomer}">
-                                            <f:selectItem itemLabel="" itemValue="0" />
-                                            <f:selectItems value="#{gestSearchSAV.listCustormerCause}" />
-                                            <f:converter converterId="apparentCauseClientConverter" />
-                                            <p:ajax update="selectLAICause" listener="#{gestSearchSAV.handleCauseClientChange}" />
-                                        </p:selectOneMenu>
-                                    </p:column>
-                                    <p:column colspan="2">
-                                        <p:selectOneMenu id="selectLAICause" value="#{afterSaleReport.apparentCause}">
-                                            <f:selectItem itemLabel="" itemValue="0" />
-                                            <f:selectItems value="#{gestSearchSAV.listLAICause}" var="appCause" itemLabel="#{appCause.description}" itemValue="#{appCause}" />
-                                            <f:converter converterId="apparentCauseLAIConverter" />
-                                            <p:ajax update="@this" />
-                                        </p:selectOneMenu>
-                                    </p:column>
-
-                                    <p:column colspan="2">
-                                    
-                                    </p:column>
-                                </p:row>
-                                <p:row>
-                                    <p:column styleClass="ui-widget-header" colspan="6">
-                                        <h:outputText value="Commentaire et actions diverses"/>
-                                    </p:column>
-
-                                </p:row>
-                                <p:row>
-                                    <p:column colspan="6">
-                                        <p:inputTextarea style="width: 100%;" value="#{afterSaleReport.comment}" />
-                                    </p:column>
-                                </p:row>
-                            </p:panelGrid>
-	            </p:tab>
+					<p:commandButton value="Retour" style="margin-top:10px;"
+						action="/entrySAV/entryIntervention.xhtml?faces-redirect=true" />
+				</p:tab>
 			</p:tabView>
 		</h:form>
-    </ui:define>
+	</ui:define>
 </ui:composition>
