@@ -15,7 +15,7 @@
             </f:facet>
 
             <p:contextMenu for="productSearched">
-                <p:menuitem value="Intervention" icon="ui-icon-search" action="#{gestSearchSAV.detailAction}" process="@form"/>
+                <p:menuitem value="Intervention" icon="ui-icon-search" action="#{gestSearchSAV.redirection()}"/>
             </p:contextMenu>
 
             <p:dataTable id="productSearched" var="product" style="margin-top:5px;"
@@ -23,7 +23,7 @@
                          selection="#{gestSearchSAV.selectedObject}" selectionMode="single"
                          paginator="true" rows="25"
                          paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                         rowsPerPageTemplate="25,50,200,500,1000" lazy="true">
+                         rowsPerPageTemplate="25,50,200,500,1000">
 
                 <f:facet name="header">
                     <h:outputText value="Liste des Interventions" />

@@ -3,6 +3,7 @@ package fr.la.jproductbaseweb.beanmanaged.saventry;
 import java.io.IOException;
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -20,6 +21,8 @@ import org.primefaces.event.TabChangeEvent;
 
 import fr.la.configfilereader.ConfigFileReaderException;
 import fr.la.jproductbase.metier.AfterSaleReport;
+import fr.la.jproductbase.metier.ApparentCause;
+import fr.la.jproductbase.metier.ApparentCauseCustomer;
 import fr.la.jproductbase.service.ServiceInterface;
 
 @ManagedBean(name = "detailInterventionBean")
@@ -28,15 +31,17 @@ public class detailInterventionBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private ServiceInterface moduleGlobal = new ServiceInterface();
+	private int compteur;
 	private int idIntervention;
-	private List<AfterSaleReport> listAfterSaleReport;
-	private AfterSaleReport selectedAfterSaleReport;
 	private int indexActive;
 	private String headerInterventon;
-	private int compteur;
-	private int nombreRetourSAV = 1;
 	private String nombreSemaineFonctionnel;
-
+	private AfterSaleReport selectedAfterSaleReport;
+    private ApparentCauseCustomer selectedApparentCauseCustomer;
+	private List<AfterSaleReport> listAfterSaleReport;
+    private List<ApparentCause> listLAICause;
+    private List<ApparentCauseCustomer> listCustormerCause;
+    
 	public void onChangeTab(TabChangeEvent event) {
 		TabView _tabView = (TabView) event.getSource();
 		Tab _currentTab = (Tab) event.getTab();
@@ -44,8 +49,7 @@ public class detailInterventionBean implements Serializable {
 		// event.getComponent().getAttributes().get("selectedAfterSaleReport");
 		for (UIComponent component : _currentTab.getChildren()) {
 			if (component instanceof Fieldset) {
-				if (this.listAfterSaleReport.get(indexActive)
-						.getIdAfterSaleReport() != 0) {
+				if (this.listAfterSaleReport.get(indexActive).getIdAfterSaleReport() != 0) {
 
 				}
 			}
@@ -155,6 +159,26 @@ public class detailInterventionBean implements Serializable {
 		}
 	}
 
+    public void handleCauseClientChange() {
+        if (this.selectedApparentCauseCustomer == null) {
+            this.listLAICause.clear();
+        } else {
+            List<ApparentCause> _apparentCauses = new ArrayList<ApparentCause>();
+            this.listLAICause = new ArrayList<ApparentCause>();
+            try {
+                _apparentCauses = this.moduleGlobal.getApparentCauses();
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            for (ApparentCause apparentCause : _apparentCauses) {
+                if (apparentCause.getApparentCauseCustomer().getIdApparentCauseCustomer() == this.selectedApparentCauseCustomer.getIdApparentCauseCustomer()) {
+                    this.listLAICause.add(apparentCause);
+                }
+            }
+        }
+    }
+	
 	public int getIdIntervention() {
 		return idIntervention;
 	}
@@ -217,15 +241,7 @@ public class detailInterventionBean implements Serializable {
 	public void setCompteur(int compteur) {
 		this.compteur = compteur;
 	}
-
-	public int getNombreRetourSAV() {
-		return nombreRetourSAV;
-	}
-
-	public void setNombreRetourSAV(int nombreRetourSAV) {
-		this.nombreRetourSAV = nombreRetourSAV;
-	}
-
+	
 	public String getNombreSemaineFonctionnel() {
 		this.nombreSemaineFonctionnel = this.calculateweek();
 		return nombreSemaineFonctionnel;

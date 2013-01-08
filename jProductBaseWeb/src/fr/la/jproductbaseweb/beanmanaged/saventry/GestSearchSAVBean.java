@@ -2,12 +2,15 @@ package fr.la.jproductbaseweb.beanmanaged.saventry;
 
 import fr.la.jproductbase.metier.Product;
 import fr.la.jproductbaseweb.beanmanaged.modeltable.ProductLazyList;
+
+import java.io.IOException;
 import java.io.Serializable;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 
 @ManagedBean(name = "gestSearchSAV")
-@SessionScoped
+@ViewScoped
 public class GestSearchSAVBean implements Serializable {
 
     /**
@@ -47,5 +50,9 @@ public class GestSearchSAVBean implements Serializable {
      */
     public void setSelectedObject(Product selectedObject) {
         this.selectedObject = selectedObject;
+    }
+    
+    public void redirection() throws IOException{
+    	FacesContext.getCurrentInstance().getExternalContext().redirect("/jProductBaseWeb/entrySAV/detailIntervention.jsf?idIntervention=" + this.selectedObject.getIdProduct());
     }
 }

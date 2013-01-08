@@ -10,7 +10,8 @@
 	    	<f:metadata>
 	     		<f:viewParam name="idIntervention" value="#{detailInterventionBean.idIntervention}"/>
 	   		</f:metadata>
-	    	<h:outputText style="text-align:center;font-size:25px;font-weight:bold;margin-top:0;" value="Detail Intervention"/>
+	   		<p:commandButton value="Retour" style="margin-right:690px;margin-left:5px;" action="/entrySAV/entryIntervention.xhtml?faces-redirect=true"/>
+	    	<h:outputText style="font-size:25px;font-weight:bold;" value="Detail Intervention"/>
 	    	<p:tabView id="tabViewAfterSaleReport" style="margin-top:5px;"
 	    				value="#{detailInterventionBean.listAfterSaleReport}" var="afterSaleReport"
 	    				activeIndex="#{detailInterventionBean.indexActive}" dynamic="true">
@@ -122,6 +123,121 @@
 	                         </p:column>
 	                     </p:row>
 	                 </p:panelGrid>
+	                 <p:panelGrid id="panelIntervention" style="width: 100%;">
+
+                                <f:facet name="header">
+                                    <p:row>
+                                        <p:column colspan="7">
+                                            <h:outputText value="INFOS UNE FOIS L'INTERVENTION REALISEE" />
+                                        </p:column>
+                                    </p:row>
+                                    <p:row>
+                                        <p:column colspan="1">
+                                            <h:outputText value="Date reparation" />
+                                        </p:column>
+                                        <p:column colspan="1">
+                                            <h:outputText value="Date Controle qualite" />
+                                        </p:column>
+                                        <p:column colspan="1">
+                                            <h:outputText value="Date expedition" />
+                                        </p:column>
+                                        <p:column colspan="1">
+                                            <h:outputText value="TF" />
+                                        </p:column>
+                                        <p:column colspan="1">
+                                            <h:outputText value="CV" />
+                                        </p:column>
+                                        <p:column colspan="1">
+                                            <h:outputText value="Intervenant" />
+                                        </p:column>
+                                    </p:row>
+
+                                </f:facet>
+                                <p:row>
+
+                                    <p:column>
+                                        <p:calendar value="#{afterSaleReport.reparationDate}"
+                                                    id="popupCalRep" pattern="dd/MM/yyyy" />
+                                    </p:column>
+                                    <p:column>
+                                        <p:calendar value="#{afterSaleReport.qualityControlDate}"
+                                                    id="popupCalQual" pattern="dd/MM/yyyy" />
+                                    </p:column>
+                                    <p:column>
+                                        <p:calendar value="#{afterSaleReport.expeditionDate}"
+                                                    id="popupCalExp" pattern="dd/MM/yyyy" />
+                                    </p:column>
+                                    <p:column>
+                                        <p:selectOneMenu value="#{afterSaleReport.functionnalTest}">
+                                            <f:selectItem itemLabel="Select One" itemValue="-1" />
+                                            <f:selectItem itemLabel="OK" itemValue="1" />
+                                            <f:selectItem itemLabel="KO" itemValue="0" />
+                                        </p:selectOneMenu>
+                                    </p:column>
+                                    <p:column>
+                                        <p:selectOneMenu value="#{afterSaleReport.visualControl}">
+                                            <f:selectItem itemLabel="Select One" itemValue="-1" />
+                                            <f:selectItem itemLabel="OK" itemValue="1" />
+                                            <f:selectItem itemLabel="KO" itemValue="0" />
+                                        </p:selectOneMenu>
+                                    </p:column>
+
+                                    <p:column>
+
+                                        <p:inputText value="#{afterSaleReport.intervenant}" />
+
+                                    </p:column>
+
+                                </p:row>
+                                <p:row>
+                                    <p:column styleClass="ui-widget-header" colspan="2">
+                                        <h:outputText
+                                            value="Cause Probable Client" />
+                                    </p:column>
+                                    <p:column styleClass="ui-widget-header" colspan="2">
+                                        <h:outputText
+                                            value="Cause Probable LAI" />
+                                    </p:column>
+                                    <p:column styleClass="ui-widget-header" colspan="2">
+                                        <h:outputText value="Fiche d'intervention" />
+                                    </p:column>
+                                </p:row>
+
+                                <p:row>
+                                    <p:column colspan="2">
+
+                                        <p:selectOneMenu id="selectCustomerCause" value="#{gestSearchSAV.selectedApparentCauseCustomer}">
+                                            <f:selectItem itemLabel="" itemValue="0" />
+                                            <f:selectItems value="#{gestSearchSAV.listCustormerCause}" />
+                                            <f:converter converterId="apparentCauseClientConverter" />
+                                            <p:ajax update="selectLAICause" listener="#{gestSearchSAV.handleCauseClientChange}" />
+                                        </p:selectOneMenu>
+                                    </p:column>
+                                    <p:column colspan="2">
+                                        <p:selectOneMenu id="selectLAICause" value="#{afterSaleReport.apparentCause}">
+                                            <f:selectItem itemLabel="" itemValue="0" />
+                                            <f:selectItems value="#{gestSearchSAV.listLAICause}" var="appCause" itemLabel="#{appCause.description}" itemValue="#{appCause}" />
+                                            <f:converter converterId="apparentCauseLAIConverter" />
+                                            <p:ajax update="@this" />
+                                        </p:selectOneMenu>
+                                    </p:column>
+
+                                    <p:column colspan="2">
+                                    
+                                    </p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column styleClass="ui-widget-header" colspan="6">
+                                        <h:outputText value="Commentaire et actions diverses"/>
+                                    </p:column>
+
+                                </p:row>
+                                <p:row>
+                                    <p:column colspan="6">
+                                        <p:inputTextarea style="width: 100%;" value="#{afterSaleReport.comment}" />
+                                    </p:column>
+                                </p:row>
+                            </p:panelGrid>
 	            </p:tab>
 			</p:tabView>
 		</h:form>
