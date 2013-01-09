@@ -1,12 +1,13 @@
 package fr.la.jproductbaseweb.beanmanaged.saventry;
 
 import java.io.Serializable;
-import javax.enterprise.context.ConversationScoped;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
+
 import org.primefaces.model.StreamedContent;
 
 @ManagedBean(name = "fileBean")
-@ConversationScoped
+@SessionScoped
 public class FileBean implements Serializable {
 
 	// Init
