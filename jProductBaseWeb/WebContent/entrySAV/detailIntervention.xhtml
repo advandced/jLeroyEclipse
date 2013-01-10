@@ -136,7 +136,7 @@
 						</p:row>
 						<p:row>
 							<p:column colspan="6">
-								<p:inputTextarea style="width: 100%;"
+								<p:inputTextarea rows="5" style="width: 100%;"
 									value="#{afterSaleReport.ncNature}" />
 							</p:column>
 						</p:row>
@@ -160,10 +160,10 @@
 									<h:outputText value="Date expedition" />
 								</p:column>
 								<p:column colspan="1">
-									<h:outputText value="TF" />
+									<h:outputText value="Test Fonctinnel" />
 								</p:column>
 								<p:column colspan="1">
-									<h:outputText value="CV" />
+									<h:outputText value="Controle Visuel" />
 								</p:column>
 								<p:column colspan="1">
 									<h:outputText value="Intervenant" />
@@ -245,7 +245,7 @@
 						</p:row>
 						<p:row>
 							<p:column colspan="6">
-								<p:inputTextarea style="width: 100%;"
+								<p:inputTextarea rows="5" style="width: 100%;"
 									value="#{afterSaleReport.comment}" />
 							</p:column>
 						</p:row>
@@ -291,6 +291,7 @@
 								</f:facet>
 								<f:facet name="input">
 									<p:selectOneMenu value="#{failure.product.idProduct}">
+										<f:selectItem itemLabel="Select One" />
 										<f:selectItems
 											value="#{detailInterventionBean.selectedObject.productComponents}"
 											var="productChanged"

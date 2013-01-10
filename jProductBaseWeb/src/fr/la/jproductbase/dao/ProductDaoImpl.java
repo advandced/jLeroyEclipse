@@ -1028,6 +1028,36 @@ public class ProductDaoImpl implements ProductDao {
         return _product;
     }
 
+    @Override
+    public Product getProductWithProductConfRef(String reference) throws SQLException{
+    	Product product = null;
+    	 PreparedStatement _stmt = null;
+         ResultSet _rs = null;
+
+         try {
+             _stmt = this.cnxProduct
+                     .getCnx()
+                     .prepareStatement("select * from product where idproductconf = (select idproductconf from productconf where reference = ?);");
+             _stmt.setString(1, reference);
+             _rs = _stmt.executeQuery();
+
+            if (_rs.next()) {
+                 product = this.getProduct(_rs);
+             }
+         } catch (NamingException e) {
+             // TODO Auto-generated catch block
+             e.printStackTrace();
+         } finally {
+             if (null != _rs) {
+                 _rs.close();
+             }
+             if (null != _stmt) {
+                 _stmt.close();
+             }
+         }
+         return product;
+    }
+
     /*
      * 
      * Cr&eacute;er un produit &agrave; partir d'un enregistrement de la base de

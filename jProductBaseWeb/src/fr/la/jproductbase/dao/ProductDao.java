@@ -328,4 +328,6 @@ public interface ProductDao {
      * Retourne la list des differents produits avec la carte ou produit sur lequels ils sont montés.
      */
     public List<Product> getProductWithMother(int startingAt, int maxPerPage, Map<String, String> filters) throws SQLException;
+    
+    public Product getProductWithProductConfRef(String reference) throws SQLException;
 }

@@ -26,14 +26,17 @@ public class ProductConfLazy extends LazyDataModel<ProductConf> {
     @Override
     public List<ProductConf> load(int startingAt, int maxPerPage, String sortField, SortOrder sortOrder, Map<String, String> filters) {
         System.out.println("FILTRE CONF" + filters.toString());
+        System.out.println("start " + startingAt + " maxperpage " + maxPerPage);
         try {
             this.listProductConf = this.moduleGlobal.getProductConfLazy(filters, startingAt, maxPerPage);
         } catch (SQLException e) {
+         System.out.println(e.getMessage());
         }
         int countSizeResult = 0;
         try {
             countSizeResult = this.moduleGlobal.countProductConf(filters);
         } catch (SQLException e) {
+            System.out.println(e.getMessage());
         }
         setRowCount(countSizeResult);
         setPageSize(maxPerPage);

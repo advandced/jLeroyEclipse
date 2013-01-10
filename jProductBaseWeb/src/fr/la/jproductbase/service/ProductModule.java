@@ -648,8 +648,6 @@ public class ProductModule {
     protected void removeProductComponent(Product product,
             Product productComponent) throws SQLException, ProductDaoException {
         ProductDao _productDao = new ProductDaoImpl(this.cnxProduct);
-        System.out.println("remove product component" + product + " / "
-                + productComponent);
 
         _productDao.removeProductComponent(product, productComponent);
     }
@@ -810,6 +808,16 @@ public class ProductModule {
         ProductDao _productDao = new ProductDaoImpl(cnxProduct);
 
         List<Product> _product = _productDao.getProductWithMother(startingAt, maxPerPage, filters);
+
+        return _product;
+
+    }
+
+    protected Product getProductWithProductConfRef(String reference) throws SQLException {
+
+        ProductDao _productDao = new ProductDaoImpl(cnxProduct);
+
+        Product _product = _productDao.getProductWithProductConfRef(reference);
 
         return _product;
 

@@ -27,7 +27,7 @@
                          selection="#{gestConfigurationProductBean.selectedObject}"
                              selectionMode="single" paginator="true" rows="50"
                              paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                             rowsPerPageTemplate="50,200,500,1000" lazy="true">
+                             rowsPerPageTemplate="50,200,500,1000">
 
 
                 <f:facet name="header">
@@ -54,7 +54,7 @@
                     <h:outputText value="#{productConfModel.productFamily}" />
                 </p:column>
 
-                <p:column headerText="Alimentation" filterBy="#{productConfModel.productSupply}">
+                <p:column headerText="Alimentation" >
                     <h:outputText value="#{productConfModel.productSupply}" />
                 </p:column>
 

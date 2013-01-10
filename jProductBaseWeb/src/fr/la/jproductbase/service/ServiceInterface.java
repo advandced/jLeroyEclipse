@@ -421,10 +421,8 @@ public class ServiceInterface implements Serializable {
 
         FailureModule _failureModule = new FailureModule(this.cnxProduct,
                 this.cnxOperator, this.cnxTester);
-        System.out.println("valeur de failure " + failure);
         Failure _failure = _failureModule.addFailureDismantedCard(
                 productionFailureReport, failure);
-        System.out.println("return failure " + _failure);
         return _failure;
     }
 
@@ -1548,7 +1546,6 @@ public class ServiceInterface implements Serializable {
         ProductConfModule _productConfModule = new ProductConfModule(
                 this.cnxProduct);
 
-        System.out.println("KNOCK 9999");
         ProductConf _productConf = _productConfModule.setProductConf(
                 productConf, reference, majorIndex, minorIndex,
                 productConfModel, productFamily, productSupply, identifiable,
@@ -2612,9 +2609,6 @@ public class ServiceInterface implements Serializable {
                 _afterSaleReport = null;
             }
 
-            System.out.println("dans Service Interface setAfterSaleReport"
-                    + _afterSaleReport);
-
             _afterSaleReport = _afterSaleReportModule.setAfterSaleReport(
                     _afterSaleReport, afterSaleReport.getArrivalDate(),
                     afterSaleReport.getEcsNumber(),
@@ -3301,6 +3295,22 @@ public class ServiceInterface implements Serializable {
         this.closeConnections();
 
         return _productConf;
+
+    }
+
+    /*
+     * Permet le lazing sur les productConfModel
+     */
+    public Product getProductWithProductConfRef(String reference) throws SQLException {
+
+        ProductModule _productModule = new ProductModule(cnxProduct);
+
+        Product _product = _productModule.getProductWithProductConfRef(reference);
+
+        // Close connections
+        this.closeConnections();
+
+        return _product;
 
     }
 

@@ -21,11 +21,9 @@ import org.primefaces.component.celleditor.CellEditor;
 import org.primefaces.component.column.Column;
 import org.primefaces.component.commandlink.CommandLink;
 import org.primefaces.component.datatable.DataTable;
-import org.primefaces.component.fieldset.Fieldset;
 import org.primefaces.component.inputtext.InputText;
 import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 import org.primefaces.component.selectonemenu.SelectOneMenu;
-import org.primefaces.component.tabview.Tab;
 import org.primefaces.component.tabview.TabView;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.RowEditEvent;
@@ -95,23 +93,9 @@ public class detailInterventionBean implements Serializable {
 
 	public void onChangeTab(TabChangeEvent event) {
 		TabView _tabView = (TabView) event.getSource();
-		Tab _currentTab = (Tab) event.getTab();
-		// AfterSaleReport _afterSaleReport = (AfterSaleReport)
-		// event.getComponent().getAttributes().get("selectedAfterSaleReport");
-		for (UIComponent component : _currentTab.getChildren()) {
-			if (component instanceof Fieldset) {
-				if (this.listAfterSaleReport.get(indexActive)
-						.getIdAfterSaleReport() != 0) {
-
-				}
-			}
-		}
 		this.indexActive = _tabView.getActiveIndex();
 		this.selectedAfterSaleReport = this.listAfterSaleReport
 				.get(indexActive);
-		if (this.selectedAfterSaleReport.getArrivalDate() == null) {
-			this.selectedAfterSaleReport.setAsker("EES-FC");
-		}
 	}
 
 	public String calculateweek() {
@@ -167,8 +151,8 @@ public class detailInterventionBean implements Serializable {
 
 	private void newAfterSaleReport() {
 		this.afterSaleReport = new AfterSaleReport(0, null, 1, null, "", "",
-				null, null, null, null, null, 2, 2, "", "", "", "", null, null,
-				this.selectedObject);
+				null, null, null, null, null, -1, -1, "EES-FC", "", "", "",
+				null, null, this.selectedObject);
 		this.afterSaleReport.setMajorIndexIn(this.selectedObject
 				.getProductConf().getMajorIndex());
 
@@ -609,24 +593,26 @@ public class detailInterventionBean implements Serializable {
 												.getValue().toString()));
 
 								if (this.productCardSelected != null) {
-									if (_failure.getProduct().getDatecode()
-											.isEmpty()
-											|| _failure.getProduct()
-													.getSerialNumber()
-													.isEmpty()) {
+									if (_failure.getProduct().getDatecode() != null) {
+										if (_failure.getProduct().getDatecode()
+												.isEmpty()
+												|| _failure.getProduct()
+														.getSerialNumber()
+														.isEmpty()) {
 
-										_failure.getProduct().setProductConf(
-												productCardSelected
-														.getProductConf());
-										_failure.getProduct().setDatecode(
-												productCardSelected
-														.getDatecode());
-										_failure.getProduct().setSerialNumber(
-												productCardSelected
-														.getSerialNumber());
+											_failure.getProduct()
+													.setProductConf(
+															productCardSelected
+																	.getProductConf());
+											_failure.getProduct().setDatecode(
+													productCardSelected
+															.getDatecode());
+											_failure.getProduct()
+													.setSerialNumber(
+															productCardSelected
+																	.getSerialNumber());
 
-									} else {
-										// todo ne rien faire
+										}
 									}
 								} else {
 								}
@@ -659,14 +645,16 @@ public class detailInterventionBean implements Serializable {
 							InputText _html = (InputText) _cellEditor
 									.getFacet("input");
 							if (this.productCardSelected != null) {
-								try {
+								if (_html.getValue() != null) {
+									try {
 
-									_failure.getProduct().setDatecode(
-											_html.getValue().toString());
+										_failure.getProduct().setDatecode(
+												_html.getValue().toString());
 
-								} catch (NumberFormatException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
+									} catch (NumberFormatException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
 								}
 							}
 							this.listElementChangedToSave = new ArrayList<ElementChanged>();
@@ -687,14 +675,16 @@ public class detailInterventionBean implements Serializable {
 							InputText _html = (InputText) _cellEditor
 									.getFacet("input");
 							if (this.productCardSelected != null) {
-								try {
+								if (_html.getValue() != null) {
+									try {
 
-									_failure.getProduct().setSerialNumber(
-											_html.getValue().toString());
+										_failure.getProduct().setSerialNumber(
+												_html.getValue().toString());
 
-								} catch (NumberFormatException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
+									} catch (NumberFormatException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
 								}
 							}
 
@@ -1010,7 +1000,7 @@ public class detailInterventionBean implements Serializable {
 
 	}
 
-	public void refresh(){
+	public void refresh() {
 		try {
 			this.selectedObject = moduleGlobal.getProduct(this.idIntervention);
 			this.listAfterSaleReport = moduleGlobal
@@ -1023,7 +1013,7 @@ public class detailInterventionBean implements Serializable {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public int getIdIntervention() {
 		return idIntervention;
 	}
