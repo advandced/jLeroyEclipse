@@ -1,6 +1,7 @@
 package fr.la.jproductbaseweb.beanmanaged.prodentry;
 
 import java.io.IOException;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +34,21 @@ public class GestSaveProductBean {
         this.productBeanList = new ArrayList<ProductBean>();
         String modele = null;
         try {
+        	
+        	java.util.Date uDate = new java.util.Date (System.currentTimeMillis ()); //Relever l'heure avant le debut du progamme (en milliseconde) 
+            System.out.println("START");
             List<Product> _productList = this.globalService.getProductsRecordables(modele);
+            System.out.println("OUT");
+        	Date dateFin = new Date (System.currentTimeMillis()); //Relever l'heure a la fin du progamme (en milliseconde) 
+        	Date duree = new Date (System.currentTimeMillis()); //Pour calculer la différence
+        	duree.setTime (dateFin.getTime () - uDate.getTime ());  //Calcul de la différence
+        	long secondes = duree.getTime () / 1000;
+        	long min = secondes / 60;
+        	long heures = min / 60;
+        	long mili = duree.getTime () % 1000;
+        	secondes %= 60;
+        	System.out.println ("Temps passé durant le traitement : \nHeures : " + heures + "\nMinutes : " + min + "\nSecondes : " + secondes + "\nMilisecondes : " + mili + "\n");
+
             for (Product p : _productList) {
 
                 ProductBean _productBean = new ProductBean();
@@ -48,6 +63,7 @@ public class GestSaveProductBean {
                 this.productBeanList.add(_productBean);
 
             }
+            System.out.println("STOP");
             this.result = true;
         } catch (SQLException e) {
             // TODO Auto-generated catch block

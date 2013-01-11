@@ -321,8 +321,8 @@ public interface ProductDao {
      * @throws ProductDaoException
      */
     public Product setProductFEDDtoLAI(int idProductFEDD, ProductConf config,
-            String serialNumber, String datecode) throws SQLException,
-            ProductDaoException;
+			String serialNumber, String datecode) throws SQLException,
+			ProductDaoException, ConfigFileReaderException, IOException;
 
     /*
      * Retourne la list des differents produits avec la carte ou produit sur lequels ils sont montés.
