@@ -1,0 +1,1 @@
+<jsp:forward page="logout.jsf"></jsp:forward>

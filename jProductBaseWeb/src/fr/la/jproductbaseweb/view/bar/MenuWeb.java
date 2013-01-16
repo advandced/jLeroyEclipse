@@ -19,12 +19,12 @@ public class MenuWeb implements MenuModel, Serializable {
     private static final long serialVersionUID = 1L;
     // private UserRightSession userRightSession;
     // private MenuModel modelMenuBar;
-    private List<Autorisation> autorisations;
+    private static List<Autorisation> autorisations;
     private Ressource resource;
-    private MenuModel modelMenu;
+    private static MenuModel modelMenu;
 
     public MenuWeb(List<Autorisation> autorisations, String nameResource) {
-        this.modelMenu = new DefaultMenuModel();
+        MenuWeb.modelMenu = new DefaultMenuModel();
         this.autorisations = autorisations;
         if (nameResource == null) {
             for (Autorisation autorisation : this.autorisations) {
@@ -33,7 +33,7 @@ public class MenuWeb implements MenuModel, Serializable {
                         .getIdressource() == 0) {
                     _menuItem.setValue(autorisation.getRessource().getMenu());
                     _menuItem.setUrl(autorisation.getRessource().getPath());
-                    this.modelMenu.addMenuItem(_menuItem);
+                    MenuWeb.modelMenu.addMenuItem(_menuItem);
                 }
             }
         } else {
@@ -58,10 +58,10 @@ public class MenuWeb implements MenuModel, Serializable {
                                 autorisation.getRessource().getPath(),
                                 String.class, new Class[0]));
                         _menuItem.setAjax(false);
-                        this.modelMenu.addMenuItem(_menuItem);
+                        MenuWeb.modelMenu.addMenuItem(_menuItem);
                     }
                 }
-            }
+            }  
         }
     }
 
@@ -70,7 +70,7 @@ public class MenuWeb implements MenuModel, Serializable {
     }
 
     public void setModelMenuBar(MenuModel modelMenuBar) {
-        this.modelMenu = modelMenuBar;
+        MenuWeb.modelMenu = modelMenuBar;
     }
 
     public List<Autorisation> getAuthorizations() {
@@ -103,5 +103,19 @@ public class MenuWeb implements MenuModel, Serializable {
     public List<UIComponent> getContents() {
         // TODO Auto-generated method stub
         return null;
+    }
+    
+    public static void updateMenu(){
+    	MenuWeb.modelMenu = new DefaultMenuModel();
+        autorisations = autorisations;
+            for (Autorisation autorisation : autorisations) {
+                MenuItem _menuItem = new MenuItem();
+                if (autorisation.getRessource().getRessourceMere()
+                        .getIdressource() == 0) {
+                    _menuItem.setValue(autorisation.getRessource().getMenu());
+                    _menuItem.setUrl(autorisation.getRessource().getPath());
+                    MenuWeb.modelMenu.addMenuItem(_menuItem);
+                }
+            }
     }
 }

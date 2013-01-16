@@ -1,2 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<pageflow:Pageflow xmlns:pageflow="http://www.sybase.com/suade/pageflow" id="pf13572262031210" configfile="/jProductBaseWeb/WebContent/WEB-INF/faces-config.xml"/>
+<pageflow:Pageflow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pageflow="http://www.sybase.com/suade/pageflow" id="pf13572262031210" configfile="/jProductBaseWeb/WebContent/WEB-INF/faces-config.xml">
+  <nodes xsi:type="pageflow:PFPage" name="*" x="72" y="408" id="pf13582583447310" referenceLink="//@navigationRule.0/@fromViewId|" outlinks="pf13583302018743 pf135833090011910 pf135833090011911" path="*"/>
+  <nodes xsi:type="pageflow:PFPage" name="index.jsf" x="96" y="180" id="pf13583302018746" referenceLink="//@navigationRule.0/@navigationCase.1/@toViewId|" outlinks="pf13583302018747" inlinks="pf13583302018743 pf135833090011910 pf135833090011911" path="/index.jsf"/>
+  <nodes xsi:type="pageflow:PFPage" name="panel.jsf" x="480" y="192" id="pf13583302018749" referenceLink="//@navigationRule.2/@navigationCase.0/@toViewId|" inlinks="pf13583302018747" path="/panel.jsf"/>
+  <links id="pf13583302018743" target="pf13583302018746" source="pf13582583447310" outcome="logout_success"/>
+  <links id="pf13583302018747" target="pf13583302018749" source="pf13583302018746" outcome="login_success"/>
+  <links id="pf135833090011910" target="pf13583302018746" source="pf13582583447310" outcome="forbidden"/>
+  <links id="pf135833090011911" target="pf13583302018746" source="pf13582583447310" outcome="failure"/>
+</pageflow:Pageflow>

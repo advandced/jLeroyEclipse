@@ -1,4 +1,3 @@
-
 <html xmlns="http://www.w3c.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
@@ -13,28 +12,60 @@
 .ui-tabs .ui-tabs-panel {
 	padding: 0px !important;
 }
-
 </style>
 </h:head>
 <h:body>
 	<p:layout id="layoutParams" fullPage="true">
 
 		<p:layoutUnit id="layoutNorth" position="north"
-			style="text-align:center;" size="160">
+			style="text-align:center;" size="117">
 			<h:form>
 				<h:graphicImage value="/images/entete.jpg" />
 
 				<p:growl id="messages" />
-
-				<p:menubar model="#{index.modelMenu}" style="margin-top:5px;"
-					autoSubmenuDisplay="true" />
 			</h:form>
+			
 		</p:layoutUnit>
 
 		<p:layoutUnit position="center" id="panelCenterParam">
-			<ui:insert name="content"></ui:insert>
-		</p:layoutUnit>
+			<p:panel header="Connectez-Vous"
+				style="width: 390px; text-align: center;margin: auto;">
+				<h:form>
+					<p:messages id="messages" showDetail="true" autoUpdate="true" />
+					<p:panelGrid style="margin: auto;">
+						<p:row>
+							<p:column style="margin: auto;border-style: hidden;">
+								<h:outputLabel value="Login :" />
+							</p:column>
+							<p:column style="border-style: hidden;">
+								<p:inputText value="#{loginBean.login}"></p:inputText>
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column style="border-style: hidden;">
+								<h:outputLabel value="Password :" />
+							</p:column>
 
+							<p:column style="border-style: hidden;">
+								<p:password value="#{loginBean.password}"></p:password>
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+					<p:row>
+						<p:commandButton style="margin: 0;"
+							action="#{loginBean.loginAction}" value="Connexion"
+							update=":content" ajax="false"></p:commandButton>
+					</p:row>
+				</h:form>
+			</p:panel>
+		</p:layoutUnit>
+		<p:panel header="Connectez-Vous"
+			style="width: 390px; text-align: center;margin: auto;">
+			<h:form>
+				<p:commandButton value="deconnexion" action="#{loginBean.logout}"
+					ajax="false"></p:commandButton>
+			</h:form>
+		</p:panel>
 	</p:layout>
 </h:body>
 

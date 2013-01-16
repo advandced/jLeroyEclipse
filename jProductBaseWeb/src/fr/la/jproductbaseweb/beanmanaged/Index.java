@@ -25,7 +25,6 @@ public class Index {
             this.menuWeb = new MenuWeb(this.userRightSession.getAutorisationList(), null);
             this.modelMenu = this.menuWeb.getModelMenuBar();
         }
-
     }
 
     public MenuModel getModelMenu() {

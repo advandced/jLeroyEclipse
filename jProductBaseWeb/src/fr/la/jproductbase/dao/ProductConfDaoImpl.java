@@ -726,7 +726,6 @@ public class ProductConfDaoImpl implements ProductConfDao {
 			ProductFamily productFamily, ProductSupply productSupply,
 			FollowingFormModel followingFormModel) throws SQLException,
 			ProductConfDaoException {
-		System.out.println("KNOCK MOTHAFUCKA 1");
 		int _idProductConfModel = 0;
 		if (null != productConfModel) {
 			_idProductConfModel = productConfModel.getIdProductConfModel();
@@ -780,7 +779,6 @@ public class ProductConfDaoImpl implements ProductConfDao {
 			_stmt.setInt(10, productConf.getIdProductConf());
 			_stmt.executeUpdate();
 
-			System.out.println("KNOCK MOTHAFUCKA 2");
 			// Update object
 			_stmt = this.cnxProduct.getCnx().prepareStatement(
 					"SELECT * FROM productConf" + " WHERE (idProductConf=?)");

@@ -12,6 +12,9 @@ import fr.la.juserright.metier.User;
 import fr.la.juserright.metier.UserRole;
 import java.io.IOException;
 import java.io.Serializable;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.List;
 

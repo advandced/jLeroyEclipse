@@ -60,7 +60,7 @@ public class GestOperatorBean implements Serializable {
 
     public void modify() {
         this.action = "modify";
-        System.out.println("click modify" + getSelectedOp().getFirstName()
+        System.out.println("click modify" + getSelectedOp().getLastName()
                 + " value action " + this.action);
         this.firstNameOP = getSelectedOp().getFirstName();
         this.lastNameOP = getSelectedOp().getLastName();

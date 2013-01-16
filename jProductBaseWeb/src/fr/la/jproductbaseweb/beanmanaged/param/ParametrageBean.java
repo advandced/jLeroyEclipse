@@ -36,8 +36,6 @@ public class ParametrageBean implements Serializable {
 
         this.menuWeb = new MenuWeb(this.userRightSession.getAutorisationList(), "parametrageBean");
         this.modelMenu = this.menuWeb.getModelMenuBar();
-
-
     }
 
     public ActionEvent getChangePageAction() {
