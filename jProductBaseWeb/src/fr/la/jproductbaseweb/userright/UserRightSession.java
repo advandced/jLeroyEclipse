@@ -1,20 +1,18 @@
 package fr.la.jproductbaseweb.userright;
 
-import fr.la.jproductbaseweb.beanmanaged.LoginBean;
+import java.io.Serializable;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
+
 import fr.la.jproductbaseweb.view.bar.MenuWeb;
 import fr.la.juserright.metier.Autorisation;
 import fr.la.juserright.metier.Permission;
 import fr.la.juserright.metier.Ressource;
 import fr.la.juserright.metier.Role;
-import java.io.Serializable;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
-import javax.faces.context.FacesContext;
-
-import org.primefaces.context.RequestContext;
 
 @ManagedBean(name = "userRightSession")
 @SessionScoped
@@ -22,8 +20,6 @@ public class UserRightSession implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private String login;
-	private String pageLog;
-	private String nameLog;
 	private List<Autorisation> autorisationList;
 	private MenuWeb menuWeb;
 
@@ -33,7 +29,7 @@ public class UserRightSession implements Serializable {
 		
 		//RequestContext rcontext = RequestContext.getCurrentInstance(); 
 		
-		FacesContext fcontext = FacesContext.getCurrentInstance();
+		/*FacesContext fcontext = FacesContext.getCurrentInstance();
 
 		LoginBean logBean = (LoginBean) fcontext
 				.getApplication()
@@ -41,7 +37,7 @@ public class UserRightSession implements Serializable {
 				.createValueExpression(fcontext.getELContext(), "#{loginBean}",
 						LoginBean.class).getValue(fcontext.getELContext());
 		
-		/*if (logBean.isUserconnected() == true){
+		if (logBean.isUserconnected() == true){
 			pageLog = "/logout.jsf";
 			nameLog = "Se déconnecter";
 			//rcontext.update("layoutNorth:menuForm:masterMenuBar");
@@ -210,8 +206,8 @@ public class UserRightSession implements Serializable {
 
 		Autorisation _autorisationEntrySAV = new Autorisation(_permission,
 				_resourceEntrySAV, _role);
-		Autorisation _autorisationAdmin = new Autorisation(_permission,
-				_resourceAdmin, _role);
+		/*Autorisation _autorisationAdmin = new Autorisation(_permission,
+				_resourceAdmin, _role);*/
 		/*Autorisation _autorisationLogin = new Autorisation(_permission,
 				_resourceLogin, _role);*/
 		Autorisation _autorisationEntryIntervention = new Autorisation(
@@ -265,10 +261,10 @@ public class UserRightSession implements Serializable {
 		_autorisationList.add(_autorisationFollowing);
 		_autorisationList.add(_autorisationProductConfModel);
 
-		if (logBean.getUseradmin() == 1){
+		/*if (logBean.getUseradmin() == 1){
 			_autorisationList.add(_autorisationAdmin);
 			System.out.println("isAdmin");
-		}
+		}*/
 
 		this.autorisationList = _autorisationList;
 	}

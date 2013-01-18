@@ -10,13 +10,8 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
-import javax.security.auth.callback.Callback;
-import javax.security.auth.callback.NameCallback;
-import javax.security.auth.callback.PasswordCallback;
-import javax.security.auth.callback.UnsupportedCallbackException;
+import javax.servlet.http.HttpServletRequest;
 
-import fr.la.jproductbaseweb.beanmanaged.exception.LoginException;
-import fr.la.jproductbaseweb.view.bar.MenuWeb;
 import fr.la.juserright.metier.User;
 import fr.la.juserright.service.ServiceUserRight;
 
@@ -108,58 +103,20 @@ public class LoginBean {
 			return true;
 		} else {
 			FacesMessage message = new FacesMessage("Identifiants incorrects !");
-			//FacesContext.getCurrentInstance().addMessage(null, message);
+			FacesContext.getCurrentInstance().addMessage(null, message);
 			return false;
 		}
 	}
 	
-	/*public boolean login() throws LoginException {
-        NameCallback nameCallback = new NameCallback(login);
-        PasswordCallback passwordCallback = new PasswordCallback(password, false);
-        Callback[] callbacks = new Callback[]{nameCallback, passwordCallback};
-        try {
-            callbackHandler.handle(callbacks);
-        } catch (IOException e) {
-            e.printStackTrace();
-            LoginException ex = new LoginException("IOException logging in.");
-            ex.initCause(e);
-            throw ex;
-        } catch (UnsupportedCallbackException e) {
-            String className = e.getCallback().getClass().getName();
-            LoginException ex = new LoginException(className + " is not a supported Callback.");
-            ex.initCause(e);
-            throw ex;
-        }
-        String userName = nameCallback.getName();
-        String password = String.valueOf(passwordCallback.getPassword());
-        try {
-            user = userService.login(userName, password);
-            FacesContext.getCurrentInstance().getExternalContext()
-			.redirect("/jProductBaseWeb/panel.jsf");
-        } catch (ServiceException e) {
-            throw new LoginException(e.getMessage());
-        }
-    }*/
-	
-	/*public boolean logout() throws LoginException {
-        try {
-            userService.logout(user);
-            return true;
-        } catch (ServiceException e) {
-            throw new LoginException("Can not execute logout process!!!");
-        } finally {
-            subject.getPublicCredentials().clear();
-            subject.getPrincipals().clear();
-            subject.getPrincipals().add(AppUtil.getAnonymousRole());
-        }
-    }*/
-	
-	public void logout() throws IOException{
+	public void logout(HttpServletRequest request) throws IOException{
+		/*
 		userlogin = null;
 		useradmin = 0;
 		userid = 0;
 		setUserconnected(false);
-		MenuWeb.updateMenu();
+		*/
+		
+		((HttpServletRequest) request).getSession().invalidate();
 		FacesContext.getCurrentInstance().getExternalContext().redirect("/jProductBaseWeb/");
 	}
 
