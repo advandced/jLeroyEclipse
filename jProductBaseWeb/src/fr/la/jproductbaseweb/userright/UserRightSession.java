@@ -122,10 +122,7 @@ public class UserRightSession implements Serializable {
 				"/entrySAV/entrySAV.jsf", "Saisie SAV", "entrySAVBean",
 				"ressource pour SAV", new Ressource(null));
 
-		Ressource _resourceAdmin = new Ressource(27,
-				"/utilisateur/utilisateur.jsf", "Administration",
-				"Administration", "panneau d'administration", new Ressource(
-						null));
+		
 
 		/*Ressource _resourceLogin = new Ressource(27, "/logout.jsf",
 				"Se déconnecter", "Se déconnecter", "page de déconnection",
