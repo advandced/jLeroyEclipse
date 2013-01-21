@@ -27,7 +27,6 @@
 			<http-method>PUT</http-method>
 		</web-resource-collection>
 		<auth-constraint>
-			<role-name>Groupe Admin</role-name>
 			<role-name>Groupe User</role-name>
 		</auth-constraint>
 	</security-constraint>
@@ -40,6 +39,6 @@
 		</form-login-config>
 	</login-config>
 	<security-role>
-		<role-name>Groupe Admin</role-name>
+		<role-name>Groupe User</role-name>
 	</security-role>
 </web-app>
