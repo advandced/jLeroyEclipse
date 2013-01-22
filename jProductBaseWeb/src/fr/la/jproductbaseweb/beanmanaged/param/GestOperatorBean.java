@@ -153,7 +153,7 @@ public class GestOperatorBean implements Serializable {
                 updateOperatorGOpe();
                 FacesContext context = FacesContext.getCurrentInstance();
                 context.addMessage(null,
-                        new FacesMessage("Modification effectuÃ©", "Operateur "
+                        new FacesMessage("Modification effectué", "Opérateur "
                         + this.lastNameOP));
                 hideDialog(_dialog);
             } catch (ConfigFileReaderException | IOException | SQLException e) {
@@ -169,7 +169,7 @@ public class GestOperatorBean implements Serializable {
                 createOperatorGOpe();
                 FacesContext context = FacesContext.getCurrentInstance();
                 context.addMessage(null, new FacesMessage(
-                        "Enregistrement Effectue", "Operateur "
+                        "Enregistrement Effectué", "Opérateur "
                         + this.lastNameOP));
                 hideDialog(_dialog);
             } catch (ConfigFileReaderException | IOException | SQLException | OperatorDaoException e) {
@@ -186,7 +186,7 @@ public class GestOperatorBean implements Serializable {
     private void createOperatorGOpe() throws ConfigFileReaderException,
             IOException, SQLException, OperatorDaoException, OperatorException, NamingException {
         // Creation d'objet pour manipuler les donnees de la base
-        System.out.println("creation d'un opÃ©rateur");
+        System.out.println("creation d'un opérateur");
         ServiceInterface _serviceInterface = new ServiceInterface();
 
 
@@ -280,6 +280,5 @@ public class GestOperatorBean implements Serializable {
 
     public void setValueAction(String valueAction) {
         System.out.println(valueAction);
-        this.valueAction = valueAction;
-    }
+        this.valueAction = valueAction;}
 }

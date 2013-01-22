@@ -1,3 +1,4 @@
+
 <html xmlns="http://www.w3c.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
@@ -16,34 +17,28 @@
 </h:head>
 <h:body>
 	<p:layout id="layoutParams" fullPage="true">
-
 		<p:layoutUnit id="layoutNorth" position="north"
-			style="text-align:center;" size="117">
-			<h:form>
+			style="text-align:center;" size="160">
+			<h:form id="menuForm">
 				<h:graphicImage value="/images/entete.jpg" />
 
 				<p:growl id="messages" />
+				<h:form>
+					<p:commandButton value="deconnexion" action="#{loginBean.logout}"
+						ajax="false"></p:commandButton>
+				</h:form>
+
+				<p:menubar model="#{index.modelMenu}" style="margin-top:5px;"
+					autoSubmenuDisplay="true" id="masterMenuBar" />
 			</h:form>
-
-
 		</p:layoutUnit>
-
 		<p:layoutUnit position="center" id="panelCenterParam">
-			<p:panel header="Connectez-Vous"
-				style="width: 390px; text-align: center;margin: auto;">
-
-				<form action="j_security_check" method="post" id="LoginForm" name="LoginForm">
-					<h:panelGrid columns="2">
-						<h:outputText value="Username:" />
-						<h:inputText id="j_username" autocomplete="on" />
-						<h:outputText value="Password:" />
-						<h:inputSecret id="j_password" autocomplete="on" />
-						<h:commandButton type="submit" value="Se connecter" />
-					</h:panelGrid>
-				</form>
+			<ui:insert name="content"></ui:insert>
+			<p:panel id="display" header="Information" style="margin-top:10px;">
+				<h:panelGrid columns="2">
+				</h:panelGrid>
 			</p:panel>
 		</p:layoutUnit>
 	</p:layout>
 </h:body>
-
 </html>

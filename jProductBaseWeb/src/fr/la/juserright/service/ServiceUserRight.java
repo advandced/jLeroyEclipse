@@ -93,7 +93,6 @@ public class ServiceUserRight implements Serializable {
         Permission _permission = _permissionModule.getPermission(idpermission);
 
         return _permission;
-
     }
 
     /*

@@ -12,7 +12,7 @@ import javax.naming.NamingException;
 import fr.la.jproductbase.metier.Operator;
 
 public class OperatorDaoImpl implements OperatorDao {
-	private static String exceptionMsg = "OpÃ©rateur inconnu dans la base de donnÃ©es.";
+	private static String exceptionMsg = "Opérateur inconnu dans la base de données.";
 
 	private ConnectionOperator cnxOperator;
 

@@ -12,8 +12,8 @@ public class FormOperatorBean implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private String action;
-    private String firstName = "test2";
-    private String lastName = "test";
+    private String firstName;
+    private String lastName;
     private String code;
     private String state;
     private GestOperatorBean gestOperBean;

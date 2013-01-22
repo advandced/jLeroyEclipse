@@ -23,49 +23,26 @@
 				<h:graphicImage value="/images/entete.jpg" />
 
 				<p:growl id="messages" />
-
 			</h:form>
+
+
 		</p:layoutUnit>
 
 		<p:layoutUnit position="center" id="panelCenterParam">
 			<p:panel header="Connectez-Vous"
 				style="width: 390px; text-align: center;margin: auto;">
-				<h:form>
-					<p:messages id="messages" showDetail="true" autoUpdate="true" />
-					<p:panelGrid style="margin: auto;">
-						<p:row>
-							<p:column style="margin: auto;border-style: hidden;">
-								<h:outputLabel value="Login :" />
-							</p:column>
-							<p:column style="border-style: hidden;">
-								<p:inputText value="#{loginBean.login}"></p:inputText>
-							</p:column>
-						</p:row>
-						<p:row>
-							<p:column style="border-style: hidden;">
-								<h:outputLabel value="Password :" />
-							</p:column>
 
-							<p:column style="border-style: hidden;">
-								<p:password value="#{loginBean.password}"></p:password>
-							</p:column>
-						</p:row>
-					</p:panelGrid>
-					<p:row>
-						<p:commandButton style="margin: 0;"
-							action="#{loginBean.loginAction}" value="Connexion"
-							update=":content" ajax="false"></p:commandButton>
-					</p:row>
-				</h:form>
+				<form action="j_security_check" method="post" id="LoginForm" name="LoginForm">
+					<h:panelGrid columns="2">
+						<h:outputText value="Username:" />
+						<h:inputText id="j_username" autocomplete="on" />
+						<h:outputText value="Password:" />
+						<h:inputSecret id="j_password" autocomplete="on" />
+						<h:commandButton type="submit" value="Se connecter" />
+					</h:panelGrid>
+				</form>
 			</p:panel>
 		</p:layoutUnit>
-		<p:panel header="Connectez-Vous"
-			style="width: 390px; text-align: center;margin: auto;">
-			<h:form>
-				<p:commandButton value="deconnexion" action="#{loginBean.logout}"
-					ajax="false"></p:commandButton>
-			</h:form>
-		</p:panel>
 	</p:layout>
 </h:body>
 
