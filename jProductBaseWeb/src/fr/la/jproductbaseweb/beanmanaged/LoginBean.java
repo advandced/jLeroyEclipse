@@ -19,6 +19,7 @@ import fr.la.juserright.service.ServiceUserRight;
 @SessionScoped
 public class LoginBean {
 
+	private static final HttpServletRequest request = null;
 	private ServiceUserRight moduleGlobal = new ServiceUserRight();
 	private String login;
 	private String password;
@@ -108,7 +109,7 @@ public class LoginBean {
 		}
 	}
 	
-	public void logout(HttpServletRequest request) throws IOException{
+	public void logout() throws IOException {
 		/*
 		userlogin = null;
 		useradmin = 0;
@@ -117,7 +118,9 @@ public class LoginBean {
 		*/
 		
 		((HttpServletRequest) request).getSession().invalidate();
-		FacesContext.getCurrentInstance().getExternalContext().redirect("/jProductBaseWeb/");
+		System.out.println("Logout !");
+		FacesContext.getCurrentInstance().getExternalContext().redirect("/jProductBaseWeb/login.jsf");
+		return;
 	}
 
 	public String md5(String input) {
