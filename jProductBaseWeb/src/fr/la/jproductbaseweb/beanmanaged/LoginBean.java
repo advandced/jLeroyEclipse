@@ -10,7 +10,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletRequest;
 
 import fr.la.juserright.metier.User;
 import fr.la.juserright.service.ServiceUserRight;
@@ -18,8 +17,6 @@ import fr.la.juserright.service.ServiceUserRight;
 @ManagedBean(name = "loginBean")
 @SessionScoped
 public class LoginBean {
-
-	private static final HttpServletRequest request = null;
 	private ServiceUserRight moduleGlobal = new ServiceUserRight();
 	private String login;
 	private String password;
@@ -117,7 +114,8 @@ public class LoginBean {
 		setUserconnected(false);
 		*/
 		
-		((HttpServletRequest) request).getSession().invalidate();
+		//((HttpServletRequest) request).getSession(true).invalidate();
+		
 		System.out.println("Logout !");
 		FacesContext.getCurrentInstance().getExternalContext().redirect("/jProductBaseWeb/login.jsf");
 		return;

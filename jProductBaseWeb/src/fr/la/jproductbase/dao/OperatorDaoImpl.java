@@ -203,10 +203,12 @@ public class OperatorDaoImpl implements OperatorDao {
 			_stmt.executeUpdate();
 			
 			_stmt = this.cnxOperator.getCnx().prepareStatement(
-					"SELECT * FROM operator" 
+					"SELECT state, code, lastName, firstName FROM operator" 
 							+ " WHERE (idOperator=?)");
 			_stmt.setInt(1, operatorToUpdate.getIdOperator());
 
+			System.out.println(operatorToUpdate.getIdOperator());
+			
 			ResultSet _rs = _stmt.executeQuery();
 			if (_rs.next()) {
 			

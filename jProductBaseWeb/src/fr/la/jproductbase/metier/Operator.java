@@ -31,7 +31,7 @@ public class Operator implements Serializable {
      * @param firstName : Pr&eacute;nom de l'op&eacute;rateur. 
      */
 	public Operator(int idOperator, Timestamp timestamp, int state,
-			String code, String lastName, String firstName) {
+			String code, String firstName, String lastName) {
 		this.idOperator = idOperator;
 		this.timestamp = timestamp;
 		this.state = state;

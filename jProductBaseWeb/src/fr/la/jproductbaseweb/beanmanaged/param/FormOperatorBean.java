@@ -30,7 +30,7 @@ public class FormOperatorBean implements Serializable {
         this.firstName = this.gestOperBean.getSelectedOp().getFirstName();
         this.lastName = this.gestOperBean.getSelectedOp().getLastName();
 
-        System.out.println("First Name " + this.firstName + " Last Name " + this.lastName);
+        System.out.println("First Name " + this.firstName + " // Last Name " + this.lastName);
     }
 
     public void buttonForm(ActionEvent event) {

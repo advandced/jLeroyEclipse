@@ -60,7 +60,7 @@ public class GestOperatorBean implements Serializable {
 
     public void modify() {
         this.action = "modify";
-        System.out.println("click modify" + getSelectedOp().getLastName()
+        System.out.println("click modify" + getSelectedOp().getFirstName()
                 + " value action " + this.action);
         this.firstNameOP = getSelectedOp().getFirstName();
         this.lastNameOP = getSelectedOp().getLastName();
@@ -190,8 +190,8 @@ public class GestOperatorBean implements Serializable {
         ServiceInterface _serviceInterface = new ServiceInterface();
 
 
-        OperatorForm _opForm = new OperatorForm(this.firstNameOP,
-                this.lastNameOP, this.codeOP, this.stateOP);
+        OperatorForm _opForm = new OperatorForm(this.lastNameOP, this.firstNameOP,
+                this.codeOP, this.stateOP);
 
         _serviceInterface.addOperator(_opForm.getSurName(), _opForm.getName(),
                 _opForm.getCode(), _opForm.getState());

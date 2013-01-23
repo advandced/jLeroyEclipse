@@ -57,7 +57,7 @@ public interface OperatorDao {
 	public List<Operator> getOperators() throws SQLException;
 
 	// TODO s'occuper de la javadoc des 3 nouvelles méthodes
-	public Operator addOperator(String firstName, String lastName, String code,
+	public Operator addOperator(String lastName, String firstName, String code,
 			int state) throws SQLException, OperatorDaoException;
 
 	public void updateOperator(Operator operatorToUpdate) throws SQLException, OperatorDaoException;
