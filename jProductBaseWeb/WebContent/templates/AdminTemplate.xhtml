@@ -7,9 +7,13 @@
 </h:head>
 <h:body>
 	<p:layout fullPage="true">
-		<p:layoutUnit id="header" position="north" size="166"
+		<p:layoutUnit id="header" position="north" size="170"
 			style="text-align : center;border:0;">
 			<p:graphicImage value="/images/entete.jpg" />
+			<h:form style="float: right;">
+					<p:commandButton value="deconnexion" action="#{loginBean.logout}"
+						ajax="false"></p:commandButton>
+				</h:form>
 			<p:menubar>
 				<p:menuitem value="Utilisateur" url="/utilisateur/utilisateur.jsf"
 					icon="ui-icon-document" />
@@ -25,9 +29,6 @@
 
 				<p:menuitem value="Autorisation"
 					url="/autorisation/autorisation.jsf" icon="ui-icon-document" />
-
-				<p:menuitem value="Quitter" url="/general/login.jsf"
-					icon="ui-icon-close" />
 			</p:menubar>
 		</p:layoutUnit>
 

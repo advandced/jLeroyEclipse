@@ -1,0 +1,1 @@
+<jsp:forward page="error404.jsf"></jsp:forward>
