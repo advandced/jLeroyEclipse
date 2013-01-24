@@ -14,7 +14,21 @@
 		<servlet-name>Faces Servlet</servlet-name>
 		<url-pattern>*.jsf</url-pattern>
 	</servlet-mapping>
-
+	
+	<security-constraint>
+		<display-name>Restricted</display-name>
+		<web-resource-collection>
+			<web-resource-name>Restricted Area</web-resource-name>
+			<url-pattern>/general/*</url-pattern>
+			<http-method>DELETE</http-method>
+			<http-method>GET</http-method>
+			<http-method>POST</http-method>
+			<http-method>PUT</http-method>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>Groupe Admin</role-name>
+		</auth-constraint>
+	</security-constraint>
 
 	<security-constraint>
 		<display-name>Restricted</display-name>
@@ -27,7 +41,6 @@
 			<http-method>PUT</http-method>
 		</web-resource-collection>
 		<auth-constraint>
-			<role-name>Groupe Admin</role-name>
 			<role-name>Groupe User</role-name>
 		</auth-constraint>
 	</security-constraint>
@@ -39,14 +52,16 @@
 			<form-error-page>/login.jsf</form-error-page>
 		</form-login-config>
 	</login-config>
+
 	<security-role>
 		<role-name>Groupe User</role-name>
 	</security-role>
 	<security-role>
 		<role-name>Groupe Admin</role-name>
 	</security-role>
+
 	<error-page>
 		<error-code>403</error-code>
-		<location>/error.jsf</location>
+		<location>/error403.jsf</location>
 	</error-page>
 </web-app>

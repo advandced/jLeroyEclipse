@@ -13,7 +13,6 @@ public class ProductBean extends Product {
 
     public ProductBean() {
         super();
-
     }
 
     public boolean isSelectedProduct() {

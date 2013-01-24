@@ -1,4 +1,3 @@
-
 <html xmlns="http://www.w3c.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
@@ -34,7 +33,12 @@
 		</p:layoutUnit>
 		<p:layoutUnit position="center" id="panelCenterParam">
 			<ui:insert name="content"></ui:insert>
-					Vous ne possèdez pas les droits nécessaires pour accèder à cette page !
+			<p:panel id="display" header="Information" style="margin-top:10px;">
+				<h:panelGrid columns="2">
+				<h:outputText value="l acces a la ressource demandee a ete interdit" /> <br />
+				<h:outputText value="Vous ne possedez pas les droits necessaires pour acceder a cette page" />
+				</h:panelGrid>
+			</p:panel>
 		</p:layoutUnit>
 	</p:layout>
 </h:body>

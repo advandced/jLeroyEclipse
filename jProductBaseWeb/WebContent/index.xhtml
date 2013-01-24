@@ -1,4 +1,3 @@
-
 <html xmlns="http://www.w3c.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
@@ -36,6 +35,180 @@
 			<ui:insert name="content"></ui:insert>
 			<p:panel id="display" header="Information" style="margin-top:10px;">
 				<h:panelGrid columns="2">
+				<h:form id="form">
+			<p:contextMenu for="form">
+				<p:menuitem value="Cree" update=":form2:dialogAdd"
+					icon="ui-icon-search" oncomplete="utilisateurDialogAdd.show()" />
+				<p:menuitem value="Modifier" update=":form3:dialogEdit"
+					icon="ui-icon-search" oncomplete="utilisateurDialogEdit.show()" />
+			</p:contextMenu>
+
+			<p:dataTable id="users" var="User"
+				value="#{utilisateurBean.userList}" rowKey="#{User.iduser}"
+				selection="#{utilisateurBean.userSelected}" selectionMode="single">
+
+				<p:column style="text-align:center;" headerText="Login">
+            			#{User.login}  
+					</p:column>
+
+				<p:column style="text-align:center;" headerText="Actif">
+            			#{User.actif}  
+					</p:column>
+
+				<p:column style="text-align:center;" headerText="Admin">
+            			#{User.admin}  
+					</p:column>
+
+				<p:column style="text-align:center;" headerText="Nom">
+            			#{User.nom}  
+					</p:column>
+
+				<p:column style="text-align:center;" headerText="Prenom">
+            			#{User.prenom}  
+					</p:column>
+
+				<p:column style="text-align:center;" headerText="E-Mail">
+            			#{User.email}  
+					</p:column>
+
+			</p:dataTable>
+		</h:form>
+			<h:form id="form2">
+			<p:dialog header="Ajout d'un utilisateur" closable="false"
+				widgetVar="utilisateurDialogAdd" resizable="false" width="340"
+				showEffect="clip" hideEffect="fold" id="dialogAdd">
+				<p:messages id="messagesAdd" showDetail="true" autoUpdate="true" />
+				<h:panelGrid id="displayAdd" columns="2" cellpadding="4">
+
+					<h:outputText value="Login:" />
+					<p:inputText value="#{utilisateurBean.login}"
+						style="font-weight:bold" />
+
+					<h:outputText value="Password: " />
+					<p:password value="#{utilisateurBean.password1}"
+						style="font-weight:bold" />
+
+					<h:outputText value="" />
+					<p:password value="#{utilisateurBean.password2}"
+						style="font-weight:bold" />
+
+					<h:outputText for="actifAdd" value="Actif:" />
+					<p:selectOneMenu id="actifAdd"
+						value="#{utilisateurBean.actif}">
+						<f:selectItem itemLabel="0" itemValue="0" />
+						<f:selectItem itemLabel="1" itemValue="1" />
+					</p:selectOneMenu>
+
+					<h:outputText for="adminAdd" value="Admin:" />
+					<p:selectOneMenu id="adminAdd"
+						value="#{utilisateurBean.admin}">
+						<f:selectItem itemLabel="0" itemValue="0" />
+						<f:selectItem itemLabel="1" itemValue="1" />
+					</p:selectOneMenu>
+
+					<h:outputText value="Nom:" />
+					<p:inputText value="#{utilisateurBean.nom}"
+						style="font-weight:bold" />
+
+					<h:outputText value="Prenom:" />
+					<p:inputText value="#{utilisateurBean.prenom}"
+						style="font-weight:bold" />
+
+					<h:outputText value="E-Mail:" />
+					<p:inputText value="#{utilisateurBean.email}"
+						style="font-weight:bold" />
+
+				</h:panelGrid>
+
+				<h:panelGrid id="displayAddButton" columns="2">
+					<p:commandButton style="margin-left:65"
+						action="#{utilisateurBean.CreateUser}" value="Ajouter"
+						update=":form:users" />
+					<p:commandButton action="#{utilisateurBean.CloseCreateUser}"
+						value="Retour" update=":form:users" />
+				</h:panelGrid>
+			</p:dialog>
+
+		</h:form>
+		<h:form id="form3">
+			<p:dialog header="Modification d'un utilisateur" closable="false"
+				widgetVar="utilisateurDialogEdit" resizable="false" width="330"
+				showEffect="clip" hideEffect="fold" id="dialogEdit">
+				<p:messages id="messagesEdit" showDetail="true" autoUpdate="true" />
+				<h:panelGrid id="displayEdit" columns="2" cellpadding="4">
+
+					<h:outputText value="Login:" />
+					<p:inputText value="#{utilisateurBean.userSelected.login}"
+						style="font-weight:bold" />
+
+					<h:outputText for="actifEdit" value="Actif:" />
+					<p:selectOneMenu id="actifEdit"
+						value="#{utilisateurBean.userSelected.actif}">
+						<f:selectItem itemLabel="0" itemValue="0" />
+						<f:selectItem itemLabel="1" itemValue="1" />
+					</p:selectOneMenu>
+
+					<h:outputText for="adminEdit" value="Admin:" />
+					<p:selectOneMenu id="adminEdit"
+						value="#{utilisateurBean.userSelected.admin}">
+						<f:selectItem itemLabel="0" itemValue="0" />
+						<f:selectItem itemLabel="1" itemValue="1" />
+					</p:selectOneMenu>
+
+					<h:outputText value="Nom:" />
+					<p:inputText value="#{utilisateurBean.userSelected.nom}"
+						style="font-weight:bold" />
+
+					<h:outputText value="Prenom:" />
+					<p:inputText value="#{utilisateurBean.userSelected.prenom}"
+						style="font-weight:bold" />
+
+					<h:outputText value="E-Mail:" />
+					<p:inputText value="#{utilisateurBean.userSelected.email}"
+						style="font-weight:bold" />
+				</h:panelGrid>
+
+				<h:panelGrid id="displayEditButton" columns="2">
+					<p:commandButton style="margin-left: 40;"
+						action="#{utilisateurBean.UpdateUser}" value="Modifier"
+						update=":form:users" />
+					<p:commandButton action="#{utilisateurBean.ShowEditPW}"
+						value="Password" update=":form:users" />
+				</h:panelGrid>
+
+				<h:panelGrid id="displayReturnButton" columns="1">
+					<p:commandButton style="margin-left: 100;"
+						action="#{utilisateurBean.CloseEditUser}" value="Retour"
+						update=":form:users" />
+				</h:panelGrid>
+			</p:dialog>
+		</h:form>
+		<h:form id="form4">
+			<p:dialog header="Nouveau Password" closable="false"
+				widgetVar="utilisateurDialogEditPW" resizable="false" width="340"
+				showEffect="clip" hideEffect="fold" id="dialogEditPW">
+				<p:ajax event="close" update="dialogEditPW"/>
+				<p:messages id="messagesPW" showDetail="true" autoUpdate="true" />
+				<h:panelGrid id="displayEditPW" columns="2" cellpadding="4">
+
+					<h:outputText value="Password:" />
+					<p:password value="#{utilisateurBean.password1}"
+						style="font-weight:bold" />
+						
+					<h:outputText value="" />
+					<p:password value="#{utilisateurBean.password2}"
+						style="font-weight:bold" />
+				</h:panelGrid>
+
+				<h:panelGrid id="displayEditPWButton" columns="2">
+					<p:commandButton style="margin-left: 50;"
+						action="#{utilisateurBean.UpdatePassword}" value="Modifier"
+						update="messagesPW" />
+					<p:commandButton action="#{utilisateurBean.CloseEditPW}"
+						value="Retour" />
+				</h:panelGrid>
+			</p:dialog>
+		</h:form>
 				</h:panelGrid>
 			</p:panel>
 		</p:layoutUnit>
