@@ -31,7 +31,7 @@
 			<role-name>Groupe User</role-name>
 		</auth-constraint>
 	</security-constraint>
-	
+
 	<login-config>
 		<auth-method>FORM</auth-method>
 		<form-login-config>
@@ -42,4 +42,11 @@
 	<security-role>
 		<role-name>Groupe User</role-name>
 	</security-role>
+	<security-role>
+		<role-name>Groupe Admin</role-name>
+	</security-role>
+	<error-page>
+		<error-code>403</error-code>
+		<location>/error.jsf</location>
+	</error-page>
 </web-app>

@@ -10,6 +10,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpSession;
 
 import fr.la.juserright.metier.User;
 import fr.la.juserright.service.ServiceUserRight;
@@ -27,6 +28,7 @@ public class LoginBean {
 	private boolean userconnected = false;
 
 	public LoginBean() {
+
 	}
 
 	public LoginBean(String url) {
@@ -96,8 +98,9 @@ public class LoginBean {
 			userlogin = login;
 			useradmin = userfind.getAdmin();
 			userid = userfind.getIduser();
-			setUserconnected(true);  
-			FacesContext.getCurrentInstance().getExternalContext().redirect("/jProductBaseWeb/panel.jsf");
+			setUserconnected(true);
+			FacesContext.getCurrentInstance().getExternalContext()
+					.redirect("/jProductBaseWeb/panel.jsf");
 			return true;
 		} else {
 			FacesMessage message = new FacesMessage("Identifiants incorrects !");
@@ -105,19 +108,18 @@ public class LoginBean {
 			return false;
 		}
 	}
-	
+
 	public void logout() throws IOException {
 		/*
-		userlogin = null;
-		useradmin = 0;
-		userid = 0;
-		setUserconnected(false);
-		*/
-		
-		//((HttpServletRequest) request).getSession(true).invalidate();
-		
-		System.out.println("Logout !");
-		FacesContext.getCurrentInstance().getExternalContext().redirect("/jProductBaseWeb/login.jsf");
+		 * userlogin = null; useradmin = 0; userid = 0; setUserconnected(false);
+		 */
+		HttpSession session = (HttpSession) FacesContext.getCurrentInstance()
+				.getExternalContext().getSession(false);
+		if (session != null) {
+			session.invalidate();
+		}
+		FacesContext.getCurrentInstance().getExternalContext()
+				.redirect("/jProductBaseWeb/login.jsf");
 		return;
 	}
 
