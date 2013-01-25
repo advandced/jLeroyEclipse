@@ -129,20 +129,17 @@ public class ProductConfModule {
             List<Software> productConfSoftwares) throws Exception {
         ProductConf _productConf = productConf;
 
-        System.out.println("KNOCK 1");
         try {
             this.cnxProduct.getCnx().setAutoCommit(false);
 
             if (null == _productConf) {
                 // New productConf
 
-                System.out.println("KNOCK 2");
                 // Add
                 _productConf = this.addProductConf(reference, majorIndex,
                         minorIndex, productConfModel, identifiable, state,
                         productFamily, productSupply, followingFormModel);
             } else {
-                System.out.println("KNOCK 3");
                 // Existing productconf
                 System.out.println("product Conf update");
                 // Update
@@ -153,7 +150,6 @@ public class ProductConfModule {
 
             // Update link between product and components
             if ((productConfComponents != null)) {
-                System.out.println("KNOCK 4");
                 /* && (productConfComponents.isEmpty() == false)) { */
                 this.updateProductConfComponents(_productConf,
                         productConfComponents);
@@ -164,7 +160,6 @@ public class ProductConfModule {
             // Update link between productConf and softwares in database
             if ((productConfSoftwares != null)) {
 
-                System.out.println("KNOCK 5");
                 /* && (productConfSoftwares.isEmpty() == false)) { */
                 this.updateProductConfSoftwares(_productConf,
                         productConfSoftwares);

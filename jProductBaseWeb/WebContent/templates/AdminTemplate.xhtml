@@ -7,10 +7,10 @@
 </h:head>
 <h:body>
 	<p:layout fullPage="true">
-		<p:layoutUnit id="header" position="north" size="170"
-			style="text-align : center;border:0;">
-			<p:graphicImage value="/images/entete.jpg" />
-			<h:form style="float: right;">
+		<p:layoutUnit id="header" position="north" size="200"
+			style="text-align : center;border:0; ">
+			<h:outputLink value="index.jsf"><p:graphicImage value="/images/entete.jpg" /></h:outputLink>
+			<h:form style="float: right; margin-right: 10px; ">
 					<p:commandButton value="deconnexion" action="#{loginBean.logout}"
 						ajax="false"></p:commandButton>
 				</h:form>

@@ -36,7 +36,7 @@ public class ProductConfDaoImpl implements ProductConfDao {
 					"SELECT * FROM productConf" + " WHERE (idProductConf=?)");
 			_stmt.setInt(1, idProductConf);
 			_rs = _stmt.executeQuery();
-
+			System.out.println("prout");
 			if (_rs.next()) {
 				_productConf = this.getProductConf(_rs);
 			} else {
@@ -732,7 +732,6 @@ public class ProductConfDaoImpl implements ProductConfDao {
 		} else {
 			_idProductConfModel = 0;
 		}
-		System.out.println("KNOCK MOTHAFUCKA 4");
 		System.out.println("ProductConf: " + productConf.toString());
 		System.out.println("reference : " + reference);
 		System.out.println("majorIndex  : " + majorIndex);
@@ -810,34 +809,38 @@ public class ProductConfDaoImpl implements ProductConfDao {
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
-		String rqt = "SELECT * FROM productConf pc, productFamily pf WHERE pc.idProductFamily = pf.idProductFamily ";
+		String rqt1 = "SELECT * FROM productConf pc, productFamily pf WHERE pc.idProductFamily = pf.idProductFamily ";
+		String rqt2 = " ORDER BY pc.reference ASC, pc.majorIndex ASC, pc.minorIndex ASC ";
 		if (filters.containsKey("minorIndex") == true) {
-			rqt += "AND pc.minorIndex LIKE '%" + filters.get("minorIndex")
+			rqt1 += "AND pc.minorIndex LIKE '%" + filters.get("minorIndex")
 					+ "%' ";
 
 		}
 		if (filters.containsKey("majorIndex") == true) {
-			rqt += "AND pc.majorIndex LIKE '%" + filters.get("majorIndex")
+			rqt1 += "AND pc.majorIndex LIKE '%" + filters.get("majorIndex")
 					+ "%' ";
 
 		}
 		if (filters.containsKey("state") == true) {
-			rqt += "AND pc.state LIKE '%" + filters.get("state") + "%' ";
+			rqt1 += "AND pc.state LIKE '%" + filters.get("state") + "%' ";
 
 		}
 		if (filters.containsKey("reference") == true) {
-			rqt += "AND pc.reference LIKE '%" + filters.get("reference")
+			rqt1 += "AND pc.reference LIKE '%" + filters.get("reference")
 					+ "%' ";
 
 		}
 
 		if (filters.containsKey("productFamily") == true) {
-			rqt += "AND pf.name LIKE '%" + filters.get("productFamily") + "%' ";
+			rqt1 += "AND pf.name LIKE '%" + filters.get("productFamily") + "%' ";
 
 		}
 		if (filters.containsKey("productSupply") == true) {
-			rqt += "AND ps.name LIKE '%" + filters.get("productSupply") + "%' ";
+			rqt1 += "AND ps.name LIKE '%" + filters.get("productSupply") + "%' ";
 		}
+		
+		String rqt = rqt1 + rqt2;
+		
 		System.out.println("REQUETE : " + rqt + "LIMIT " + limit + ","
 				+ maxperpage + ";");
 		int i = 0;

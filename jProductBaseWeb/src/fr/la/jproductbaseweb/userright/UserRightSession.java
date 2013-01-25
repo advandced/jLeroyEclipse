@@ -156,10 +156,10 @@ public class UserRightSession implements Serializable {
 				"Devis Reparation", "DevisRepaBean", "", _resourceEntrySAV);
 		Ressource _ressourceFollowing = new Ressource(25,
 				"/param/followingForm.jsf?faces-redirect=true",
-				"Following Form", "FollowingFormBean", _resource);
+				"Fiche Suiveuse", "FollowingFormBean", _resource);
 		Ressource _ressourceProductConfModel = new Ressource(26,
 				"/param/productConfModel.jsf?faces-redirect=true",
-				"Product Conf Model", "ProductConfModelBean", _resource);
+				"Modèle Configuration produit", "ProductConfModelBean", _resource);
 
 		Role _role = new Role("Admin");
 
