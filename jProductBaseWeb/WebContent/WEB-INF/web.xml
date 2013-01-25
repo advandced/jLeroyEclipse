@@ -19,6 +19,38 @@
 		<display-name>Restricted</display-name>
 		<web-resource-collection>
 			<web-resource-name>Restricted Area</web-resource-name>
+			<url-pattern>/param/*</url-pattern>
+			<http-method>DELETE</http-method>
+			<http-method>GET</http-method>
+			<http-method>POST</http-method>
+			<http-method>PUT</http-method>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>Groupe User</role-name>
+		</auth-constraint>
+	</security-constraint>
+	
+	<security-constraint>
+		<display-name>Restricted</display-name>
+		<web-resource-collection>
+			<web-resource-name>Restricted Area</web-resource-name>
+			<url-pattern>/param/operator.jsf</url-pattern>
+			<url-pattern>/param/params.jsf</url-pattern>
+			<http-method>DELETE</http-method>
+			<http-method>GET</http-method>
+			<http-method>POST</http-method>
+			<http-method>PUT</http-method>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>Groupe User</role-name>
+			<role-name>Groupe Fedd</role-name>
+		</auth-constraint>
+	</security-constraint>
+	
+	<security-constraint>
+		<display-name>Restricted</display-name>
+		<web-resource-collection>
+			<web-resource-name>Restricted Area</web-resource-name>
 			<url-pattern>/general/*</url-pattern>
 			<http-method>DELETE</http-method>
 			<http-method>GET</http-method>
@@ -42,6 +74,7 @@
 		</web-resource-collection>
 		<auth-constraint>
 			<role-name>Groupe User</role-name>
+			<role-name>Groupe Fedd</role-name>
 		</auth-constraint>
 	</security-constraint>
 
@@ -59,6 +92,7 @@
 	<security-role>
 		<role-name>Groupe Admin</role-name>
 	</security-role>
+
 
 	<error-page>
 		<error-code>403</error-code>

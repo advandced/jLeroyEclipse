@@ -1,5 +1,7 @@
-<html xmlns="http://www.w3c.org/1999/xhtml"
-	xmlns:f="http://java.sun.com/jsf/core"
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:ui="http://java.sun.com/jsf/facelets">
@@ -16,10 +18,12 @@
 </h:head>
 <h:body>
 	<p:layout id="layoutParams" fullPage="true">
-			<p:layoutUnit id="layoutNorth" position="north" size="200"
+		<p:layoutUnit id="layoutNorth" position="north" size="200"
 			style="text-align : center;border:0; ">
 			<h:form id="menuForm">
-				<h:outputLink value="index.jsf"><p:graphicImage value="/images/entete.jpg" /></h:outputLink>
+				<h:outputLink value="index.jsf">
+					<p:graphicImage value="/images/entete.jpg" />
+				</h:outputLink>
 
 				<p:growl id="messages" />
 				<h:form style="float: right; margin-right: 10px; ">
@@ -31,9 +35,13 @@
 					autoSubmenuDisplay="true" id="masterMenuBar" />
 			</h:form>
 		</p:layoutUnit>
-<p:layoutUnit id="content" position="center" style="border:0;">
-			<ui:insert name="content" />
+		<p:layoutUnit id="content" position="center" style="border:0;">
+			<div id="content">
+				<ui:insert name="content">
+					<ui:include src="/template/common/commonContent.xhtml" />
+				</ui:insert>
+			</div>
 		</p:layoutUnit>
-		</p:layout>
+	</p:layout>
 </h:body>
 </html>

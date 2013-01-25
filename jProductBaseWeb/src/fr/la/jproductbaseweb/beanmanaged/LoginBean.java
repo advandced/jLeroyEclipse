@@ -111,7 +111,7 @@ public class LoginBean {
 			session.invalidate();
 		}
 		FacesContext.getCurrentInstance().getExternalContext()
-				.redirect("/jProductBaseWeb/login.jsf");
+				.redirect("/jProductBaseWeb/");
 		return;
 	}
 
