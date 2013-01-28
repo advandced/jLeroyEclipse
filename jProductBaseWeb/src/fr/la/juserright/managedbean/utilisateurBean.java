@@ -1,5 +1,8 @@
 package fr.la.juserright.managedbean;
 
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -209,11 +212,26 @@ public class utilisateurBean {
 		RequestContext context = RequestContext.getCurrentInstance();
 		context.execute("utilisateurDialogEditPW.hide()");
 	}
+	
+	public String md5(String input) {
+		String md5 = null;
+		if (null == input)
+			return null;
+
+		try {
+			MessageDigest digest = MessageDigest.getInstance("MD5");
+			digest.update(input.getBytes(), 0, input.length());
+			md5 = new BigInteger(1, digest.digest()).toString(16);
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+		return md5;
+	}
 
 	public void UpdatePassword() {
 		try { 
 				@SuppressWarnings("unused")
-				EditUserPW _editUserPW = new EditUserPW(this.userSelected.getIduser(), this.password1, this.password2);
+				EditUserPW _editUserPW = new EditUserPW(this.userSelected.getIduser(), md5(this.password1), md5(this.password2));
 				this.moduleGlobal.updateUserPassword(this.userSelected2);
 				this.CloseEditPW();
 			

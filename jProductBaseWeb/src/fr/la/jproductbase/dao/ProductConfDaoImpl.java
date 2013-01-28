@@ -36,7 +36,6 @@ public class ProductConfDaoImpl implements ProductConfDao {
 					"SELECT * FROM productConf" + " WHERE (idProductConf=?)");
 			_stmt.setInt(1, idProductConf);
 			_rs = _stmt.executeQuery();
-			System.out.println("prout");
 			if (_rs.next()) {
 				_productConf = this.getProductConf(_rs);
 			} else {
