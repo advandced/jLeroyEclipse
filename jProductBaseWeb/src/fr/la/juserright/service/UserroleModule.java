@@ -45,14 +45,14 @@ public class UserroleModule {
 		_userroleDao.delete(_userrole);
 	}
 
-	public List<UserRole> getUserRoleWithIdUser(int iduser) throws SQLException {
+	/*public List<UserRole> getUserRoleWithIdUser(int iduser) throws SQLException {
 		
 		UserRoleDAO _userroleDao = FactoryDAO.getUserRoleDAO(this.cnxUserRight);
 
 		List<UserRole> _userrole = _userroleDao.getUserRoleWithIdUser(iduser);
 
 		return _userrole;
-	}
+	}*/
 
 	public List<UserRole> getUserRoleWithLogin(String login) throws SQLException {
 		

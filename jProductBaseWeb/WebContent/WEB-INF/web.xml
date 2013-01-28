@@ -51,7 +51,7 @@
 		<display-name>Restricted</display-name>
 		<web-resource-collection>
 			<web-resource-name>Restricted Area</web-resource-name>
-			<url-pattern>/general/*</url-pattern>
+			<url-pattern>/admin/*</url-pattern>
 			<http-method>DELETE</http-method>
 			<http-method>GET</http-method>
 			<http-method>POST</http-method>

@@ -74,20 +74,20 @@ public class UserModule {
 		return _user;
 	}
 	
-	public List<User> getUserAddRole(int idrole) throws SQLException {
+	public List<User> getUserAddRole(String nom_role) throws SQLException {
 		
 		UserDAO _userDao = FactoryDAO.getUserDAO(this.cnxUserRight);
 		
-		List<User> _user = _userDao.getUserAddRole(idrole);
+		List<User> _user = _userDao.getUserAddRole(nom_role);
 		
 		return _user;
 	}
 	
-	public List<User> getUserForARole(int idrole) throws SQLException {
+	public List<User> getUserForARole(String nom_role) throws SQLException {
 		
 		UserDAO _userDao = FactoryDAO.getUserDAO(this.cnxUserRight);
 		
-		List<User> _user = _userDao.getUserForARole(idrole);
+		List<User> _user = _userDao.getUserForARole(nom_role);
 		
 		return _user;
 	}

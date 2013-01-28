@@ -222,7 +222,7 @@ public class roleBean {
 
 	public void refreshlistUserForRole() throws SQLException {
 		this.listUserForRole = this.moduleGlobal
-				.getUserForARole(this.roleSelected.getIdrole());
+				.getUserForARole(this.roleSelected.getName());
 	}
 
 	public void refreshlistUserAdd() throws SQLException {
@@ -237,7 +237,7 @@ public class roleBean {
 	}
 
 	public List<String> converterlistUser(Role _role) throws SQLException {
-		List<User> listUserAdd = moduleGlobal.getUserAddRole(_role.getIdrole());
+		List<User> listUserAdd = moduleGlobal.getUserAddRole(_role.getName());
 		List<String> listString = new ArrayList<String>();
 		for (User p : listUserAdd) {
 			listString.add(p.getLogin());

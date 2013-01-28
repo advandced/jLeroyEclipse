@@ -53,7 +53,7 @@ public class UserRoleDAO implements ModelDAO<UserRole> {
 
 		try {
 			_stmt = this.cnxUserRight.getCnx().prepareStatement(
-					"SELECT * FROM UserRole");
+					"SELECT * FROM user_role");
 			_rs = _stmt.executeQuery();
 			while (_rs.next()) {
 				UserRole _userroletmp = this.getUserRole(_rs);
@@ -84,10 +84,10 @@ public class UserRoleDAO implements ModelDAO<UserRole> {
 		try {
 			_stmt = this.cnxUserRight.getCnx()
 					.prepareStatement(
-							"DELETE FROM userrole " + "WHERE iduser = "
-									+ _object.getUser().getIduser() + " AND "
-									+ "idrole = "
-									+ _object.getRole().getIdrole() + ";");
+							"DELETE FROM user_role " + "WHERE login = "
+									+ _object.getUser().getLogin() + " AND "
+									+ "nom_role = "
+									+ _object.getRole().getName() + ";");
 			_stmt.executeUpdate();
 
 		} catch (NamingException e) {
@@ -99,15 +99,15 @@ public class UserRoleDAO implements ModelDAO<UserRole> {
 		}
 	}
 
-	public List<UserRole> getUserRoleWithIdUser(int iduser) throws SQLException {
+	/*public List<UserRole> getUserRoleWithIdUser(int lo) throws SQLException {
 		List<UserRole> _userrole = new ArrayList<UserRole>();
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
 			_stmt = this.cnxUserRight.getCnx().prepareStatement(
-					"SELECT * FROM userrole" + " WHERE iduser = ?;");
-			_stmt.setInt(1, iduser);
+					"SELECT * FROM user_role" + " WHERE login = ?;");
+			_stmt.setString(1, _object.getUser().getLogin());
 			_rs = _stmt.executeQuery();
 			while (_rs.next()) {
 				UserRole _userroletmp = this.getUserRole(_rs);
@@ -124,7 +124,7 @@ public class UserRoleDAO implements ModelDAO<UserRole> {
 			}
 		}
 		return _userrole;
-	}
+	}*/
 
 	public List<UserRole> getUserRoleWithLogin(String _login)
 			throws SQLException {
@@ -134,8 +134,7 @@ public class UserRoleDAO implements ModelDAO<UserRole> {
 
 		try {
 			_stmt = this.cnxUserRight.getCnx().prepareStatement(
-					"SELECT * FROM userrole WHERE iduser = ("
-							+ "SELECT iduser FROM user WHERE login = ?);");
+					"SELECT * FROM user_role WHERE login = ?");
 			_stmt.setString(1, _login);
 			_rs = _stmt.executeQuery();
 			while (_rs.next()) {
