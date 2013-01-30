@@ -393,7 +393,7 @@ public class ServiceUserRight implements Serializable {
     /*
      * Retourne tous les userrole en fonction d'une iduser
      */
-    /*public List<UserRole> getUserRoleWithIdUser(int iduser) throws SQLException {
+    public List<UserRole> getUserRoleWithIdUser(int iduser) throws SQLException {
 
         UserroleModule _userroleModule = new UserroleModule(this.cnxUserRight);
 
@@ -402,7 +402,7 @@ public class ServiceUserRight implements Serializable {
 
         return _userrole;
 
-    }*/
+    }
 
     /*
      * Cr�e une autorisation

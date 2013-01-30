@@ -25,12 +25,11 @@ public class UserRoleDAO implements ModelDAO<UserRole> {
 
 	public void create(UserRole _object) throws SQLException {
 		PreparedStatement _stmt = null;
-
+		
 		try {
-			_stmt = this.cnxUserRight.getCnx().prepareStatement(
-					"INSERT INTO userrole (iduser, idrole) " + "VALUES ("
-							+ _object.getUser().getIduser() + "" + ", "
-							+ _object.getRole().getIdrole() + ");");
+			String cLogin = _object.getUser().getLogin();
+			String cName = _object.getRole().getName();
+			_stmt = this.cnxUserRight.getCnx().prepareStatement("INSERT INTO user_role (login, nom_role) VALUES ('"+ cLogin +"', '"+ cName +"')");
 			_stmt.executeUpdate();
 
 		} catch (NamingException e) {
@@ -58,7 +57,7 @@ public class UserRoleDAO implements ModelDAO<UserRole> {
 			while (_rs.next()) {
 				UserRole _userroletmp = this.getUserRole(_rs);
 				_userrole.add(_userroletmp);
-
+				System.out.println("pouet readAll !");
 			}
 		} catch (NamingException e) {
 			e.printStackTrace();
@@ -99,19 +98,20 @@ public class UserRoleDAO implements ModelDAO<UserRole> {
 		}
 	}
 
-	/*public List<UserRole> getUserRoleWithIdUser(int lo) throws SQLException {
+	public List<UserRole> getUserRoleWithIdUser(int id_role) throws SQLException {
 		List<UserRole> _userrole = new ArrayList<UserRole>();
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
 			_stmt = this.cnxUserRight.getCnx().prepareStatement(
-					"SELECT * FROM user_role" + " WHERE login = ?;");
-			_stmt.setString(1, _object.getUser().getLogin());
+					"SELECT * FROM user_role" + " WHERE id_role = ?;");
+			_stmt.setInt(1, id_role);
 			_rs = _stmt.executeQuery();
 			while (_rs.next()) {
 				UserRole _userroletmp = this.getUserRole(_rs);
 				_userrole.add(_userroletmp);
+				System.out.println("pouet getUserRoleWithIdUser !");
 			}
 		} catch (NamingException e) {
 			e.printStackTrace();
@@ -124,7 +124,7 @@ public class UserRoleDAO implements ModelDAO<UserRole> {
 			}
 		}
 		return _userrole;
-	}*/
+	}
 
 	public List<UserRole> getUserRoleWithLogin(String _login)
 			throws SQLException {
@@ -140,6 +140,7 @@ public class UserRoleDAO implements ModelDAO<UserRole> {
 			while (_rs.next()) {
 				UserRole _userroletmp = this.getUserRole(_rs);
 				_userrole.add(_userroletmp);
+				System.out.println("pouet getUserRoleWithLogin !");
 			}
 		} catch (NamingException e) {
 			e.printStackTrace();

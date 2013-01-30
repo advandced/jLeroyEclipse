@@ -204,7 +204,7 @@ public class roleBean {
 
 	public void addUserRole() throws SQLException {
 		User _user = moduleGlobal.getUser(this.userAdd);
-		Role _role = moduleGlobal.getRole(this.roleSelected.getIdrole());
+		Role _role = moduleGlobal.getRole(this.roleSelected.getName());
 		UserRole _userrole = new UserRole(_role, _user);
 		moduleGlobal.createUserRole(_userrole);
 		this.refreshlistUserAdd();

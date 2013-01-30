@@ -235,6 +235,8 @@ public class UserDAO implements ModelDAO<User> {
 			while (_rs.next()) {
 				User _usertmp = this.getUser(_rs);
 				_user.add(_usertmp);
+				System.out.println("pouet getUserAddRole !");
+				System.out.println(_usertmp.getLogin());
 			}
 		} catch (NamingException e) {
 			e.printStackTrace();
@@ -263,6 +265,7 @@ public class UserDAO implements ModelDAO<User> {
 			while (_rs.next()) {
 				User _usertmp = this.getUser(_rs);
 				_user.add(_usertmp);
+				System.out.println("pouet getUserForARole !");
 			}
 		} catch (NamingException e) {
 			e.printStackTrace();

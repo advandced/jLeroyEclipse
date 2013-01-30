@@ -26,10 +26,6 @@
             			#{User.actif}  
 					</p:column>
 
-				<p:column style="text-align:center;" headerText="Admin">
-            			#{User.admin}  
-					</p:column>
-
 				<p:column style="text-align:center;" headerText="Nom">
             			#{User.nom}  
 					</p:column>
@@ -66,13 +62,6 @@
 					<h:outputText for="actifAdd" value="Actif:" />
 					<p:selectOneMenu id="actifAdd"
 						value="#{utilisateurBean.actif}">
-						<f:selectItem itemLabel="0" itemValue="0" />
-						<f:selectItem itemLabel="1" itemValue="1" />
-					</p:selectOneMenu>
-
-					<h:outputText for="adminAdd" value="Admin:" />
-					<p:selectOneMenu id="adminAdd"
-						value="#{utilisateurBean.admin}">
 						<f:selectItem itemLabel="0" itemValue="0" />
 						<f:selectItem itemLabel="1" itemValue="1" />
 					</p:selectOneMenu>
@@ -115,13 +104,6 @@
 					<h:outputText for="actifEdit" value="Actif:" />
 					<p:selectOneMenu id="actifEdit"
 						value="#{utilisateurBean.userSelected.actif}">
-						<f:selectItem itemLabel="0" itemValue="0" />
-						<f:selectItem itemLabel="1" itemValue="1" />
-					</p:selectOneMenu>
-
-					<h:outputText for="adminEdit" value="Admin:" />
-					<p:selectOneMenu id="adminEdit"
-						value="#{utilisateurBean.userSelected.admin}">
 						<f:selectItem itemLabel="0" itemValue="0" />
 						<f:selectItem itemLabel="1" itemValue="1" />
 					</p:selectOneMenu>
