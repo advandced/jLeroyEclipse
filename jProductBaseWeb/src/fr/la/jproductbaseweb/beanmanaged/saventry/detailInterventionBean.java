@@ -330,8 +330,6 @@ public class detailInterventionBean implements Serializable {
 						_newProductConf.getFollowingForm(),
 						_newProductConf.getProductConfComponents(),
 						_newProductConf.getProductConfSoftwares());
-				System.out.println("test");
-
 			}
 
 			// this.afterSaleReport.setMajorIndexOut(this.majorIndexOut);

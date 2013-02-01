@@ -57,7 +57,6 @@ public class UserRoleDAO implements ModelDAO<UserRole> {
 			while (_rs.next()) {
 				UserRole _userroletmp = this.getUserRole(_rs);
 				_userrole.add(_userroletmp);
-				System.out.println("pouet readAll !");
 			}
 		} catch (NamingException e) {
 			e.printStackTrace();
@@ -111,7 +110,6 @@ public class UserRoleDAO implements ModelDAO<UserRole> {
 			while (_rs.next()) {
 				UserRole _userroletmp = this.getUserRole(_rs);
 				_userrole.add(_userroletmp);
-				System.out.println("pouet getUserRoleWithIdUser !");
 			}
 		} catch (NamingException e) {
 			e.printStackTrace();
@@ -140,7 +138,6 @@ public class UserRoleDAO implements ModelDAO<UserRole> {
 			while (_rs.next()) {
 				UserRole _userroletmp = this.getUserRole(_rs);
 				_userrole.add(_userroletmp);
-				System.out.println("pouet getUserRoleWithLogin !");
 			}
 		} catch (NamingException e) {
 			e.printStackTrace();

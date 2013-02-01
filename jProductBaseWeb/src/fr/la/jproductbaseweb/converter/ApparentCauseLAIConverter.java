@@ -67,7 +67,6 @@ public class ApparentCauseLAIConverter implements Converter {
 		if (arg2 == null) {
 			return null;
 		} else {
-			//System.out.println("test");
 			return String.valueOf(((ApparentCause) arg2).getIdApparentCause());
 		}
 

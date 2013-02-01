@@ -154,6 +154,21 @@ public class utilisateurBean {
 		this.prenom = null;
 		this.email = null;
 	}
+	
+	public String md5(String input) {
+		String md5 = null;
+		if (null == input)
+			return null;
+
+		try {
+			MessageDigest digest = MessageDigest.getInstance("MD5");
+			digest.update(input.getBytes(), 0, input.length());
+			md5 = new BigInteger(1, digest.digest()).toString(16);
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+		return md5;
+	}
 
 	public void UpdateUser() throws SQLException {
 		try {
@@ -176,7 +191,7 @@ public class utilisateurBean {
 		try {
 			@SuppressWarnings("unused")
 			AjoutUtilisateur _verifAddUser = new AjoutUtilisateur(this.login,
-					this.password1, this.password2, this.actif, this.admin,
+					md5(this.password1), md5(this.password2), this.actif, this.admin,
 					this.nom, this.prenom, this.email);
 			this.CloseCreateUser();
 		} catch (SQLException e) {
@@ -213,21 +228,6 @@ public class utilisateurBean {
 		context.execute("utilisateurDialogEditPW.hide()");
 	}
 	
-	public String md5(String input) {
-		String md5 = null;
-		if (null == input)
-			return null;
-
-		try {
-			MessageDigest digest = MessageDigest.getInstance("MD5");
-			digest.update(input.getBytes(), 0, input.length());
-			md5 = new BigInteger(1, digest.digest()).toString(16);
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		}
-		return md5;
-	}
-
 	public void UpdatePassword() {
 		try { 
 				@SuppressWarnings("unused")

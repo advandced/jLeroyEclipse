@@ -235,8 +235,6 @@ public class UserDAO implements ModelDAO<User> {
 			while (_rs.next()) {
 				User _usertmp = this.getUser(_rs);
 				_user.add(_usertmp);
-				System.out.println("pouet getUserAddRole !");
-				System.out.println(_usertmp.getLogin());
 			}
 		} catch (NamingException e) {
 			e.printStackTrace();
@@ -255,17 +253,14 @@ public class UserDAO implements ModelDAO<User> {
 		List<User> _user = new ArrayList<User>();
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
-
 		try {
 			_stmt = this.cnxUserRight.getCnx().prepareStatement(
-					"SELECT * FROM user WHERE login IN (SELECT login "
-							+ "FROM user_role WHERE login = ?);");
+					"SELECT * FROM user WHERE login IN (SELECT login FROM user_role WHERE nom_role = ?);");
 			_stmt.setString(1, login);
 			_rs = _stmt.executeQuery();
 			while (_rs.next()) {
 				User _usertmp = this.getUser(_rs);
 				_user.add(_usertmp);
-				System.out.println("pouet getUserForARole !");
 			}
 		} catch (NamingException e) {
 			e.printStackTrace();
