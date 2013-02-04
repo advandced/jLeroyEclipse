@@ -1,16 +1,25 @@
 package fr.la.jproductbaseweb.beanmanaged;
 
 import java.io.IOException;
+import java.math.BigInteger;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.SQLException;
+
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
+import fr.la.juserright.metier.User;
+import fr.la.juserright.service.ServiceUserRight;
 
 @ManagedBean(name = "loginBean")
 @SessionScoped
 public class LoginBean {
-	//private ServiceUserRight moduleGlobal = new ServiceUserRight();
+	private ServiceUserRight moduleGlobal = new ServiceUserRight();
 	private String login;
 	private String password;
 	private String redirectFrom;
@@ -40,7 +49,7 @@ public class LoginBean {
 	}
 
 	public void setPassword(String password) throws NoSuchAlgorithmException {
-		//this.password = md5(password);
+		this.password = md5(password);
 	}
 
 	public String getRedirectFrom() {
@@ -83,14 +92,20 @@ public class LoginBean {
 		this.userconnected = userconnected;
 	}
 
-	/*public boolean loginAction() throws SQLException, IOException {
-
+	public boolean loginAction() throws SQLException, IOException {
 		if (moduleGlobal.login(new User(login, password)) != null) {
 			User userfind = moduleGlobal.getUser(login);
 			userlogin = login;
 			useradmin = userfind.getAdmin();
 			userid = userfind.getIduser();
 			setUserconnected(true);
+			FacesContext ctx = FacesContext.getCurrentInstance();
+			HttpServletRequest servletRequest = (HttpServletRequest) ctx.getExternalContext().getRequest();
+			// returns something like "/myapplication/home.faces"
+			String fullURI = servletRequest.getRequestURI();
+			
+			System.out.println(fullURI);
+			
 			FacesContext.getCurrentInstance().getExternalContext()
 					.redirect("/jProductBaseWeb/panel.jsf");
 			return true;
@@ -99,12 +114,12 @@ public class LoginBean {
 			FacesContext.getCurrentInstance().addMessage(null, message);
 			return false;
 		}
-	}*/
+	}
 
 	public void logout() throws IOException {
-		/*
-		 * userlogin = null; useradmin = 0; userid = 0; setUserconnected(false);
-		 */
+		
+		userlogin = null; useradmin = 0; userid = 0; setUserconnected(false);
+		 
 		HttpSession session = (HttpSession) FacesContext.getCurrentInstance()
 				.getExternalContext().getSession(false);
 		if (session != null) {
@@ -115,7 +130,7 @@ public class LoginBean {
 		return;
 	}
 
-	/*public String md5(String input) {
+	public String md5(String input) {
 		String md5 = null;
 		if (null == input)
 			return null;
@@ -128,5 +143,5 @@ public class LoginBean {
 			e.printStackTrace();
 		}
 		return md5;
-	}*/
+	}
 }
