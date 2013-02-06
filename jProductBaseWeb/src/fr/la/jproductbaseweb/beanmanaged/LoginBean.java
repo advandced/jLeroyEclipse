@@ -101,10 +101,17 @@ public class LoginBean {
 			setUserconnected(true);
 			FacesContext ctx = FacesContext.getCurrentInstance();
 			HttpServletRequest servletRequest = (HttpServletRequest) ctx.getExternalContext().getRequest();
-			// returns something like "/myapplication/home.faces"
+			// retourne l'addresse complète du fichier
 			String fullURI = servletRequest.getRequestURI();
 			
+			/*if(fullURI == "/jProductBaseWeb/panel.jsf"){
+				FacesContext.getCurrentInstance().getExternalContext()
+				.redirect("/jProductBaseWeb/error403.jsf");
+			}*/
+			
 			System.out.println(fullURI);
+			
+			System.out.println(userlogin);
 			
 			FacesContext.getCurrentInstance().getExternalContext()
 					.redirect("/jProductBaseWeb/panel.jsf");

@@ -23,6 +23,7 @@ public class permissionBean {
 
 	public permissionBean() throws SQLException {
 		this.refreshlist();
+		
 	}
 
 	public Permission getPermissionSelected() {

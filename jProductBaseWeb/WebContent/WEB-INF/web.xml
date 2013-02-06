@@ -14,6 +14,22 @@
 		<servlet-name>Faces Servlet</servlet-name>
 		<url-pattern>*.jsf</url-pattern>
 	</servlet-mapping>
+	
+	<filter>
+    <filter-name>LoginPageFilter</filter-name>
+    <filter-class>
+        fr.la.juserright.managedbean.LoginPageFilter
+    </filter-class>
+    <init-param>
+       <param-name>test-param</param-name>
+       <param-value>This parameter is for testing.</param-value>
+    </init-param>
+</filter>
+
+<filter-mapping>
+    <filter-name>LoginPageFilter</filter-name>
+    <url-pattern>/index.jsf</url-pattern>
+</filter-mapping>
 
 	<!-- Pages de redirection en cas d'erreur -->
 	<error-page>

@@ -204,7 +204,7 @@ public class roleBean {
 
 	public void addUserRole() throws SQLException {
 		User _user = moduleGlobal.getUser(this.userAdd);
-		Role _role = moduleGlobal.getRole(this.roleSelected.getName());
+		Role _role = moduleGlobal.getRole(this.roleSelected.getIdrole());
 		UserRole _userrole = new UserRole(_role, _user);
 		moduleGlobal.createUserRole(_userrole);
 		this.refreshlistUserAdd();
@@ -222,7 +222,7 @@ public class roleBean {
 
 	public void refreshlistUserForRole() throws SQLException {
 		this.listUserForRole = this.moduleGlobal
-				.getUserForARole(this.roleSelected.getName());
+				.getUserForARole(this.roleSelected.getIdrole());
 	}
 
 	public void refreshlistUserAdd() throws SQLException {
@@ -237,7 +237,7 @@ public class roleBean {
 	}
 
 	public List<String> converterlistUser(Role _role) throws SQLException {
-		List<User> listUserAdd = moduleGlobal.getUserAddRole(_role.getName());
+		List<User> listUserAdd = moduleGlobal.getUserAddRole(_role.getIdrole());
 		List<String> listString = new ArrayList<String>();
 		for (User p : listUserAdd) {
 			listString.add(p.getLogin());

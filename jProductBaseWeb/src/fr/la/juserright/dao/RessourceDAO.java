@@ -69,31 +69,30 @@ public class RessourceDAO implements ModelDAO<Ressource> {
 		return _ressource;
 	}
 
-    @Override
 	public List<Ressource> readAll() throws SQLException {
-		List<Ressource> __ressource = new ArrayList<Ressource>();
+		List<Ressource> _ressource = new ArrayList<Ressource>();
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxUserRight.getCnx().prepareStatement(
-					"SELECT * FROM ressource");
+			_stmt = this.cnxUserRight.getCnx().prepareStatement("SELECT * FROM ressource");
 			_rs = _stmt.executeQuery();
 			while (_rs.next()) {
 				Ressource _ressourcetmp = this.getRessource(_rs);
-				__ressource.add(_ressourcetmp);
+				_ressource.add(_ressourcetmp);
+				System.out.println(_ressourcetmp);
 			}
 		} catch (NamingException e) {
+			e.printStackTrace();
 		} finally {
 			if (null != _rs) {
 				_rs.close();
 			}
 			if (null != _stmt) {
 				_stmt.close();
-				this.cnxUserRight.closeCnx();
 			}
 		}
-		return __ressource;
+		return _ressource;
 	}
 
     @Override

@@ -221,16 +221,16 @@ public class UserDAO implements ModelDAO<User> {
 		}
 	}
 
-	public List<User> getUserAddRole(String nom_role) throws SQLException {
+	public List<User> getUserAddRole(int idrole) throws SQLException {
 		List<User> _user = new ArrayList<User>();
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
 			_stmt = this.cnxUserRight.getCnx().prepareStatement(
-					"SELECT * FROM user WHERE login NOT IN (SELECT login "
-							+ "FROM user_role WHERE nom_role = ?);");
-			_stmt.setString(1, nom_role);
+					"SELECT * FROM user WHERE iduser NOT IN (SELECT iduser "
+							+ "FROM userrole WHERE idrole = ?);");
+			_stmt.setInt(1, idrole);
 			_rs = _stmt.executeQuery();
 			while (_rs.next()) {
 				User _usertmp = this.getUser(_rs);
@@ -249,14 +249,16 @@ public class UserDAO implements ModelDAO<User> {
 		return _user;
 	}
 
-	public List<User> getUserForARole(String login) throws SQLException {
+	public List<User> getUserForARole(int idrole) throws SQLException {
 		List<User> _user = new ArrayList<User>();
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
+
 		try {
 			_stmt = this.cnxUserRight.getCnx().prepareStatement(
-					"SELECT * FROM user WHERE login IN (SELECT login FROM user_role WHERE nom_role = ?);");
-			_stmt.setString(1, login);
+					"SELECT * FROM user WHERE iduser IN (SELECT iduser "
+							+ "FROM userrole WHERE idrole = ?);");
+			_stmt.setInt(1, idrole);
 			_rs = _stmt.executeQuery();
 			while (_rs.next()) {
 				User _usertmp = this.getUser(_rs);

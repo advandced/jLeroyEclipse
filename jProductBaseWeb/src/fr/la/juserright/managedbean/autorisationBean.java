@@ -121,8 +121,9 @@ public class autorisationBean {
 		List<Permission> _allperm = moduleGlobal.getAllPermission();
 		for (Permission p : _allperm) {
 			this.listPermission.add(p.getName());
+			System.out.println(p.getName());
 		}
-
+		
 	}
 
 	public void RoleChange() throws SQLException {

@@ -197,7 +197,7 @@ public class RoleDAO implements ModelDAO<Role> {
 		int _idrole = _rs.getInt("idRole");
 		String _name = _rs.getString("name");
 		UserDAO _userDao = FactoryDAO.getUserDAO(this.cnxUserRight);
-		List<User> _user = _userDao.getUserForARole(_name);
+		List<User> _user = _userDao.getUserForARole(_idrole);
 		Role _role = new Role(_idrole, _name, _user);
 		return _role;
 	}

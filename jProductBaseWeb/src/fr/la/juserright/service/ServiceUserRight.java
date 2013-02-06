@@ -33,7 +33,7 @@ public class ServiceUserRight implements Serializable {
     }
 
     /*
-     * Cr�e une Permission
+     * Cree une Permission
      */
     public void createPermission(Permission _permission) throws SQLException {
 
@@ -45,7 +45,7 @@ public class ServiceUserRight implements Serializable {
     }
 
     /*
-     * Retourne la List de toutes les donn�es de la table Permission
+     * Retourne la List de toutes les donnees de la table Permission
      */
     public List<Permission> getAllPermission() throws SQLException {
 
@@ -93,6 +93,7 @@ public class ServiceUserRight implements Serializable {
         Permission _permission = _permissionModule.getPermission(idpermission);
 
         return _permission;
+
     }
 
     /*
@@ -110,7 +111,7 @@ public class ServiceUserRight implements Serializable {
     }
 
     /*
-     * Cr�e une ressource
+     * Cree une ressource
      */
     public void createRessource(Ressource _ressource) throws SQLException {
 
@@ -174,7 +175,7 @@ public class ServiceUserRight implements Serializable {
     }
 
     /*
-     * Cr�e un role
+     * Cree un role
      */
     public void createRole(Role _role) throws SQLException {
 
@@ -260,7 +261,7 @@ public class ServiceUserRight implements Serializable {
     }
 
     /*
-     * cr�e un user
+     * cree un user
      */
     public void createUser(User _user) throws SQLException {
 
@@ -345,7 +346,7 @@ public class ServiceUserRight implements Serializable {
     }
 
     /*
-     * Cr�e un UserRole
+     * Cree un UserRole
      */
     public void createUserRole(UserRole _userrole) throws SQLException {
 
@@ -405,7 +406,7 @@ public class ServiceUserRight implements Serializable {
     }
 
     /*
-     * Cr�e une autorisation
+     * Cree une autorisation
      */
     public void createAutorisation(Autorisation _autorisation)
             throws SQLException {
@@ -494,11 +495,11 @@ public class ServiceUserRight implements Serializable {
     /*
      * Retourne tous les users qui ne font pas parti de ce groupe
      */
-    public List<User> getUserAddRole(String nom_role) throws SQLException {
+    public List<User> getUserAddRole(int idrole) throws SQLException {
 
         UserModule _userModule = new UserModule(this.cnxUserRight);
 
-        List<User> _user = _userModule.getUserAddRole(nom_role);
+        List<User> _user = _userModule.getUserAddRole(idrole);
 
         return _user;
 
@@ -507,11 +508,11 @@ public class ServiceUserRight implements Serializable {
     /*
      * Retourne tous les users fesant parti de ce groupe
      */
-    public List<User> getUserForARole(String nom_role) throws SQLException {
+    public List<User> getUserForARole(int idrole) throws SQLException {
 
         UserModule _userModule = new UserModule(this.cnxUserRight);
 
-        List<User> _user = _userModule.getUserForARole(nom_role);
+        List<User> _user = _userModule.getUserForARole(idrole);
 
         return _user;
 
