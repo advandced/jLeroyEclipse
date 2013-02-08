@@ -19,7 +19,7 @@
 			</p:contextMenu>
 
 			<p:dataTable id="roles" var="Role" value="#{roleBean.listRole}"
-				rowKey="#{Role.name}" selection="#{roleBean.roleSelected}"
+				rowKey="#{Role.idrole}" selection="#{roleBean.roleSelected}"
 				selectionMode="single">
 
 				<p:column style="text-align:center;width:200px;" headerText="Nom">
@@ -32,6 +32,7 @@
 
 			</p:dataTable>
 		</h:form>
+		
 		<h:form id="form2">
 			<p:dialog header="Ajout Utilisateur" closable="false"
 				widgetVar="dialogAddUtilisateur" resizable="false" width="310"

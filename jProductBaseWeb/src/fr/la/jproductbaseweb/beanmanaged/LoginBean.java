@@ -5,7 +5,6 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
-
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -16,7 +15,7 @@ import javax.servlet.http.HttpSession;
 import fr.la.juserright.metier.User;
 import fr.la.juserright.service.ServiceUserRight;
 
-@ManagedBean(name = "loginBean")
+@ManagedBean(name="loginBean")
 @SessionScoped
 public class LoginBean {
 	private ServiceUserRight moduleGlobal = new ServiceUserRight();
@@ -28,8 +27,7 @@ public class LoginBean {
 	private int userid;
 	private boolean userconnected = false;
 
-	public LoginBean() {
-
+	public LoginBean() throws IOException {
 	}
 
 	public LoginBean(String url) {
@@ -95,10 +93,12 @@ public class LoginBean {
 	public boolean loginAction() throws SQLException, IOException {
 		if (moduleGlobal.login(new User(login, password)) != null) {
 			User userfind = moduleGlobal.getUser(login);
+			
 			userlogin = login;
 			useradmin = userfind.getAdmin();
 			userid = userfind.getIduser();
 			setUserconnected(true);
+			
 			FacesContext ctx = FacesContext.getCurrentInstance();
 			HttpServletRequest servletRequest = (HttpServletRequest) ctx.getExternalContext().getRequest();
 			// retourne l'addresse complète du fichier

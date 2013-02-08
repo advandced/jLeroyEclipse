@@ -18,7 +18,7 @@ import fr.la.juserright.service.ServiceUserRight;
 import fr.la.juserright.verificationformulaire.AjoutRessource;
 import fr.la.juserright.verificationformulaire.EditRessource;
 
-@ManagedBean(name = "ressourceBean")
+@ManagedBean
 @SessionScoped
 public class ressourceBean {
 
@@ -40,7 +40,7 @@ public class ressourceBean {
 
 	private String idmereselect;
 
-	public ressourceBean(){
+	public ressourceBean() throws SQLException {
 		
 	}
 

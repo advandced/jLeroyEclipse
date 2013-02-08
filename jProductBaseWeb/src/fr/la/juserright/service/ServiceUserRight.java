@@ -127,11 +127,10 @@ public class ServiceUserRight implements Serializable {
      */
     public List<Ressource> getAllRessource() throws SQLException {
 
-        RessourceModule _ressourceModule = new RessourceModule(
-                this.cnxUserRight);
+        RessourceModule _ressourceModule = new RessourceModule(this.cnxUserRight);
 
         List<Ressource> _ressource = _ressourceModule.getAllRessource();
-
+        
         return _ressource;
 
     }

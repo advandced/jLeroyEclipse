@@ -2,50 +2,45 @@ package fr.la.juserright.managedbean;
 
 import java.io.IOException;
 
-import javax.faces.context.FacesContext;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import fr.la.jproductbaseweb.beanmanaged.LoginBean;
 
-public class LoginPageFilter implements Filter
-{
-   public void init(FilterConfig filterConfig) throws ServletException
-   {
+@WebFilter(urlPatterns = { "/panel.jsf", "/param/*", "/entryPROD/*", "/entrySAV/*", "/admin/*"})
+public class LoginPageFilter implements Filter {
 
-   }
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {    
+        HttpServletRequest req = (HttpServletRequest) request;
+        LoginBean auth = (LoginBean) req.getSession().getAttribute("loginBean");
 
-   public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse,   FilterChain filterChain) throws IOException, ServletException
-   {
-       //HttpServletRequest request = (HttpServletRequest) servletRequest;
-       //HttpServletResponse response = (HttpServletResponse) servletResponse;
-       
-       LoginBean user = new LoginBean();
+        if (auth != null && auth.isUserconnected()) {
+            // L'utilisateur est connecte on le laisse poursuivre sa requete
+            chain.doFilter(request, response);
+        } else {
+            // L'utilisateur n'est pas connecte on le redirige a l'accueil
+            HttpServletResponse res = (HttpServletResponse) response;
+            res.sendRedirect(req.getContextPath() + "/index.jsf");
+        }
+    }
 
-       if(user.getUserlogin() != null){ //If user is already authenticated
-    	   FacesContext.getCurrentInstance().getExternalContext()
-			.redirect("/jProductBaseWeb/panel.jsf");
-    	   System.out.println("StarPluc Vous n'êtes pas connecté ");
-    	   System.out.println(user.getUserlogin());
-    	   System.out.println(user.getLogin());
-    	   System.out.println(user.getUserid());
-       } else{
-           filterChain.doFilter(servletRequest, servletResponse);
-    
-           System.out.println("StarPluc Vous n'êtes pas connecté "+ user.getUserlogin());
-       }
-       
-       System.out.println("StarPluc !");
-   }
+	@Override
+	public void destroy() {
+		// TODO Auto-generated method stub
+		
+	}
 
-   public void destroy()
-   {
-
-   }
+	@Override
+	public void init(FilterConfig arg0) throws ServletException {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -15,23 +15,32 @@
 		<url-pattern>*.jsf</url-pattern>
 	</servlet-mapping>
 	
-	<filter>
-    <filter-name>LoginPageFilter</filter-name>
-    <filter-class>
-        fr.la.juserright.managedbean.LoginPageFilter
-    </filter-class>
-    <init-param>
-       <param-name>test-param</param-name>
-       <param-value>This parameter is for testing.</param-value>
-    </init-param>
-</filter>
+	<!--  <filter>
+	    <filter-name>LoginPageFilter</filter-name>
+	    <filter-class>
+	        fr.la.juserright.managedbean.LoginPageFilter
+	    </filter-class>
+	    <init-param>
+	       <param-name>test-param</param-name>
+	       <param-value>This parameter is for testing.</param-value>
+	    </init-param>
+	</filter>
 
-<filter-mapping>
-    <filter-name>LoginPageFilter</filter-name>
-    <url-pattern>/index.jsf</url-pattern>
-</filter-mapping>
+	<filter-mapping>
+	    <filter-name>LoginPageFilter</filter-name>
+	    <url-pattern>/index.jsf</url-pattern>
+	</filter-mapping> -->
+
+	<session-config>
+        <session-timeout>1</session-timeout>
+    </session-config>
 
 	<!-- Pages de redirection en cas d'erreur -->
+	<error-page>
+        <exception-type>javax.faces.application.ViewExpiredException</exception-type>
+        <location>/index.jsf</location>
+	</error-page>
+
 	<error-page>
 		<error-code>403</error-code>
 		<location>/error403.jsf</location>

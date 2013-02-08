@@ -9,8 +9,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
-import org.primefaces.context.RequestContext;
-
 import fr.la.jproductbaseweb.beanmanaged.LoginBean;
 import fr.la.jproductbaseweb.view.bar.MenuWeb;
 import fr.la.juserright.metier.Autorisation;
@@ -31,7 +29,7 @@ public class UserRightSession implements Serializable {
 
 		this.login = "Halcens";
 		
-		RequestContext rcontext = RequestContext.getCurrentInstance(); 
+		//RequestContext rcontext = RequestContext.getCurrentInstance(); 
 		
 		FacesContext fcontext = FacesContext.getCurrentInstance();
 
@@ -130,9 +128,9 @@ public class UserRightSession implements Serializable {
 				"Administration", "Administration", "page admin",
 				new Ressource(null)); 
 
-		Ressource _resourceLogin = new Ressource(27, "/logout.jsf",
-				"Se déconnecter", "Se déconnecter", "page de déconnection",
-				new Ressource(null)); 
+		//Ressource _resourceLogin = new Ressource(27, "/logout.jsf",
+				//"Se déconnecter", "Se déconnecter", "page de déconnection",
+				//new Ressource(null)); 
 
 		Ressource _resourceEntryIntervention = new Ressource(18,
 				"/entrySAV/entryIntervention.jsf?faces-redirect=true",
@@ -211,8 +209,8 @@ public class UserRightSession implements Serializable {
 				_resourceEntrySAV, _role);
 		Autorisation _autorisationAdmin = new Autorisation(_permission,
 				_resourceAdmin, _role);
-		Autorisation _autorisationLogin = new Autorisation(_permission,
-				_resourceLogin, _role);
+		//Autorisation _autorisationLogin = new Autorisation(_permission,
+				//_resourceLogin, _role);
 		Autorisation _autorisationEntryIntervention = new Autorisation(
 				_permission, _resourceEntryIntervention, _role);
 		Autorisation _autorisationRecapCom = new Autorisation(_permission,
