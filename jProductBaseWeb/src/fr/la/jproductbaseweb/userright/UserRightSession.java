@@ -1,5 +1,6 @@
 package fr.la.jproductbaseweb.userright;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -50,7 +51,20 @@ public class UserRightSession implements Serializable {
 			//rcontext.update("layoutNorth:menuForm:masterMenuBar");
 			System.out.println("login");
 		}*/
+		
+		try {
+			LoginBean lb = new LoginBean();
+			
+			if(lb.isUserconnected()){
+				System.out.println("Test complete !");
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
+		
+			
 		List<Autorisation> _autorisationList = new ArrayList<Autorisation>();
 		Ressource _resource = new Ressource(1, "/param/params.jsf",
 				"Parametrage", "parametrageBean",

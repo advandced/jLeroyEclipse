@@ -31,8 +31,8 @@ public class testBean {
 	private String idmereselect;
 
 	public testBean() throws SQLException{
-		//this.refreshlist();
-		System.out.println("Test !");
+		this.refreshlist();
+		//System.out.println("Test !");
 	}
 
 	public List<Ressource> getListRessource() {

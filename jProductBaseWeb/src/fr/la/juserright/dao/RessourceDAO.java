@@ -80,7 +80,6 @@ public class RessourceDAO implements ModelDAO<Ressource> {
 			while (_rs.next()) {
 				Ressource _ressourcetmp = this.getRessource(_rs);
 				_ressource.add(_ressourcetmp);
-				System.out.println(_ressourcetmp);
 			}
 		} catch (NamingException e) {
 			e.printStackTrace();

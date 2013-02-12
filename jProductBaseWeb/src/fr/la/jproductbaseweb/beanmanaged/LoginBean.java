@@ -9,7 +9,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import fr.la.juserright.metier.User;
@@ -99,17 +98,17 @@ public class LoginBean {
 			userid = userfind.getIduser();
 			setUserconnected(true);
 			
-			FacesContext ctx = FacesContext.getCurrentInstance();
+			/*FacesContext ctx = FacesContext.getCurrentInstance();
 			HttpServletRequest servletRequest = (HttpServletRequest) ctx.getExternalContext().getRequest();
 			// retourne l'addresse complète du fichier
 			String fullURI = servletRequest.getRequestURI();
 			
-			/*if(fullURI == "/jProductBaseWeb/panel.jsf"){
+			if(fullURI == "/jProductBaseWeb/panel.jsf"){
 				FacesContext.getCurrentInstance().getExternalContext()
 				.redirect("/jProductBaseWeb/error403.jsf");
-			}*/
+			}
 			
-			System.out.println(fullURI);
+			System.out.println(fullURI);*/
 			
 			System.out.println(userlogin);
 			

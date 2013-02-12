@@ -25,11 +25,12 @@ public class UserRoleDAO implements ModelDAO<UserRole> {
 
 	public void create(UserRole _object) throws SQLException {
 		PreparedStatement _stmt = null;
-		
+
 		try {
-			String cLogin = _object.getUser().getLogin();
-			String cName = _object.getRole().getName();
-			_stmt = this.cnxUserRight.getCnx().prepareStatement("INSERT INTO user_role (login, nom_role) VALUES ('"+ cLogin +"', '"+ cName +"')");
+			_stmt = this.cnxUserRight.getCnx().prepareStatement(
+					"INSERT INTO userrole (iduser, idrole) " + "VALUES ("
+							+ _object.getUser().getIduser() + "" + ", "
+							+ _object.getRole().getIdrole() + ");");
 			_stmt.executeUpdate();
 
 		} catch (NamingException e) {
@@ -52,11 +53,12 @@ public class UserRoleDAO implements ModelDAO<UserRole> {
 
 		try {
 			_stmt = this.cnxUserRight.getCnx().prepareStatement(
-					"SELECT * FROM user_role");
+					"SELECT * FROM UserRole");
 			_rs = _stmt.executeQuery();
 			while (_rs.next()) {
 				UserRole _userroletmp = this.getUserRole(_rs);
 				_userrole.add(_userroletmp);
+
 			}
 		} catch (NamingException e) {
 			e.printStackTrace();
@@ -82,10 +84,10 @@ public class UserRoleDAO implements ModelDAO<UserRole> {
 		try {
 			_stmt = this.cnxUserRight.getCnx()
 					.prepareStatement(
-							"DELETE FROM user_role " + "WHERE login = "
-									+ _object.getUser().getLogin() + " AND "
-									+ "nom_role = "
-									+ _object.getRole().getName() + ";");
+							"DELETE FROM userrole " + "WHERE iduser = "
+									+ _object.getUser().getIduser() + " AND "
+									+ "idrole = "
+									+ _object.getRole().getIdrole() + ";");
 			_stmt.executeUpdate();
 
 		} catch (NamingException e) {
@@ -97,15 +99,15 @@ public class UserRoleDAO implements ModelDAO<UserRole> {
 		}
 	}
 
-	public List<UserRole> getUserRoleWithIdUser(int id_role) throws SQLException {
+	public List<UserRole> getUserRoleWithIdUser(int iduser) throws SQLException {
 		List<UserRole> _userrole = new ArrayList<UserRole>();
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
 			_stmt = this.cnxUserRight.getCnx().prepareStatement(
-					"SELECT * FROM user_role" + " WHERE id_role = ?;");
-			_stmt.setInt(1, id_role);
+					"SELECT * FROM userrole" + " WHERE iduser = ?;");
+			_stmt.setInt(1, iduser);
 			_rs = _stmt.executeQuery();
 			while (_rs.next()) {
 				UserRole _userroletmp = this.getUserRole(_rs);
@@ -131,8 +133,7 @@ public class UserRoleDAO implements ModelDAO<UserRole> {
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxUserRight.getCnx().prepareStatement(
-					"SELECT * FROM user_role WHERE login = ?");
+			_stmt = this.cnxUserRight.getCnx().prepareStatement("SELECT * FROM userrole WHERE iduser = (SELECT iduser FROM user WHERE login = ?);");
 			_stmt.setString(1, _login);
 			_rs = _stmt.executeQuery();
 			while (_rs.next()) {

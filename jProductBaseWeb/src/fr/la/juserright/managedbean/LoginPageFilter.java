@@ -14,33 +14,44 @@ import javax.servlet.http.HttpServletResponse;
 
 import fr.la.jproductbaseweb.beanmanaged.LoginBean;
 
-@WebFilter(urlPatterns = { "/panel.jsf", "/param/*", "/entryPROD/*", "/entrySAV/*", "/admin/*"})
+@WebFilter(urlPatterns = { "/panel.jsf", "/param/*", "/entryPROD/*",
+		"/entrySAV/*", "/admin/*" })
 public class LoginPageFilter implements Filter {
 
-    @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {    
-        HttpServletRequest req = (HttpServletRequest) request;
-        LoginBean auth = (LoginBean) req.getSession().getAttribute("loginBean");
+	public void init(FilterConfig config) throws ServletException {
+		// TODO Auto-generated method stub
 
-        if (auth != null && auth.isUserconnected()) {
-            // L'utilisateur est connecte on le laisse poursuivre sa requete
-            chain.doFilter(request, response);
-        } else {
-            // L'utilisateur n'est pas connecte on le redirige a l'accueil
-            HttpServletResponse res = (HttpServletResponse) response;
-            res.sendRedirect(req.getContextPath() + "/index.jsf");
-        }
-    }
+	}
+
+	public void doFilter(ServletRequest request, ServletResponse response,
+			FilterChain chain) throws ServletException, IOException {
+		HttpServletRequest req = (HttpServletRequest) request;
+		LoginBean auth = (LoginBean) req.getSession().getAttribute("loginBean");
+
+		if (auth != null && auth.isUserconnected()) {
+			// retourne l'addresse complète du fichier
+			String fullURI = req.getRequestURI();
+
+			if (fullURI.matches("/jProductBaseWeb/param/productConfModel.jsf")) {
+				// System.out.println(fullURI);
+				HttpServletResponse res = (HttpServletResponse) response;
+				res.sendRedirect(req.getContextPath() + "/error403.jsf");
+				chain.doFilter(request, response);
+			} else {
+				// L'utilisateur est connecte on le laisse poursuivre sa requete
+				chain.doFilter(request, response);
+			}
+		} else {
+			// L'utilisateur n'est pas connecte on le redirige a l'accueil
+			HttpServletResponse res = (HttpServletResponse) response;
+			res.sendRedirect(req.getContextPath() + "/index.jsf");
+		}
+	}
 
 	@Override
 	public void destroy() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
-	@Override
-	public void init(FilterConfig arg0) throws ServletException {
-		// TODO Auto-generated method stub
-		
-	}
 }
