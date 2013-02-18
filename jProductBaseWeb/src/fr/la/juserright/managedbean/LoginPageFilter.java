@@ -25,7 +25,7 @@ public class LoginPageFilter implements Filter {
 	
 	public LoginPageFilter(){
 		permList.add("/jProductBaseWeb/param/productConfModel.jsf");
-		permList.add("/jProductBaseWeb/param/productConf.jsf");
+		permList.add("/jProductBaseWeb/param/typeTest.jsf");
 	}
 
 	public void init(FilterConfig config) throws ServletException {

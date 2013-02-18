@@ -12,14 +12,13 @@ import java.util.List;
 import javax.naming.NamingException;
 
 public class RessourceDAO implements ModelDAO<Ressource> {
-
+	
 	private ConnectionUserRight cnxUserRight;
 
 	public RessourceDAO(ConnectionUserRight cnxUserRight) {
 		this.cnxUserRight = cnxUserRight;
 	}
 
-    @Override
 	public void create(Ressource _object) throws SQLException {
 		PreparedStatement _stmt = null;
 
@@ -70,31 +69,31 @@ public class RessourceDAO implements ModelDAO<Ressource> {
 	}
 
 	public List<Ressource> readAll() throws SQLException {
-		List<Ressource> _ressource = new ArrayList<Ressource>();
+		List<Ressource> __ressource = new ArrayList<Ressource>();
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxUserRight.getCnx().prepareStatement("SELECT * FROM ressource");
+			_stmt = this.cnxUserRight.getCnx().prepareStatement(
+					"SELECT * FROM ressource");
 			_rs = _stmt.executeQuery();
 			while (_rs.next()) {
 				Ressource _ressourcetmp = this.getRessource(_rs);
-				_ressource.add(_ressourcetmp);
+				__ressource.add(_ressourcetmp);
 			}
 		} catch (NamingException e) {
-			e.printStackTrace();
 		} finally {
 			if (null != _rs) {
 				_rs.close();
 			}
 			if (null != _stmt) {
 				_stmt.close();
+				this.cnxUserRight.closeCnx();
 			}
 		}
-		return _ressource;
+		return __ressource;
 	}
 
-    @Override
 	public void update(Ressource _object) throws SQLException {
 		PreparedStatement _stmt = null;
 
@@ -162,7 +161,6 @@ public class RessourceDAO implements ModelDAO<Ressource> {
 		}
 	}
 
-    @Override
 	public void delete(Ressource _object) throws SQLException {
 		PreparedStatement _stmt = null;
 
@@ -181,7 +179,6 @@ public class RessourceDAO implements ModelDAO<Ressource> {
 		}
 	}
 
-    @Override
 	public Ressource read(Ressource _object) throws SQLException {
 		Ressource _ressource = null;
 		PreparedStatement _stmt = null;

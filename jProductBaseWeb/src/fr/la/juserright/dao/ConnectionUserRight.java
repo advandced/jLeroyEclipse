@@ -9,21 +9,17 @@ import javax.naming.NamingException;
 import fr.la.configfilereader.ConfigFileReaderException;
 import fr.la.jproductbase.dao.ConnectionPool;
 
-
 public class ConnectionUserRight {
 	private Connection cnx;
 	private ConnectionPool connectionPool;
 
-	public ConnectionUserRight() throws ConfigFileReaderException, IOException, SQLException {
+	public ConnectionUserRight() throws ConfigFileReaderException, IOException,	SQLException {
 		connectionPool = new ConnectionPool();
 	}
 
 	public Connection getCnx() throws SQLException, NamingException {
-		if (null == this.cnx) {
-			this.cnx = connectionPool.getConnection("java:comp/env/jdbc/_leroyUserRight");
-		} else {
-			// Connexion already open
-		}
+
+		this.cnx = connectionPool.getConnection("java:comp/env/jdbc/_leroyUserRight");
 
 		return cnx;
 	}

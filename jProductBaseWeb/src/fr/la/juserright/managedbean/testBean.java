@@ -32,7 +32,6 @@ public class testBean {
 
 	public testBean() throws SQLException{
 		this.refreshlist();
-		//System.out.println("Test !");
 	}
 
 	public List<Ressource> getListRessource() {

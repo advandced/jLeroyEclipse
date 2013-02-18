@@ -41,7 +41,7 @@ public class ressourceBean {
 	private String idmereselect;
 
 	public ressourceBean() throws SQLException {
-		
+		this.refreshlist();
 	}
 
 	public List<Ressource> getListRessource() {
