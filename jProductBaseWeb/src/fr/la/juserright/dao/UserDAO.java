@@ -36,6 +36,7 @@ public class UserDAO implements ModelDAO<User> {
 			if (null != _stmt) {
 				_stmt.close();
 			}
+			this.cnxUserRight.closeCnx();
 		}
 	}
 
@@ -61,6 +62,7 @@ public class UserDAO implements ModelDAO<User> {
 			if (null != _stmt) {
 				_stmt.close();
 			}
+			this.cnxUserRight.closeCnx();
 		}
 		return _user;
 	}
@@ -87,6 +89,7 @@ public class UserDAO implements ModelDAO<User> {
 			if (null != _stmt) {
 				_stmt.close();
 			}
+			this.cnxUserRight.closeCnx();
 		}
 		return _user;
 	}
@@ -111,6 +114,7 @@ public class UserDAO implements ModelDAO<User> {
 			if (null != _stmt) {
 				_stmt.close();
 			}
+			this.cnxUserRight.closeCnx();
 		}
 	}
 
@@ -128,6 +132,7 @@ public class UserDAO implements ModelDAO<User> {
 			if (null != _stmt) {
 				_stmt.close();
 			}
+			this.cnxUserRight.closeCnx();
 		}
 	}
 
@@ -155,6 +160,7 @@ public class UserDAO implements ModelDAO<User> {
 			if (null != _stmt) {
 				_stmt.close();
 			}
+			this.cnxUserRight.closeCnx();
 		}
 		return _user;
 	}
@@ -185,6 +191,7 @@ public class UserDAO implements ModelDAO<User> {
 			if (null != _stmt) {
 				_stmt.close();
 			}
+			this.cnxUserRight.closeCnx();
 		}
 		return _user;
 	}
@@ -213,6 +220,7 @@ public class UserDAO implements ModelDAO<User> {
 			if (null != _stmt) {
 				_stmt.close();
 			}
+			this.cnxUserRight.closeCnx();
 		}
 		if (null != _user) {
 			return _user;
@@ -273,6 +281,7 @@ public class UserDAO implements ModelDAO<User> {
 			if (null != _stmt) {
 				_stmt.close();
 			}
+
 		}
 		return _user;
 	}
@@ -303,6 +312,7 @@ public class UserDAO implements ModelDAO<User> {
 			if (null != _stmt) {
 				_stmt.close();
 			}
+			this.cnxUserRight.closeCnx();
 		}
 		return _user;
 	}
@@ -322,6 +332,7 @@ public class UserDAO implements ModelDAO<User> {
 			if (null != _stmt) {
 				_stmt.close();
 			}
+			this.cnxUserRight.closeCnx();
 		}
 	}
 

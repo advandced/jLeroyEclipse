@@ -15,10 +15,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import fr.la.jproductbaseweb.beanmanaged.LoginBean;
+import fr.la.juserright.service.ServiceUserRight;
 
 @WebFilter(urlPatterns = { "/panel.jsf", "/param/*", "/entryPROD/*",
 		"/entrySAV/*", "/admin/*" })
 public class LoginPageFilter implements Filter {
+	
+	ServiceUserRight moduleGlobal = new ServiceUserRight();
 	
 	List<String> permList = new ArrayList<String>();
 	boolean urlFound = false;

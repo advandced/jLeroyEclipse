@@ -143,6 +143,8 @@ public class PermissionDAO implements ModelDAO<Permission> {
 			if (null != _stmt) {
 				_stmt.close();
 			}
+		
+
 		}
 		return _permission;
 	}

@@ -112,6 +112,7 @@ public class autorisationBean {
 		for (Role r : _allrole) {
 			if (r.getName() != null) {
 				this.listRole.add(r.getName());
+				System.out.println(r.getName());
 			}
 		}
 	}
@@ -157,6 +158,8 @@ public class autorisationBean {
 		if (this.autorisationSelected.getPermission().getName() != null) {
 			this.PermissionSelected = this.autorisationSelected.getPermission()
 					.getName();
+			System.out.println(this.autorisationSelected.getPermission()
+					.getName());
 		}
 		RequestContext context = RequestContext.getCurrentInstance();
 		context.execute("dialogDetail.show()");
