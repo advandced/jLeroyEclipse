@@ -108,9 +108,9 @@ public class LoginBean {
 				.redirect("/jProductBaseWeb/error403.jsf");
 			}
 			
-			System.out.println(fullURI);*/
+			System.out.println(fullURI);
 			
-			System.out.println(userlogin);
+			System.out.println(userlogin);*/
 			
 			FacesContext.getCurrentInstance().getExternalContext()
 					.redirect("/jProductBaseWeb/panel.jsf");

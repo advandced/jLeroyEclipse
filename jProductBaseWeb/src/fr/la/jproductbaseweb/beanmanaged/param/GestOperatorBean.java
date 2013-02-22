@@ -269,7 +269,7 @@ public class GestOperatorBean implements Serializable {
     }
 
     public String getAction() {
-        System.out.println("recup action value " + this.action);
+        //System.out.println("recup action value " + this.action);
         return action;
     }
 

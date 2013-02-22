@@ -1,6 +1,7 @@
 package fr.la.juserright.managedbean;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import fr.la.jproductbaseweb.beanmanaged.LoginBean;
+import fr.la.juserright.metier.Autorisation;
 import fr.la.juserright.service.ServiceUserRight;
 
 @WebFilter(urlPatterns = { "/panel.jsf", "/param/*", "/entryPROD/*",
@@ -23,12 +25,11 @@ public class LoginPageFilter implements Filter {
 	
 	ServiceUserRight moduleGlobal = new ServiceUserRight();
 	
-	List<String> permList = new ArrayList<String>();
+	List<Autorisation> Listpermissions = new ArrayList<Autorisation>();
 	boolean urlFound = false;
 	
 	public LoginPageFilter(){
-		permList.add("/jProductBaseWeb/param/productConfModel.jsf");
-		permList.add("/jProductBaseWeb/param/typeTest.jsf");
+
 	}
 
 	public void init(FilterConfig config) throws ServletException {
@@ -40,19 +41,31 @@ public class LoginPageFilter implements Filter {
 		HttpServletRequest req = (HttpServletRequest) request;
 		LoginBean auth = (LoginBean) req.getSession().getAttribute("loginBean");
 		
-		//System.out.println("-->"+permList+"<--");
-		
-		// retourne l'addresse complète du fichier
-		String fullURI = req.getRequestURI();
-		
-		urlFound = permList.contains(fullURI);
-
 		if (auth != null && auth.isUserconnected()) {
 			if (urlFound) {
 				HttpServletResponse res = (HttpServletResponse) response;
 				res.sendRedirect(req.getContextPath() + "/error403.jsf");
 				chain.doFilter(request, response);
 			}  else {
+				// retourne l'addresse complète du fichier
+				String fullURI = req.getRequestURI();
+				
+				List<Autorisation> permList = null;
+				try {
+					permList = moduleGlobal.getAutorisationByLogin(auth.getUserlogin());
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				for (Autorisation r : permList) {	
+					if (r.getRessource() != null && fullURI.equals("/jProductBaseWeb"+r.getRessource().getPath()) && r.getPermission().getIdpermission() == 3) {
+						HttpServletResponse res = (HttpServletResponse) response;
+						res.sendRedirect(req.getContextPath() + "/error403.jsf");
+					}
+				}
+				
+				urlFound = permList.contains(fullURI);
+				
 				// L'utilisateur est connecte on le laisse poursuivre sa requete
 				chain.doFilter(request, response);
 			}
