@@ -152,13 +152,14 @@ public class autorisationBean {
 		this.refreshlistPerm();
 	}
 
-	public void showDetailAutorisation() {
+	public void showDetailAutorisation() throws SQLException {
 		if (this.autorisationSelected.getPermission().getName() != null) {
 			this.PermissionSelected = this.autorisationSelected.getPermission()
 					.getName();
 		}
 		RequestContext context = RequestContext.getCurrentInstance();
 		context.execute("dialogDetail.show()");
+		this.refreshTab();
 	}
 
 	public void hideDetailAutorisation() {

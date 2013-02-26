@@ -55,14 +55,14 @@ public class EditAutorisation {
 		Autorisation _autorisation = moduleGlobal
 				.checkAutorisationExists(new Autorisation(_permission,
 						_ressource, _role));
-		if (_permission.getIdpermission() == 3) {
+		/*if (_permission.getIdpermission() == 3) {
 			moduleGlobal.deleteAutorisation(_autorisation);
-		} else {
+		} else {*/
 			if (_autorisation != null) {
 				moduleGlobal.updateAutorisation(_autorisation);
 			} else {
 				moduleGlobal.createAutorisation(new Autorisation(_permission, _ressource, _role));
 			}
-		}
+		/*}*/
 	}
 }

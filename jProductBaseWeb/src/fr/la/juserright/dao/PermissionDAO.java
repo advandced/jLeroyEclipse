@@ -34,6 +34,7 @@ public class PermissionDAO implements ModelDAO<Permission> {
 			if (null != _stmt) {
 				_stmt.close();
 			}
+			this.cnxUserRight.closeCnx();
 		}
 	}
 
@@ -61,6 +62,7 @@ public class PermissionDAO implements ModelDAO<Permission> {
 			if (null != _stmt) {
 				_stmt.close();
 			}
+			this.cnxUserRight.closeCnx();
 		}
 		return _permission;
 	}
@@ -89,6 +91,7 @@ public class PermissionDAO implements ModelDAO<Permission> {
 			if (null != _stmt) {
 				_stmt.close();
 			}
+			this.cnxUserRight.closeCnx();
 		}
 		return _permission;
 	}
@@ -117,6 +120,7 @@ public class PermissionDAO implements ModelDAO<Permission> {
 			if (null != _stmt) {
 				_stmt.close();
 			}
+			this.cnxUserRight.closeCnx();
 		}
 		return _permission;
 	}
@@ -143,8 +147,7 @@ public class PermissionDAO implements ModelDAO<Permission> {
 			if (null != _stmt) {
 				_stmt.close();
 			}
-		
-
+			this.cnxUserRight.closeCnx();
 		}
 		return _permission;
 	}
@@ -165,6 +168,7 @@ public class PermissionDAO implements ModelDAO<Permission> {
 			if (null != _stmt) {
 				_stmt.close();
 			}
+			this.cnxUserRight.closeCnx();
 		}
 	}
 
@@ -183,6 +187,7 @@ public class PermissionDAO implements ModelDAO<Permission> {
 			if (null != _stmt) {
 				_stmt.close();
 			}
+			this.cnxUserRight.closeCnx();
 		}
 
 	}
