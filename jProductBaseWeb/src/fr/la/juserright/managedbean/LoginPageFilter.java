@@ -61,11 +61,7 @@ public class LoginPageFilter implements Filter {
 					if (r.getRessource() != null && fullURI.equals("/jProductBaseWeb"+r.getRessource().getPath()) && r.getPermission().getIdpermission() == 3) {
 						HttpServletResponse res = (HttpServletResponse) response;
 						res.sendRedirect(req.getContextPath() + "/error403.jsf");
-						//System.out.println("True");
 					}
-					//System.out.println(fullURI);
-					//System.out.println("/jProductBaseWeb"+r.getRessource().getPath());
-					//System.out.println(fullURI.equals("/jProductBaseWeb"+r.getRessource().getPath()));
 				}
 				
 				// L'utilisateur est connecte on le laisse poursuivre sa requete

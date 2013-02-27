@@ -36,7 +36,6 @@ public class RessourceDAO implements ModelDAO<Ressource> {
 			if (null != _stmt) {
 				_stmt.close();
 			}
-			this.cnxUserRight.closeCnx();
 		}
 	}
 
@@ -63,7 +62,7 @@ public class RessourceDAO implements ModelDAO<Ressource> {
 			if (null != _stmt) {
 				_stmt.close();
 			}
-			this.cnxUserRight.closeCnx();
+
 		}
 		return _ressource;
 	}
@@ -89,7 +88,7 @@ public class RessourceDAO implements ModelDAO<Ressource> {
 			if (null != _stmt) {
 				_stmt.close();
 			}
-			this.cnxUserRight.closeCnx();
+	
 		}
 		return __ressource;
 	}
@@ -119,7 +118,7 @@ public class RessourceDAO implements ModelDAO<Ressource> {
 			if (null != _stmt) {
 				_stmt.close();
 			}
-			this.cnxUserRight.closeCnx();
+
 		}
 	}
 
@@ -139,7 +138,7 @@ public class RessourceDAO implements ModelDAO<Ressource> {
 			if (null != _stmt) {
 				_stmt.close();
 			}
-			this.cnxUserRight.closeCnx();
+
 		}
 	}
 
@@ -157,7 +156,7 @@ public class RessourceDAO implements ModelDAO<Ressource> {
 			if (null != _stmt) {
 				_stmt.close();
 			}
-			this.cnxUserRight.closeCnx();
+
 		}
 	}
 
@@ -175,7 +174,7 @@ public class RessourceDAO implements ModelDAO<Ressource> {
 			if (null != _stmt) {
 				_stmt.close();
 			}
-			this.cnxUserRight.closeCnx();
+
 		}
 	}
 
@@ -202,7 +201,7 @@ public class RessourceDAO implements ModelDAO<Ressource> {
 			if (null != _stmt) {
 				_stmt.close();
 			}
-			this.cnxUserRight.closeCnx();
+
 		}
 		return _ressource;
 	}
@@ -244,7 +243,7 @@ public class RessourceDAO implements ModelDAO<Ressource> {
 			if (null != _stmt) {
 				_stmt.close();
 			}
-			this.cnxUserRight.closeCnx();
+
 		}
 		return _ressource;
 	}
@@ -270,7 +269,7 @@ public class RessourceDAO implements ModelDAO<Ressource> {
 			if (null != _stmt) {
 				_stmt.close();
 			}
-			this.cnxUserRight.closeCnx();
+
 		}
 		return _ressource;
 	}
@@ -301,7 +300,7 @@ public class RessourceDAO implements ModelDAO<Ressource> {
 			if (null != _stmt) {
 				_stmt.close();
 			}
-			this.cnxUserRight.closeCnx();
+
 		}
 		return _menu;
 	}
@@ -329,7 +328,7 @@ public class RessourceDAO implements ModelDAO<Ressource> {
 			if (null != _stmt) {
 				_stmt.close();
 			}
-			this.cnxUserRight.closeCnx();
+
 		}
 		return _ressource;
 	}
@@ -357,7 +356,7 @@ public class RessourceDAO implements ModelDAO<Ressource> {
 			if (null != _stmt) {
 				_stmt.close();
 			}
-			this.cnxUserRight.closeCnx();
+
 		}
 		return _ressource;
 	}
@@ -389,7 +388,7 @@ public class RessourceDAO implements ModelDAO<Ressource> {
 			if (null != _stmt) {
 				_stmt.close();
 			}
-			this.cnxUserRight.closeCnx();
+
 		}
 		return _ressource;
 	}
@@ -421,7 +420,6 @@ public class RessourceDAO implements ModelDAO<Ressource> {
 			if (null != _stmt) {
 				_stmt.close();
 			}
-			this.cnxUserRight.closeCnx();
 		}
 		return _ressource;
 	}

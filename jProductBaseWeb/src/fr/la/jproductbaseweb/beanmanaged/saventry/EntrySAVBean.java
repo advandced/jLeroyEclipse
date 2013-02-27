@@ -4,6 +4,7 @@ import fr.la.jproductbaseweb.userright.UserRightSession;
 import fr.la.jproductbaseweb.view.bar.MenuWeb;
 import fr.la.juserright.metier.Autorisation;
 import java.awt.event.ActionEvent;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
@@ -21,7 +22,7 @@ public class EntrySAVBean {
 	private ActionEvent changePageAction;
 	private List<Autorisation> autorisation;
 
-	public EntrySAVBean() throws SQLException {
+	public EntrySAVBean() throws SQLException, IOException {
 		this.userRightSession = new UserRightSession();
 		this.autorisation = this.userRightSession.getAutorisationList();
 		this.menuWeb = new MenuWeb(this.autorisation, "entrySAVBean");

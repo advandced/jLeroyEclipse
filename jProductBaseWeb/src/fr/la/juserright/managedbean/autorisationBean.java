@@ -152,14 +152,13 @@ public class autorisationBean {
 		this.refreshlistPerm();
 	}
 
-	public void showDetailAutorisation() throws SQLException {
+	public void showDetailAutorisation() {
 		if (this.autorisationSelected.getPermission().getName() != null) {
 			this.PermissionSelected = this.autorisationSelected.getPermission()
 					.getName();
 		}
 		RequestContext context = RequestContext.getCurrentInstance();
 		context.execute("dialogDetail.show()");
-		this.refreshTab();
 	}
 
 	public void hideDetailAutorisation() {
@@ -172,6 +171,7 @@ public class autorisationBean {
 		EditAutorisation _editAuto = new EditAutorisation(
 				this.autorisationSelected.getRessource().getMenu(),
 				this.RoleSelected, this.PermissionSelected);
+		//System.out.println("=========>"+this.autorisationSelected.getRessource().getMenu()+"< >"+this.RoleSelected+"< >"+this.PermissionSelected);
 		this.refreshTab();
 		this.hideDetailAutorisation();
 	}

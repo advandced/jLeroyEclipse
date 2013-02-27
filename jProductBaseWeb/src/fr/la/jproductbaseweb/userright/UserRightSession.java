@@ -16,22 +16,19 @@ import fr.la.juserright.metier.Autorisation;
 import fr.la.juserright.metier.Permission;
 import fr.la.juserright.metier.Ressource;
 import fr.la.juserright.metier.Role;
+import fr.la.juserright.service.ServiceUserRight;
 
 @ManagedBean(name = "userRightSession")
 @SessionScoped
 public class UserRightSession implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	ServiceUserRight moduleGlobal = new ServiceUserRight();
 	private String login;
 	private List<Autorisation> autorisationList;
 	private MenuWeb menuWeb;
 
-	public UserRightSession() throws SQLException {
-
-		this.login = "Halcens";
-		
-		//RequestContext rcontext = RequestContext.getCurrentInstance(); 
-		
+	public UserRightSession() throws SQLException, IOException {			
 		FacesContext fcontext = FacesContext.getCurrentInstance();
 
 		LoginBean logBean = (LoginBean) fcontext
@@ -50,22 +47,47 @@ public class UserRightSession implements Serializable {
 			nameLog = "Se connecter";
 			//rcontext.update("layoutNorth:menuForm:masterMenuBar");
 			System.out.println("login");
-		}*/
+		}
+		
+		LoginBean lb = new LoginBean();
+		
+		List<Autorisation> permList = null;
+		*/
+		List<Autorisation> _autorisationList = new ArrayList<Autorisation>();
+		/*
+		Role _role = new Role("Admin");
+
+		Permission _permission = new Permission();
 		
 		try {
-			LoginBean lb = new LoginBean();
-			
-			if(lb.isUserconnected()){
-				System.out.println("Test complete !");
-			}
-		} catch (IOException e) {
+			permList = moduleGlobal.getAutorisationByLogin(lb.getUserlogin());
+		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		/*int fin = 100;
+		Ressource[] re = new Ressource[fin];
+		Autorisation[] au = new Autorisation[fin];
+		int i = 1;
+		for (Autorisation r : permList) {	
+			if (r.getRessource() != null && r.getPermission().getIdpermission() == 1) {
+				re[i-1] = new Ressource(r.getRessource().getIdressource(), r.getRessource().getPath(),
+						r.getRessource().getMenu(), r.getRessource().getManagedBean(),
+						r.getRessource().getDescription(), new Ressource(null));
 
-		
-			
+				
+				au[i-1] = new Autorisation(_permission, re[i-1],
+						_role);
+				
+				_autorisationList.add(au[i-1]); 
+				i++;
+			}
+		}
 		List<Autorisation> _autorisationList = new ArrayList<Autorisation>();
+		System.out.println(au[1]+" <=-=> "+au[2]);
+		*/
+		
+		
 		Ressource _resource = new Ressource(1, "/param/params.jsf",
 				"Parametrage", "parametrageBean",
 				"ressource pour le parametrage", new Ressource(null));
@@ -278,7 +300,6 @@ public class UserRightSession implements Serializable {
 
 		if (logBean.getUseradmin() == 1){
 			_autorisationList.add(_autorisationAdmin);
-			System.out.println("isAdmin");
 		}
 
 		this.autorisationList = _autorisationList;

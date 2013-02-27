@@ -64,7 +64,6 @@ public class RoleDAO implements ModelDAO<Role> {
 			if (null != _stmt) {
 				_stmt.close();
 			}
-
 		}
 		return _role;
 	}
