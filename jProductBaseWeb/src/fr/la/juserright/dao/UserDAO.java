@@ -185,6 +185,7 @@ public class UserDAO implements ModelDAO<User> {
 			if (null != _stmt) {
 				_stmt.close();
 			}
+			this.cnxUserRight.closeCnx();
 		}
 		return _user;
 	}

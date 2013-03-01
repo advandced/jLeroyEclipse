@@ -98,6 +98,13 @@ public class AutorisationDAO implements ModelDAO<Autorisation> {
 			if (null != _stmt) {
 				_stmt.close();
 			}
+			
+			try {
+				this.cnxUserRight.getCnx().close();
+			} catch (NamingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 

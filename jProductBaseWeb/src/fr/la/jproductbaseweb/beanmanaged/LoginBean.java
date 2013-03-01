@@ -5,12 +5,16 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 
+import fr.la.juserright.metier.Autorisation;
 import fr.la.juserright.metier.User;
 import fr.la.juserright.service.ServiceUserRight;
 
@@ -25,6 +29,7 @@ public class LoginBean {
 	private int useradmin;
 	private int userid;
 	private boolean userconnected = false;
+	public List<Autorisation> permList = new ArrayList<Autorisation>();
 
 	public LoginBean() throws IOException {
 	}
@@ -112,6 +117,20 @@ public class LoginBean {
 			
 			System.out.println(userlogin);*/
 			
+			if (userlogin != null && isUserconnected()) {
+			
+					try {
+						if (permList.isEmpty()) {
+						permList = moduleGlobal.getAutorisationByLogin(login);
+						} 
+						
+						
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+			}
 			FacesContext.getCurrentInstance().getExternalContext()
 					.redirect("/jProductBaseWeb/panel.jsf");
 			return true;
