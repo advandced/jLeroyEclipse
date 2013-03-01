@@ -71,6 +71,7 @@ public class RessourceDAO implements ModelDAO<Ressource> {
 		List<Ressource> __ressource = new ArrayList<Ressource>();
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
+		
 
 		try {
 			_stmt = this.cnxUserRight.getCnx().prepareStatement(
@@ -80,6 +81,7 @@ public class RessourceDAO implements ModelDAO<Ressource> {
 				Ressource _ressourcetmp = this.getRessource(_rs);
 				__ressource.add(_ressourcetmp);
 			}
+			_stmt.setFetchSize(500);
 		} catch (NamingException e) {
 		} finally {
 			if (null != _rs) {

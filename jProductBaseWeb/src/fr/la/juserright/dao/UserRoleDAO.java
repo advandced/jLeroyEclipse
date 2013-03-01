@@ -39,6 +39,11 @@ public class UserRoleDAO implements ModelDAO<UserRole> {
 			if (null != _stmt) {
 				_stmt.close();
 			}
+			try {
+				this.cnxUserRight.getCnx().close();
+			} catch (NamingException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -63,12 +68,20 @@ public class UserRoleDAO implements ModelDAO<UserRole> {
 		} catch (NamingException e) {
 			e.printStackTrace();
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			try{
+	            if(_rs != null) _rs.close();
+	        }
+	        catch(SQLException sqlEx){
+	            System.out.println("Error: disconnect");
+	        }   
+
+
+	        try{
+	           if(_stmt != null) _stmt.close();
+	        }
+	        catch(SQLException sqlEx){
+	            System.out.println("Error: disconnect");
+	        }   
 		}
 		return _userrole;
 	}
@@ -96,6 +109,11 @@ public class UserRoleDAO implements ModelDAO<UserRole> {
 			if (null != _stmt) {
 				_stmt.close();
 			}
+			try {
+				this.cnxUserRight.getCnx().close();
+			} catch (NamingException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -116,12 +134,22 @@ public class UserRoleDAO implements ModelDAO<UserRole> {
 		} catch (NamingException e) {
 			e.printStackTrace();
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			try{
+	            if(_rs != null) _rs.close();
+	        }
+	        catch(SQLException sqlEx){
+	            System.out.println("Error: disconnect");
+	        }   
+
+
+	        try{
+	           if(_stmt != null) _stmt.close();
+	        }
+	        catch(SQLException sqlEx){
+	            System.out.println("Error: disconnect");
+	        }   
+
+
 		}
 		return _userrole;
 	}
@@ -140,15 +168,22 @@ public class UserRoleDAO implements ModelDAO<UserRole> {
 				UserRole _userroletmp = this.getUserRole(_rs);
 				_userrole.add(_userroletmp);
 			}
+			_stmt.setFetchSize(100);
 		} catch (NamingException e) {
 			e.printStackTrace();
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			try{
+	            if(_rs != null) _rs.close();
+	        }
+	        catch(SQLException sqlEx){
+	            System.out.println("Error: disconnect");
+	        }   
+	        try{
+	           if(_stmt != null) _stmt.close();
+	        }
+	        catch(SQLException sqlEx){
+	            System.out.println("Error: disconnect");
+	        }   
 		}
 		return _userrole;
 	}

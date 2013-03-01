@@ -122,7 +122,7 @@ public class autorisationBean {
 		for (Permission p : _allperm) {
 			this.listPermission.add(p.getName());
 		}
-		
+
 	}
 
 	public void RoleChange() throws SQLException {
@@ -167,11 +167,13 @@ public class autorisationBean {
 	}
 
 	public void EditAutorisation() throws SQLException {
+		for (int i = 0; i > 8  ; i++){
+			System.out.println("fail :)");
+		}
 		@SuppressWarnings("unused")
 		EditAutorisation _editAuto = new EditAutorisation(
 				this.autorisationSelected.getRessource().getMenu(),
 				this.RoleSelected, this.PermissionSelected);
-		//System.out.println("=========>"+this.autorisationSelected.getRessource().getMenu()+"< >"+this.RoleSelected+"< >"+this.PermissionSelected);
 		this.refreshTab();
 		this.hideDetailAutorisation();
 	}
