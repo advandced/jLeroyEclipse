@@ -34,13 +34,11 @@ public class MenuWeb implements MenuModel, Serializable {
                     _menuItem.setValue(autorisation.getRessource().getMenu());
                     _menuItem.setUrl(autorisation.getRessource().getPath());
                     this.modelMenu.addMenuItem(_menuItem);
-                    System.out.println(autorisation.getRessource().getRessourceBean());
                 }
             }
         } else {
             for (Autorisation autorisation : this.autorisations) {
                 MenuItem _menuItem = new MenuItem();
-                System.out.println(autorisation.getRessource().getRessourceBean());
                 if (autorisation.getRessource().getRessourceMere()
                         .getManagedBean() != null) {
                     if (autorisation.getRessource().getRessourceMere()

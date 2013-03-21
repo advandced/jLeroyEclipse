@@ -38,7 +38,7 @@ public class UserRightSession implements Serializable {
 					LoginBean.class).getValue(fcontext.getELContext());
 		
 		List<Autorisation> _autorisationList = new ArrayList<Autorisation>();
-		/*
+		
 		List<Autorisation> permList = null;
 		
 		Role _role = new Role(logBean.getUserlogin());
@@ -58,13 +58,13 @@ public class UserRightSession implements Serializable {
 				
 				Ressource _ressource = new Ressource(r.getRessource().getIdressource() , r.getRessource().getPath(),
 						r.getRessource().getMenu(), r.getRessource().getManagedBean(),
-						r.getRessource().getDescription(), "parametrageBean");
+						r.getRessource().getDescription(), new Ressource(null));
 				
-				_autorisationList.add(new Autorisation(_permission, _ressource,
+				_autorisationList.add(new Autorisation(_permission, _ressource, _role));
 				
 				}
 		}
-		*/
+		/*
 		
 		
 		Ressource _resource = new Ressource(1, "/param/params.jsf",
@@ -176,7 +176,7 @@ public class UserRightSession implements Serializable {
 				"/param/productConfModel.jsf?faces-redirect=true",
 				"Modèle Configuration produit", "ProductConfModelBean", _resource);
 
-		Role _role = new Role("Admin");
+		Role _role = new Role(logBean.getUserlogin());
 
 		Permission _permission = new Permission();
 
@@ -276,7 +276,7 @@ public class UserRightSession implements Serializable {
 		if (logBean.getUseradmin() == 1){
 			_autorisationList.add(_autorisationAdmin);
 		}
-
+*/
 		this.autorisationList = _autorisationList;
 	}
 
