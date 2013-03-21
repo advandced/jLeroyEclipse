@@ -58,21 +58,14 @@ public class EditAutorisation {
 		if (_permission.getIdpermission() == 3) {
 			moduleGlobal.deleteAutorisation(_autorisation);
 			moduleGlobal.createAutorisation(new Autorisation(_permission, _ressource, _role));
-			System.out.println("Pluc 1");
 		} else if (_permission.getIdpermission() == 1) {
 			moduleGlobal.deleteAutorisation(_autorisation);
 			moduleGlobal.createAutorisation(new Autorisation(_permission, _ressource, _role));
 		} else {
 			if (_autorisation != null) {
 				moduleGlobal.updateAutorisation(_autorisation);
-				System.out.println("Pluc 2");
-				/*System.out.println("edit"+_autorisation.getPermission().getName());
-				System.out.println("edit"+_autorisation.getPermission().getIdpermission());
-				System.out.println("edit"+_autorisation.getRessource().getIdressource());
-				System.out.println("edit"+_autorisation.getRole().getIdrole());*/
 			} else {
 				moduleGlobal.createAutorisation(new Autorisation(_permission, _ressource, _role));
-				System.out.println("Pluc 3");
 			}
 		}
 	}

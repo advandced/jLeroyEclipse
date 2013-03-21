@@ -40,7 +40,7 @@ public class RessourceDAO implements ModelDAO<Ressource> {
 	}
 
 	public Ressource read(int _idRessource) throws SQLException {
-		Ressource _ressource = null;
+		Ressource _ressource = new Ressource();
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 

@@ -167,9 +167,6 @@ public class autorisationBean {
 	}
 
 	public void EditAutorisation() throws SQLException {
-		for (int i = 0; i > 8  ; i++){
-			System.out.println("fail :)");
-		}
 		@SuppressWarnings("unused")
 		EditAutorisation _editAuto = new EditAutorisation(
 				this.autorisationSelected.getRessource().getMenu(),

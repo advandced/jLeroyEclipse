@@ -35,56 +35,35 @@ public class UserRightSession implements Serializable {
 				.getApplication()
 				.getExpressionFactory()
 				.createValueExpression(fcontext.getELContext(), "#{loginBean}",
-						LoginBean.class).getValue(fcontext.getELContext());
+					LoginBean.class).getValue(fcontext.getELContext());
 		
-		/*if (logBean.isUserconnected() == true){
-			pageLog = "/logout.jsf";
-			nameLog = "Se déconnecter";
-			//rcontext.update("layoutNorth:menuForm:masterMenuBar");
-			System.out.println("logout");
-		} else {
-			pageLog = "/login.jsf";
-			nameLog = "Se connecter";
-			//rcontext.update("layoutNorth:menuForm:masterMenuBar");
-			System.out.println("login");
-		}
-		
-		LoginBean lb = new LoginBean();
-		
-		List<Autorisation> permList = null;
-		*/
 		List<Autorisation> _autorisationList = new ArrayList<Autorisation>();
 		/*
-		Role _role = new Role("Admin");
+		List<Autorisation> permList = null;
+		
+		Role _role = new Role(logBean.getUserlogin());
 
 		Permission _permission = new Permission();
 		
 		try {
-			permList = moduleGlobal.getAutorisationByLogin(lb.getUserlogin());
+			permList = moduleGlobal.getAutorisationByLogin(logBean.getUserlogin());
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		/*int fin = 100;
-		Ressource[] re = new Ressource[fin];
-		Autorisation[] au = new Autorisation[fin];
-		int i = 1;
+	
+		
 		for (Autorisation r : permList) {	
 			if (r.getRessource() != null && r.getPermission().getIdpermission() == 1) {
-				re[i-1] = new Ressource(r.getRessource().getIdressource(), r.getRessource().getPath(),
+				
+				Ressource _ressource = new Ressource(r.getRessource().getIdressource() , r.getRessource().getPath(),
 						r.getRessource().getMenu(), r.getRessource().getManagedBean(),
-						r.getRessource().getDescription(), new Ressource(null));
-
+						r.getRessource().getDescription(), "parametrageBean");
 				
-				au[i-1] = new Autorisation(_permission, re[i-1],
-						_role);
+				_autorisationList.add(new Autorisation(_permission, _ressource,
 				
-				_autorisationList.add(au[i-1]); 
-				i++;
-			}
+				}
 		}
-		List<Autorisation> _autorisationList = new ArrayList<Autorisation>();
-		System.out.println(au[1]+" <=-=> "+au[2]);
 		*/
 		
 		
@@ -162,11 +141,7 @@ public class UserRightSession implements Serializable {
 
 		Ressource _resourceAdmin = new Ressource(26, "/admin/",
 				"Administration", "Administration", "page admin",
-				new Ressource(null)); 
-
-		//Ressource _resourceLogin = new Ressource(27, "/logout.jsf",
-				//"Se déconnecter", "Se déconnecter", "page de déconnection",
-				//new Ressource(null)); 
+				new Ressource(null));  
 
 		Ressource _resourceEntryIntervention = new Ressource(18,
 				"/entrySAV/entryIntervention.jsf?faces-redirect=true",

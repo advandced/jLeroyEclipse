@@ -29,6 +29,8 @@ public class ressourceBean {
 	private Ressource ressourceSelected = new Ressource();
 
 	private List<String> listMenuRessource;
+	
+	private int idressource_ressource;
 
 	private String path;
 
@@ -211,5 +213,13 @@ public class ressourceBean {
 				this.listMenuRessource.add(r.getMenu());
 			}
 		}
+	}
+
+	public int getIdressource_ressource() {
+		return idressource_ressource;
+	}
+
+	public void setIdressource_ressource(int idressource_ressource) {
+		this.idressource_ressource = idressource_ressource;
 	}
 }

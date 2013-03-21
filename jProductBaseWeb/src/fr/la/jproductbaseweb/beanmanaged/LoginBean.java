@@ -103,20 +103,6 @@ public class LoginBean {
 			userid = userfind.getIduser();
 			setUserconnected(true);
 			
-			/*FacesContext ctx = FacesContext.getCurrentInstance();
-			HttpServletRequest servletRequest = (HttpServletRequest) ctx.getExternalContext().getRequest();
-			// retourne l'addresse complète du fichier
-			String fullURI = servletRequest.getRequestURI();
-			
-			if(fullURI == "/jProductBaseWeb/panel.jsf"){
-				FacesContext.getCurrentInstance().getExternalContext()
-				.redirect("/jProductBaseWeb/error403.jsf");
-			}
-			
-			System.out.println(fullURI);
-			
-			System.out.println(userlogin);*/
-			
 			if (userlogin != null && isUserconnected()) {
 			
 					try {

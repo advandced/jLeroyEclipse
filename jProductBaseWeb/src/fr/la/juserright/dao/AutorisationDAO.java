@@ -36,8 +36,6 @@ public class AutorisationDAO implements ModelDAO<Autorisation> {
 							+ ", " + _object.getRessource().getIdressource()
 							+ "" + ", " + _object.getRole().getIdrole() + ");");
 			_stmt.executeUpdate();
-
-			System.out.println("Shakreat");
 		} catch (NamingException e) {
 			e.printStackTrace();
 		} finally {
@@ -89,8 +87,6 @@ public class AutorisationDAO implements ModelDAO<Autorisation> {
 			_stmt.setInt(2, _autorisation.getRessource().getIdressource());
 			_stmt.setInt(3, _autorisation.getRole().getIdrole());
 			_stmt.executeUpdate();
-			
-			System.out.println("Shakupdat");
 
 		} catch (NamingException e) {
 			e.printStackTrace();
@@ -118,7 +114,6 @@ public class AutorisationDAO implements ModelDAO<Autorisation> {
 			_stmt.setInt(2, _object.getRole().getIdrole());
 			_stmt.executeUpdate();
 			
-			System.out.println("Shakdelet");
 		} catch (NamingException e) {
 			e.printStackTrace();
 		} finally {
@@ -251,6 +246,7 @@ public class AutorisationDAO implements ModelDAO<Autorisation> {
 	public List<Autorisation> getAutorisationByLogin(String login)
 			throws SQLException {
 		List<UserRole> _ur = moduleGlobal.getUserRoleWithLogin(login);
+		
 		List<Autorisation> _AutorisationTmp = new ArrayList<Autorisation>();
 		List<Autorisation> _AutorisationReturn = new ArrayList<Autorisation>();
 		if (_ur != null) {
@@ -271,12 +267,25 @@ public class AutorisationDAO implements ModelDAO<Autorisation> {
 										rtn.getPermission().setIdpermission(
 												tmp.getPermission()
 														.getIdpermission());
+										
 									}
+									/*permId = moduleGlobal.getRessource(rtn.getPermission().getIdpermission());
+									rtn.getRessource().setIdressource_ressource(tmp.getRessource().getIdressource_ressource());
+									//System.out.println(rtn.getRessource().getIdressource());
+
+									*/
 								}
-							}
+								
+								//System.out.println(permId.getIdressource_ressource());
+								
+								}
 							if (found == 0) {
+								//Ressource permId = moduleGlobal.getRessource(tmp.getRessource().getIdressource());
+								//System.out.println(permId.getIdressource_ressource() +" < - > "+tmp.getRessource().getIdressource());
+								//System.out.println(tmp.getRessource());
 								_AutorisationReturn.add(tmp);
 							}
+							//System.out.println(tmp.getPermission().getIdpermission()); tmp.getRessource().getIdressource_ressource()
 						}
 					}
 				}
