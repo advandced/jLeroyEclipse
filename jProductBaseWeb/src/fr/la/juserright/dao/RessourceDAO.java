@@ -12,7 +12,7 @@ import java.util.List;
 import javax.naming.NamingException;
 
 public class RessourceDAO implements ModelDAO<Ressource> {
-	
+
 	private ConnectionUserRight cnxUserRight;
 
 	public RessourceDAO(ConnectionUserRight cnxUserRight) {
@@ -71,7 +71,7 @@ public class RessourceDAO implements ModelDAO<Ressource> {
 		List<Ressource> __ressource = new ArrayList<Ressource>();
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
-		
+
 
 		try {
 			_stmt = this.cnxUserRight.getCnx().prepareStatement(
@@ -90,7 +90,7 @@ public class RessourceDAO implements ModelDAO<Ressource> {
 			if (null != _stmt) {
 				_stmt.close();
 			}
-	
+
 		}
 		return __ressource;
 	}

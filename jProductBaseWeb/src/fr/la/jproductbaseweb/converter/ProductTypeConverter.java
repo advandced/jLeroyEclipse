@@ -19,17 +19,14 @@ public class ProductTypeConverter implements Converter {
 	private List<ProductType> productTypeConverter;
 
 	public ProductTypeConverter() {
-		System.out.println("get productConfActive");
 		ServiceInterface _serviceInterface = new ServiceInterface();
 		try {
 			productTypeConverter = _serviceInterface.getActiveProductTypes();
 			System.out.println("taille list : " + productTypeConverter.size());
-
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 	}
 
 	@Override
@@ -41,23 +38,17 @@ public class ProductTypeConverter implements Converter {
 				System.out.println("getAsObject " + arg2);
 				int number = Integer.parseInt(arg2);
 				for (ProductType productType : productTypeConverter) {
-
 					if (productType.getIdProductType() == number) {
-
 						return productType;
 					}
-
 				}
 			} catch (NumberFormatException exception) {
 				throw new ConverterException(new FacesMessage(
 						FacesMessage.SEVERITY_ERROR, "Conversion error",
 						"probleme Product Conf Model"));
 			}
-
 			return null;
-
 		}
-
 	}
 
 	@Override
@@ -68,7 +59,6 @@ public class ProductTypeConverter implements Converter {
 
 			return String.valueOf(((ProductType) arg2).getIdProductType());
 		}
-
 	}
 
 	public List<ProductType> getProductTypeConverter() {
@@ -78,5 +68,4 @@ public class ProductTypeConverter implements Converter {
 	public void setProductTypeConverter(List<ProductType> productTypeConverter) {
 		this.productTypeConverter = productTypeConverter;
 	}
-
 }

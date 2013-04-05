@@ -72,7 +72,7 @@ public class UserRoleDAO implements ModelDAO<UserRole> {
 	            if(_rs != null) _rs.close();
 	        }
 	        catch(SQLException sqlEx){
-	            System.out.println("Error: disconnect");
+
 	        }   
 
 
@@ -80,7 +80,7 @@ public class UserRoleDAO implements ModelDAO<UserRole> {
 	           if(_stmt != null) _stmt.close();
 	        }
 	        catch(SQLException sqlEx){
-	            System.out.println("Error: disconnect");
+
 	        }   
 		}
 		return _userrole;
@@ -138,7 +138,7 @@ public class UserRoleDAO implements ModelDAO<UserRole> {
 	            if(_rs != null) _rs.close();
 	        }
 	        catch(SQLException sqlEx){
-	            System.out.println("Error: disconnect");
+
 	        }   
 
 
@@ -146,7 +146,6 @@ public class UserRoleDAO implements ModelDAO<UserRole> {
 	           if(_stmt != null) _stmt.close();
 	        }
 	        catch(SQLException sqlEx){
-	            System.out.println("Error: disconnect");
 	        }   
 
 
@@ -176,13 +175,13 @@ public class UserRoleDAO implements ModelDAO<UserRole> {
 	            if(_rs != null) _rs.close();
 	        }
 	        catch(SQLException sqlEx){
-	            System.out.println("Error: disconnect");
+
 	        }   
 	        try{
 	           if(_stmt != null) _stmt.close();
 	        }
 	        catch(SQLException sqlEx){
-	            System.out.println("Error: disconnect");
+
 	        }   
 		}
 		return _userrole;
