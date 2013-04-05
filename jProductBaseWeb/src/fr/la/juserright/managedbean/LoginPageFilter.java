@@ -16,14 +16,13 @@ import fr.la.jproductbaseweb.beanmanaged.LoginBean;
 import fr.la.juserright.metier.Autorisation;
 import fr.la.juserright.service.ServiceUserRight;
 
+//Defini les pages à bloquer ainsi que les dossiers
 @WebFilter(urlPatterns = { "/panel.jsf", "/param/*", "/entryPROD/*",
 		"/entrySAV/*", "/admin/*" })
 @SessionScoped
 public class LoginPageFilter implements Filter {
 
 	ServiceUserRight moduleGlobal = new ServiceUserRight();
-
-
 
 	public LoginPageFilter() {
 
@@ -41,8 +40,9 @@ public class LoginPageFilter implements Filter {
 		if (auth != null && auth.isUserconnected()) {
 			// retourne l'addresse complète du fichier
 			String fullURI = req.getRequestURI();
- 
+					//Charge la liste des pages autorisés
 					for (Autorisation r : auth.permList) {
+						//Redirige vers error403 si le droit d'accès n'est pas valable
 						if (r.getRessource() != null
 								&& fullURI.equals("/jProductBaseWeb"
 										+ r.getRessource().getPath())
@@ -52,7 +52,6 @@ public class LoginPageFilter implements Filter {
 									+ "/error403.jsf");
 						}
 					}
-			
 
 			// L'utilisateur est connecte on le laisse poursuivre sa requete
 			chain.doFilter(request, response);
@@ -66,7 +65,5 @@ public class LoginPageFilter implements Filter {
 	@Override
 	public void destroy() {
 		// TODO Auto-generated method stub
-
 	}
-
 }

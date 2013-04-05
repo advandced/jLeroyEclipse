@@ -41,17 +41,20 @@ public class UserRightSession implements Serializable {
 		/*
 		List<Autorisation> permList = null;
 		
+		//
 		Role _role = new Role(logBean.getUserlogin());
 
 		Permission _permission = new Permission();
 		
 		try {
+			//Récupère la liste des pages en Accès Total à partir du login
 			permList = moduleGlobal.getAutorisationByLogin(logBean.getUserlogin());
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	
+		//Génère les ressources
 		for (Autorisation r : permList) {	
 			if (r.getRessource() != null && r.getPermission().getIdpermission() == 1) {
 				Ressource _ressource = new Ressource(r.getRessource().getIdressource() , r.getRessource().getPath(),
