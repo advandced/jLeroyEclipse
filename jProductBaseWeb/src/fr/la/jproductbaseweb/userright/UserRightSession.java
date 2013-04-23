@@ -38,45 +38,13 @@ public class UserRightSession implements Serializable {
 					LoginBean.class).getValue(fcontext.getELContext());
 		
 		List<Autorisation> _autorisationList = new ArrayList<Autorisation>();
-		/*
-		List<Autorisation> permList = null;
-		
-		//
-		Role _role = new Role(logBean.getUserlogin());
-
-		Permission _permission = new Permission();
-		
-		try {
-			//Récupère la liste des pages en Accès Total à partir du login
-			permList = moduleGlobal.getAutorisationByLogin(logBean.getUserlogin());
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	
-		//Génère les ressources
-		for (Autorisation r : permList) {	
-			if (r.getRessource() != null && r.getPermission().getIdpermission() == 1) {
-				Ressource _ressource = new Ressource(r.getRessource().getIdressource() , r.getRessource().getPath(),
-						r.getRessource().getMenu(), r.getRessource().getPath(),
-						r.getRessource().getDescription(), new Ressource(null));
-				
-				_autorisationList.add(new Autorisation(_permission, _ressource, _role));
-				}
-		}*/
-		
 
 		List<String> paths = new ArrayList<String>();
 		List<Autorisation> permList = moduleGlobal.getAutorisationByLogin(logBean.getUserlogin());
 		for (Autorisation r : permList) {	
 			if (r.getRessource() != null && r.getPermission().getIdpermission() == 1) {
 				paths.add(r.getRessource().getPath());
-				/*
-				Ressource _ressource = new Ressource(r.getRessource().getIdressource() , r.getRessource().getPath(),
-						r.getRessource().getMenu(), r.getRessource().getPath(),
-						r.getRessource().getDescription(), new Ressource(null));
-				*/
-				}
+			}
 		}
 
 		Ressource _resource = new Ressource(1, "/param/params.jsf", "Parametrage", "parametrageBean", "ressource pour le parametrage", new Ressource(null));
@@ -135,7 +103,6 @@ public class UserRightSession implements Serializable {
 		Autorisation _autorisationSearchByDate = new Autorisation(_permission, _ressourceSearchByDate, _role);
 		Autorisation _autorisationEntrySAV = new Autorisation(_permission, _resourceEntrySAV, _role);
 		Autorisation _autorisationAdmin = new Autorisation(_permission,	_resourceAdmin, _role);
-		//Autorisation _autorisationLogin = new Autorisation(_permission, _resourceLogin, _role);
 		Autorisation _autorisationEntryIntervention = new Autorisation(_permission, _resourceEntryIntervention, _role);
 		Autorisation _autorisationRecapCom = new Autorisation(_permission,_ressourceRecapCom, _role);
 		Autorisation _autorisationExpedSav = new Autorisation(_permission,_ressourceExpedSav, _role);
@@ -183,7 +150,6 @@ public class UserRightSession implements Serializable {
 			_autorisationList.add(_autorisationSearchByDate);
 		if (paths.contains(_autorisationEntrySAV.getRessource().getPath()))
 			_autorisationList.add(_autorisationEntrySAV);
-		//_autorisationList.add(_autorisationLogin);
 
 		if (paths.contains(_autorisationEntryIntervention.getRessource().getPath()))
 			_autorisationList.add(_autorisationEntryIntervention);
@@ -205,8 +171,7 @@ public class UserRightSession implements Serializable {
 			_autorisationList.add(_autorisationProductConfModel);
 
 		if (logBean.getUseradmin() == 1){
-			//if (paths.contains(_autorisationAdmin.getRessource().getPath()))
-				_autorisationList.add(_autorisationAdmin);
+			_autorisationList.add(_autorisationAdmin);
 		}
 		
 		this.autorisationList = _autorisationList;
