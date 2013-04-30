@@ -24,8 +24,7 @@ public interface ElementChangedDao {
 	 * 
 	 * @throws SQLException
 	 */
-	public List<ElementChanged> getElementsChanged(Failure failure)
-			throws SQLException;
+	public List<ElementChanged> getElementsChanged(Failure failure);
 
 	/**
 	 * Ajoute un &eacute;l&eacute;ment chang&eacute; &agrave; la base de
@@ -41,8 +40,7 @@ public interface ElementChangedDao {
 	 * @throws SQLException
 	 * @throws ElementChangedDaoException
 	 */
-	public ElementChanged addElementChanged(ElementChanged ElementChanged,
-			Failure failure) throws SQLException, ElementChangedDaoException;
+	public ElementChanged addElementChanged(ElementChanged ElementChanged, Failure failure);
 
 	/**
 	 * Mettre &agrave; jour un &eacute;l&eacute;ment d'un d&eacute;faut dans la
@@ -56,8 +54,7 @@ public interface ElementChangedDao {
 	 * @throws SQLException
 	 * @throws ElementChangedDaoException
 	 */
-	public void updateElementChanged(ElementChanged elementChanged,
-			Failure failure) throws SQLException, ElementChangedDaoException;
+	public void updateElementChanged(ElementChanged elementChanged,	Failure failure);
 
 	/**
 	 * Supprimer un &eacute;l&eacute;ment d'un d&eacute;faut de la base de
@@ -68,6 +65,5 @@ public interface ElementChangedDao {
 	 * 
 	 * @throws SQLException
 	 */
-	public void removeElementChanged(ElementChanged elementChanged)
-			throws SQLException;
+	public void removeElementChanged(ElementChanged elementChanged);
 }

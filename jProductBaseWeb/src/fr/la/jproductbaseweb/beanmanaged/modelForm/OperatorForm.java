@@ -1,6 +1,5 @@
 package fr.la.jproductbaseweb.beanmanaged.modelForm;
 
-import fr.la.jproductbaseweb.beanmanaged.exception.OperatorException;
 import java.io.Serializable;
 
 public class OperatorForm implements Serializable {
@@ -11,7 +10,7 @@ public class OperatorForm implements Serializable {
     private String code;
     private int state;
 
-    public OperatorForm(String surName, String name, String code, int state) throws OperatorException {
+    public OperatorForm(String surName, String name, String code, int state) {
         super();
         this.surName = surName;
         this.name = name;
@@ -19,8 +18,8 @@ public class OperatorForm implements Serializable {
         this.state = state;
 
         if (this.surName.isEmpty() || this.name.isEmpty() || this.code.isEmpty()) {
-
-            throw new OperatorException();
+        	//"Les champs sont obligatoires"
+            throw new IllegalArgumentException();
 
         }
     }

@@ -1,110 +1,66 @@
 package fr.la.juserright.service;
 
-import java.sql.SQLException;
 import java.util.List;
 
-import fr.la.juserright.dao.ConnectionUserRight;
-import fr.la.juserright.dao.FactoryDAO;
 import fr.la.juserright.dao.UserDAO;
-import fr.la.juserright.exception.ErrorException;
 import fr.la.juserright.metier.User;
 
 public class UserModule {
-	private ConnectionUserRight cnxUserRight;
+	
+	UserDAO _userDao;
 
-	protected UserModule(ConnectionUserRight cnxUserRight) {
-		this.cnxUserRight = cnxUserRight;
+	public UserModule(UserDAO userDao) {
+		_userDao = userDao;
 	}
 
-	public void createUser(User _user) throws SQLException {
-		
-		UserDAO _userDao = FactoryDAO.getUserDAO(this.cnxUserRight);
-		
+	public void createUser(User _user) {
 		_userDao.create(_user);
-		
 	}
 	
-	public List<User> getAllUser() throws SQLException {
-		
-		UserDAO _userDao = FactoryDAO.getUserDAO(this.cnxUserRight);
-		
+	public List<User> getAllUser() {
 		List<User> _user = _userDao.readAll();
-		
 		return _user;
 	}
 	
-	public void updateUser(User _user) throws SQLException {
-		
-		UserDAO _userDao = FactoryDAO.getUserDAO(this.cnxUserRight);
-		
+	public void updateUser(User _user) {
 		_userDao.update(_user);
 	}
 	
-	public void deleteUser(User _user) throws SQLException {
-		
-		UserDAO _userDao = FactoryDAO.getUserDAO(this.cnxUserRight);
-		
+	public void deleteUser(User _user) {
 		_userDao.delete(_user);		
 	}
 	
-	public User getUser(int idUser) throws SQLException {
-		
-		UserDAO _userDao = FactoryDAO.getUserDAO(this.cnxUserRight);
-		
+	public User getUser(int idUser) {
 		User _user = _userDao.getUser(idUser);
-		
 		return _user;
 	}
 	
-	public User getUser(String login) throws SQLException {
-		
-		UserDAO _userDao = FactoryDAO.getUserDAO(this.cnxUserRight);
-		
+	public User getUser(String login) {
 		User _user = _userDao.getUser(login);
-		
 		return _user;
 	}
 	
-	public User login(User user) throws SQLException {
-		
-		UserDAO _userDao = FactoryDAO.getUserDAO(this.cnxUserRight);
-		
+	public User login(User user) {
 		User _user = _userDao.login(user);
-		
 		return _user;
 	}
 	
-	public List<User> getUserAddRole(int idrole) throws SQLException {
-		
-		UserDAO _userDao = FactoryDAO.getUserDAO(this.cnxUserRight);
-		
+	public List<User> getUserAddRole(int idrole) {
 		List<User> _user = _userDao.getUserAddRole(idrole);
-		
 		return _user;
 	}
 	
-	public List<User> getUserForARole(int idrole) throws SQLException {
-		
-		UserDAO _userDao = FactoryDAO.getUserDAO(this.cnxUserRight);
-		
+	public List<User> getUserForARole(int idrole) {
 		List<User> _user = _userDao.getUserForARole(idrole);
-		
 		return _user;
 	}
 	
-	public User updateUserIfLoginNotExist(User user) throws SQLException, ErrorException {
-		
-		UserDAO _userDao = FactoryDAO.getUserDAO(this.cnxUserRight);
-		
+	public User updateUserIfLoginNotExist(User user) {
 		User _user = _userDao.updateUserIfLoginNotExist(user);
-	
 		return _user;
 	}
 	
-	public void updateUserPassword(User user) throws SQLException, ErrorException {
-		
-		UserDAO _userDao = FactoryDAO.getUserDAO(this.cnxUserRight);
-		
+	public void updateUserPassword(User user) {
 		_userDao.updateUserPassword(user);
 	}
 }

@@ -25,8 +25,7 @@ public interface FailureDao {
 	 * 
 	 * @throws SQLException
 	 */
-	public List<Failure> getFailures(ProductionFailureReport failureReport)
-			throws SQLException;
+	public List<Failure> getFailures(ProductionFailureReport failureReport);
 	
 	/**
 	 * Recherche les d&eacute;fauts d'un rapport d'intervention SAV de la base de
@@ -39,8 +38,7 @@ public interface FailureDao {
 	 * 
 	 * @throws SQLException
 	 */
-	public List<Failure> getFailures(AfterSaleReport afterSaleReport)
-			throws SQLException;
+	public List<Failure> getFailures(AfterSaleReport afterSaleReport);
 
 	/**
 	 * Recherche un d&eacute;faut de la base de donn&eacute;es &agrave; partir
@@ -53,7 +51,7 @@ public interface FailureDao {
 	 * 
 	 * @throws SQLException
 	 */
-	public Failure getFailure(int idFailure) throws SQLException;
+	public Failure getFailure(int idFailure);
 
 	/**
 	 * Ajouter un d&eacute;faut dans la base de donn&eacute;s.
@@ -68,8 +66,7 @@ public interface FailureDao {
 	 * @throws SQLException
 	 * @throws FailureDaoException
 	 */
-	public Failure addFailure(Failure failure, ProductionFailureReport failureReport)
-			throws SQLException, FailureDaoException;
+	public Failure addFailure(Failure failure, ProductionFailureReport failureReport);
 	
 	/**
 	 * Ajouter une intervention SAV dans la base de donn&eacute;s.
@@ -84,8 +81,7 @@ public interface FailureDao {
 	 * @throws SQLException
 	 * @throws FailureDaoException
 	 */
-	public Failure addFailure(Failure failure, AfterSaleReport afterSaleReport)
-			throws SQLException, FailureDaoException;
+	public Failure addFailure(Failure failure, AfterSaleReport afterSaleReport);
 
 	/**
 	 * Mettre &agrave; jour un d&eacute;faut dans la base de donn&eacute;s.
@@ -98,8 +94,7 @@ public interface FailureDao {
 	 * @throws SQLException
 	 * @throws FailureDaoException
 	 */
-	public void updateFailure(Failure failure, ProductionFailureReport failureReport)
-			throws SQLException, FailureDaoException;
+	public void updateFailure(Failure failure, ProductionFailureReport failureReport);
 	
 	/**
 	 * Mettre &agrave; jour une intervention SAV dans la base de donn&eacute;s.
@@ -110,8 +105,7 @@ public interface FailureDao {
 	 * @throws SQLException
 	 * @throws FailureDaoException
 	 */
-	public void updateFailure(Failure failure)
-			throws SQLException, FailureDaoException;
+	public void updateFailure(Failure failure);
 
 	/**
 	 * Supprimer un d&eacute;faut d'un rapport de d&eacute;fauts de la base de
@@ -122,5 +116,5 @@ public interface FailureDao {
 	 * 
 	 * @throws SQLException
 	 */
-	public void removeFailure(Failure failure) throws SQLException;
+	public void removeFailure(Failure failure);
 }

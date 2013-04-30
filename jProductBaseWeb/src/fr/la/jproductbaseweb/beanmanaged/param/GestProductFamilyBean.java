@@ -1,18 +1,14 @@
 package fr.la.jproductbaseweb.beanmanaged.param;
 
-import java.sql.SQLException;
+import java.io.Serializable;
 import java.util.List;
 
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
-import javax.naming.NamingException;
 
-import fr.la.jproductbase.dao.ProductFamilyDaoException;
 import fr.la.jproductbase.metier.ProductFamily;
 import fr.la.jproductbase.metier.ProductType;
 import fr.la.jproductbaseweb.beanmanaged.exception.ProductFamilyException;
-import fr.la.jproductbaseweb.beanmanaged.modelForm.FamilyProductForm;
-import java.io.Serializable;
 
 @ManagedBean(name = "gestProductFamilyBean")
 @ApplicationScoped
@@ -26,16 +22,9 @@ public class GestProductFamilyBean extends GestFormAbstract<ProductFamily> imple
     private ProductType selectedProductType;
 
     public GestProductFamilyBean() {
-
         super();
-        try {
-            this.objectList = this.moduleGolbal.getProductFamilies();
-            this.productTypeList = this.moduleGolbal.getActiveProductTypes();
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
+        this.objectList = this.moduleGolbal.getProductFamilies();
+        this.productTypeList = this.moduleGolbal.getActiveProductTypes();
     }
 
     @Override
@@ -58,48 +47,16 @@ public class GestProductFamilyBean extends GestFormAbstract<ProductFamily> imple
 
     @Override
     protected void create() throws ProductFamilyException {
-
-
-        @SuppressWarnings("unused")
-        FamilyProductForm _familyProductForm = new FamilyProductForm(this.nameProductFamily, this.stateProductFamily, this.selectedProductType);
-
-
-
-        // TODO Auto-generated method stub
-        try {
-            this.moduleGolbal.addProductFamily(this.nameProductFamily, this.stateProductFamily, this.selectedProductType);
-            this.objectList = this.moduleGolbal.getProductFamilies();
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (ProductFamilyDaoException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        this.moduleGolbal.addProductFamily(this.nameProductFamily, this.stateProductFamily, this.selectedProductType);
+        this.objectList = this.moduleGolbal.getProductFamilies();
 
     }
 
     @Override
     protected void update() throws ProductFamilyException {
-
-        @SuppressWarnings("unused")
-        FamilyProductForm _familyProductForm = new FamilyProductForm(this.nameProductFamily, this.stateProductFamily, this.selectedProductType);
-
-
         ProductFamily _productFamily = new ProductFamily(getSelectedObject().getIdProductFamily(), null, this.stateProductFamily, this.nameProductFamily, getSelectedProductType());
-        System.out.println(this.stateProductFamily);
-
-        try {
-            this.moduleGolbal.updateProductFamily(_productFamily);
-            this.objectList = this.moduleGolbal.getProductFamilies();
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (NamingException e) {
-            e.printStackTrace();
-        }
-
-
+        this.moduleGolbal.updateProductFamily(_productFamily);
+        this.objectList = this.moduleGolbal.getProductFamilies();
     }
 
     public String getNameProductFamily() {

@@ -1,65 +1,42 @@
 package fr.la.juserright.service;
 
-import java.sql.SQLException;
 import java.util.List;
 
-import fr.la.juserright.dao.ConnectionUserRight;
-import fr.la.juserright.dao.FactoryDAO;
 import fr.la.juserright.dao.UserRoleDAO;
 import fr.la.juserright.metier.UserRole;
 
 public class UserroleModule {
-	private ConnectionUserRight cnxUserRight;
+	
+	UserRoleDAO _userroleDao;
 
-	protected UserroleModule(ConnectionUserRight cnxUserRight) {
-		this.cnxUserRight = cnxUserRight;
+	public UserroleModule(UserRoleDAO userroleDao) {
+		_userroleDao = userroleDao;
 	}
 
-	public void createUserRole(UserRole _userrole) throws SQLException {
-		
-		UserRoleDAO _userroleDao = FactoryDAO.getUserRoleDAO(this.cnxUserRight);
-
+	public void createUserRole(UserRole _userrole) {
 		_userroleDao.create(_userrole);
 	}
 
-	public List<UserRole> getAllUserRole() throws SQLException {
-		
-		UserRoleDAO _userroleDao = FactoryDAO.getUserRoleDAO(this.cnxUserRight);
-
+	public List<UserRole> getAllUserRole() {
 		List<UserRole> _userrole = _userroleDao.readAll();
-
 		return _userrole;
 	}
 
-	public void updateUserRole(UserRole _userrole) throws SQLException {
-		
-		UserRoleDAO _userroleDao = FactoryDAO.getUserRoleDAO(this.cnxUserRight);
-
+	public void updateUserRole(UserRole _userrole) {
 		_userroleDao.update(_userrole);
 	}
 
-	public void deleteUserRole(UserRole _userrole) throws SQLException {
-		
-		UserRoleDAO _userroleDao = FactoryDAO.getUserRoleDAO(this.cnxUserRight);
-
+	public void deleteUserRole(UserRole _userrole) {
 		_userroleDao.delete(_userrole);
 	}
 
-	public List<UserRole> getUserRoleWithIdUser(int iduser) throws SQLException {
-		
-		UserRoleDAO _userroleDao = FactoryDAO.getUserRoleDAO(this.cnxUserRight);
-
+	public List<UserRole> getUserRoleWithIdUser(int iduser) {
 		List<UserRole> _userrole = _userroleDao.getUserRoleWithIdUser(iduser);
-
 		return _userrole;
 	}
 
-	public List<UserRole> getUserRoleWithLogin(String login) throws SQLException {
-		
-		UserRoleDAO _userroleDao = FactoryDAO.getUserRoleDAO(this.cnxUserRight);
-
+	public List<UserRole> getUserRoleWithLogin(String login) {
 		List<UserRole> _userrole = _userroleDao.getUserRoleWithLogin(login);
-
 		return _userrole;
 	}
 

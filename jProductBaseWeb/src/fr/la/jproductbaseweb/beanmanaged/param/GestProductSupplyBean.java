@@ -1,16 +1,13 @@
 package fr.la.jproductbaseweb.beanmanaged.param;
 
-import java.sql.SQLException;
+import java.io.Serializable;
 
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
-import javax.naming.NamingException;
 
-import fr.la.jproductbase.dao.ProductDaoException;
 import fr.la.jproductbase.metier.ProductSupply;
 import fr.la.jproductbaseweb.beanmanaged.exception.ProductSupplyException;
 import fr.la.jproductbaseweb.beanmanaged.modelForm.ProductSuppplyForm;
-import java.io.Serializable;
 
 @ManagedBean(name = "gestProductSupplyBean")
 @ApplicationScoped
@@ -22,12 +19,7 @@ public class GestProductSupplyBean extends GestFormAbstract<ProductSupply> imple
 
     public GestProductSupplyBean() {
         super();
-        try {
-            this.objectList = this.moduleGolbal.getProductSupplies();
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        this.objectList = this.moduleGolbal.getProductSupplies();
     }
 
     @Override
@@ -48,45 +40,18 @@ public class GestProductSupplyBean extends GestFormAbstract<ProductSupply> imple
 
     @Override
     protected void create() throws ProductSupplyException {
-        // TODO Auto-generated method stub
-
         ProductSuppplyForm _productSupplyForm = new ProductSuppplyForm(this.nameProductSupply, this.stateProductSupply);
-
-
-        try {
-            this.moduleGolbal.addProductSupply(_productSupplyForm.getName(), _productSupplyForm.getState());
-            this.objectList = this.moduleGolbal.getProductSupplies();
-        } catch (SQLException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        } catch (ProductDaoException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        } catch (NamingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        this.moduleGolbal.addProductSupply(_productSupplyForm.getName(), _productSupplyForm.getState());
+        this.objectList = this.moduleGolbal.getProductSupplies();
 
     }
 
     @Override
     protected void update() throws ProductSupplyException {
-
         ProductSuppplyForm _productSupplyForm = new ProductSuppplyForm(this.nameProductSupply, this.stateProductSupply);
-
         ProductSupply _productSupply = new ProductSupply(getSelectedObject().getIdProductSupply(), null, _productSupplyForm.getState(), _productSupplyForm.getName());
-        try {
-            this.moduleGolbal.updateProductSupply(_productSupply);
-            this.objectList = this.moduleGolbal.getProductSupplies();
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (NamingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-
+        this.moduleGolbal.updateProductSupply(_productSupply);
+        this.objectList = this.moduleGolbal.getProductSupplies();
     }
 
     public String getNameProductSupply() {

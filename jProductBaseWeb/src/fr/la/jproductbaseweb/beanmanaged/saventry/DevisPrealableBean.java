@@ -10,7 +10,6 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
 import fr.la.configfilereader.ConfigFileReaderException;
-import fr.la.jproductbase.dao.AfterSaleReportDaoException;
 import fr.la.jproductbase.metier.AfterSaleCom;
 import fr.la.jproductbase.service.ServiceInterface;
 import fr.la.jproductbaseweb.beanmanaged.exception.DevisPrealableException;
@@ -20,14 +19,13 @@ import fr.la.jproductbaseweb.beanmanaged.modelForm.DevisPrealableForm;
 @SessionScoped
 public class DevisPrealableBean {
 
-	private ServiceInterface moduleGlobal = new ServiceInterface();
+	private ServiceInterface moduleGlobal = ServiceInterface.getInstance();
 
 	private List<AfterSaleCom> listAfterSaleCom;
 
 	private Boolean datafound;
 
-	public DevisPrealableBean() throws SQLException, ConfigFileReaderException,
-			IOException, AfterSaleReportDaoException {
+	public DevisPrealableBean() {
 		this.refresh();
 	}
 
@@ -47,8 +45,7 @@ public class DevisPrealableBean {
 		this.datafound = datafound;
 	}
 
-	public void refresh() throws SQLException, ConfigFileReaderException,
-			IOException, AfterSaleReportDaoException {
+	public void refresh() {
 		this.listAfterSaleCom = moduleGlobal.getDevisPrea();
 		if (this.listAfterSaleCom.size() != 0) {
 			this.datafound = true;

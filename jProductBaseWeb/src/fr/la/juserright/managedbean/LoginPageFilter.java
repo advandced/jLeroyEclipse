@@ -22,7 +22,7 @@ import fr.la.juserright.service.ServiceUserRight;
 @SessionScoped
 public class LoginPageFilter implements Filter {
 
-	ServiceUserRight moduleGlobal = new ServiceUserRight();
+	ServiceUserRight moduleGlobal = ServiceUserRight.getInstance();
 
 	public LoginPageFilter() {
 

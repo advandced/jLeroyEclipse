@@ -19,14 +19,8 @@ public class ProductTypeConverter implements Converter {
 	private List<ProductType> productTypeConverter;
 
 	public ProductTypeConverter() {
-		ServiceInterface _serviceInterface = new ServiceInterface();
-		try {
-			productTypeConverter = _serviceInterface.getActiveProductTypes();
-			System.out.println("taille list : " + productTypeConverter.size());
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		ServiceInterface _serviceInterface = ServiceInterface.getInstance();
+		productTypeConverter = _serviceInterface.getActiveProductTypes();
 	}
 
 	@Override

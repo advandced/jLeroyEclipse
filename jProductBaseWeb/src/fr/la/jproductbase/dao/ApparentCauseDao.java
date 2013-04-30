@@ -20,8 +20,7 @@ public interface ApparentCauseDao {
 	 * 
 	 * @throws SQLException
 	 */
-	public List<ApparentCause> getApparentCauses()
-			throws SQLException;
+	public List<ApparentCause> getApparentCauses();
 
 	/**
 	 * Recherche une cause probable de la base de donn&eacute;es &agrave; partir
@@ -34,7 +33,7 @@ public interface ApparentCauseDao {
 	 * 
 	 * @throws SQLException
 	 */
-	public ApparentCause getApparentCause(int idApparentCause) throws SQLException;
+	public ApparentCause getApparentCause(int idApparentCause);
 
 	/**
 	 * Ajouter une cause probable dans la base de donn&eacute;s.
@@ -47,8 +46,7 @@ public interface ApparentCauseDao {
 	 * @throws SQLException
 	 * @throws ApparentCauseDaoException
 	 */
-	public ApparentCause addApparentCause(ApparentCause apparentCause)
-			throws SQLException, ApparentCauseDaoException;
+	public ApparentCause addApparentCause(ApparentCause apparentCause);
 
 	/**
 	 * Mettre &agrave; jour une cause probable dans la base de donn&eacute;s.
@@ -59,8 +57,7 @@ public interface ApparentCauseDao {
 	 * @throws SQLException
 	 * @throws ApparentCauseDaoException
 	 */
-	public void updateApparentCause(ApparentCause apparentCause)
-			throws SQLException, ApparentCauseDaoException;
+	public void updateApparentCause(ApparentCause apparentCause);
 
 	/**
 	 * Supprimer une cause probable d'un rapport de d&eacute;fauts de la base de
@@ -71,5 +68,5 @@ public interface ApparentCauseDao {
 	 * 
 	 * @throws SQLException
 	 */
-	public void removeApparentCause(ApparentCause apparentCause) throws SQLException;
+	public void removeApparentCause(ApparentCause apparentCause);
 }

@@ -6,7 +6,6 @@ import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 import javax.naming.NamingException;
 
-import fr.la.jproductbase.dao.TesterDaoException;
 import fr.la.jproductbase.metier.Tester;
 import fr.la.jproductbase.service.ServiceInterface;
 import fr.la.jproductbaseweb.beanmanaged.exception.TesterException;
@@ -23,21 +22,13 @@ public class GestTesterBean extends GestFormAbstract<Tester> implements Serializ
 
     public GestTesterBean() {
         super();
-        try {
-            this.objectList = this.moduleGolbal.getTesters();
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-
+        this.objectList = this.moduleGolbal.getTesters();
     }
 
     @Override
     public void selectedModify() {
         // TODO Auto-generated method stub
         super.selectedModify();
-        System.out.println("selected Modify");
         this.nameTester = getSelectedObject().getName();
         this.stateTester = getSelectedObject().getState();
     }
@@ -58,41 +49,19 @@ public class GestTesterBean extends GestFormAbstract<Tester> implements Serializ
         TesterForm _testerForm = new TesterForm(this.nameTester, this.stateTester);
         // On crée un nouveau testeur avec les infos recup dans la
         // requete
-        try {
-            this.moduleGolbal.addTester(_testerForm.getDescription(), _testerForm.getState());
-            this.objectList = this.moduleGolbal.getTesters();
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (TesterDaoException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-
+        this.moduleGolbal.addTester(_testerForm.getDescription(), _testerForm.getState());
+        this.objectList = this.moduleGolbal.getTesters();
     }
 
     @Override
     protected void update() throws TesterException {
-        ServiceInterface _serviceInterface = new ServiceInterface();
+        ServiceInterface _serviceInterface = ServiceInterface.getInstance();
         TesterForm _testerForm = new TesterForm(this.nameTester, this.stateTester);
         // On recup le testeur, on le modifie avec les infos recup
         // dans la requete
         getSelectedObject().setName(_testerForm.getDescription());
         getSelectedObject().setState(_testerForm.getState());
-        try {
-            _serviceInterface.updateTester(getSelectedObject());
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (TesterDaoException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (NamingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
+        _serviceInterface.updateTester(getSelectedObject());
     }
 
     public String getNameTester() {

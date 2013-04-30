@@ -8,7 +8,7 @@ import fr.la.juserright.service.ServiceUserRight;
 
 public class CreateRole {
 
-	private ServiceUserRight moduleGlobal = new ServiceUserRight();
+	private ServiceUserRight moduleGlobal = ServiceUserRight.getInstance();
 
 	private String Role;
 

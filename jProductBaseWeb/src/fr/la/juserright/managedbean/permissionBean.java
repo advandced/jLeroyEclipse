@@ -12,7 +12,7 @@ import org.primefaces.context.RequestContext;
 @SessionScoped
 public class permissionBean {
 
-	ServiceUserRight moduleGlobal = new ServiceUserRight();
+	ServiceUserRight moduleGlobal = ServiceUserRight.getInstance();
 
 	private Permission permissionSelected = new Permission();
 

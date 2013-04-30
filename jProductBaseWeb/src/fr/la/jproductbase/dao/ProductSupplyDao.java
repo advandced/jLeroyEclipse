@@ -22,7 +22,7 @@ public interface ProductSupplyDao {
 	 * 
 	 * @throws SQLException
 	 */
-	ProductSupply getProductSupply(int idProductSupply) throws SQLException;
+	ProductSupply getProductSupply(int idProductSupply);
 
 	/**
 	 * Recherche une alimentation produit de la base de donn&eacute;es.
@@ -34,7 +34,7 @@ public interface ProductSupplyDao {
 	 * 
 	 * @throws SQLException
 	 */
-	ProductSupply getProductSupply(String name) throws SQLException;
+	ProductSupply getProductSupply(String name);
 
 	/**
 	 * Recherche les alimentations de produit de la base de donn&eacute;es.
@@ -43,7 +43,7 @@ public interface ProductSupplyDao {
 	 * 
 	 * @throws SQLException
 	 */
-	List<ProductSupply> getProductSupplies() throws SQLException;
+	List<ProductSupply> getProductSupplies();
 
 	/**
 	 * Recherche les alimentations de produit actives de la base de
@@ -53,15 +53,12 @@ public interface ProductSupplyDao {
 	 * 
 	 * @throws SQLException
 	 */
-	List<ProductSupply> getActiveProductSupplies() throws SQLException;
+	List<ProductSupply> getActiveProductSupplies();
 
 	// 15-12-11 : RMO : Création de 3 nouvelles méthodes //TODO RMO : JavaDoc
-	ProductSupply addProductSupply(String name, int state) throws SQLException,
-			ProductDaoException;
+	ProductSupply addProductSupply(String name, int state);
 
-	void updateProductSupply(ProductSupply productSupplyToUpdate)
-			throws SQLException, ProductDaoException;
+	void updateProductSupply(ProductSupply productSupplyToUpdate);
 
-	void deleteProductSupply(ProductSupply productSupplyToDelete)
-			throws SQLException;
+	void deleteProductSupply(ProductSupply productSupplyToDelete);
 }

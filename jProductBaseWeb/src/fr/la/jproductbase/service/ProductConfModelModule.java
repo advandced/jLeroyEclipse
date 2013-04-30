@@ -1,122 +1,61 @@
 package fr.la.jproductbase.service;
 
-import fr.la.jproductbase.dao.ConnectionProduct;
-import fr.la.jproductbase.dao.ProductConfModelDao;
-import fr.la.jproductbase.dao.ProductConfModelDaoImpl;
-import fr.la.jproductbase.metier.ProductConfModel;
-import fr.la.jproductbase.metier.ProductType;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+import fr.la.jproductbase.dao.ProductConfModelDao;
+import fr.la.jproductbase.metier.ProductConfModel;
+import fr.la.jproductbase.metier.ProductType;
+
 public class ProductConfModelModule {
 
-    private ConnectionProduct cnxProduct;
-
-    protected ProductConfModelModule(ConnectionProduct cnxProduct) {
-        this.cnxProduct = cnxProduct;
+	ProductConfModelDao _productConfModelDao;
+	
+    public ProductConfModelModule(ProductConfModelDao productConfModelDao) {
+    	_productConfModelDao = productConfModelDao;
     }
 
-    protected ProductConfModel getProductConfModel(int idProductConfModel)
-            throws SQLException {
-        ProductConfModelDao _productConfModelDao = new ProductConfModelDaoImpl(
-                this.cnxProduct);
-
-        ProductConfModel _productModelConf = _productConfModelDao
-                .getProductConfModel(idProductConfModel);
-
-        return _productModelConf;
+    public ProductConfModel getProductConfModel(int idProductConfModel) {
+        return  _productConfModelDao.getProductConfModel(idProductConfModel);
     }
 
-    protected ProductConfModel getProductConfModel(String reference)
-            throws SQLException {
-        ProductConfModelDao _productConfModelDao = new ProductConfModelDaoImpl(
-                this.cnxProduct);
-
-        ProductConfModel _productModelConf = _productConfModelDao
-                .getProductConfModel(reference);
-
-        return _productModelConf;
+    public ProductConfModel getProductConfModel(String reference) {
+        return _productConfModelDao.getProductConfModel(reference);
     }
 
-    protected List<ProductConfModel> getActiveProductConfModels(
-            ProductType productType) throws SQLException {
-        ProductConfModelDao _productConfModelDao = new ProductConfModelDaoImpl(
-                this.cnxProduct);
-
-        List<ProductConfModel> _productModelConfs = _productConfModelDao
-                .getActiveProductConfModels(productType);
-
-        return _productModelConfs;
+    public List<ProductConfModel> getActiveProductConfModels(ProductType productType) {
+        return _productConfModelDao.getActiveProductConfModels(productType);
     }
 
-    protected List<ProductConfModel> getActiveProductConfModels() throws SQLException {
-        ProductConfModelDao _productConfModelDao = new ProductConfModelDaoImpl(
-                this.cnxProduct);
-
-        List<ProductConfModel> _productModelConfs = _productConfModelDao
-                .getActiveProductConfModels();
-
-        return _productModelConfs;
+    public List<ProductConfModel> getActiveProductConfModels() {
+        return _productConfModelDao.getActiveProductConfModels();
     }
 
-    protected List<ProductConfModel> getProductConfModels() throws SQLException {
-        ProductConfModelDao _productConfModelDao = new ProductConfModelDaoImpl(
-                this.cnxProduct);
-
-        List<ProductConfModel> _productModelConfs = _productConfModelDao
-                .getProductConfModels();
-
-        return _productModelConfs;
+    public List<ProductConfModel> getProductConfModels() {
+        return _productConfModelDao.getProductConfModels();
     }
 
-    protected List<ProductConfModel> getProductConfModels(int type) throws SQLException {
-        ProductConfModelDao _productConfModelDao = new ProductConfModelDaoImpl(
-                this.cnxProduct);
-
-        List<ProductConfModel> _productModelConfs = _productConfModelDao
-                .getProductConfModels(type);
-
-        return _productModelConfs;
+    public List<ProductConfModel> getProductConfModels(int type) {
+        return _productConfModelDao.getProductConfModels(type);
     }
 
-    protected void addProductConfModels(ProductConfModel _productConfModel) throws SQLException {
-        ProductConfModelDao _productConfModelDao = new ProductConfModelDaoImpl(
-                this.cnxProduct);
-
+    public void addProductConfModels(ProductConfModel _productConfModel) {
         _productConfModelDao.addProductConfModels(_productConfModel);
     }
 
-    protected void delProductConfModels(int id) throws SQLException {
-        ProductConfModelDao _productConfModelDao = new ProductConfModelDaoImpl(
-                this.cnxProduct);
-
+    public void delProductConfModels(int id) {
         _productConfModelDao.delProductConfModels(id);
     }
 
-    protected void updateProductConfModels(ProductConfModel productConfModel) throws SQLException {
-        ProductConfModelDao _productConfModelDao = new ProductConfModelDaoImpl(
-                this.cnxProduct);
-
+    public void updateProductConfModels(ProductConfModel productConfModel) {
         _productConfModelDao.updateProductConfModels(productConfModel);
     }
 
-    protected int countProductConfModel(Map<String, String> filters) throws SQLException {
-        ProductConfModelDao _productConfModelDao = new ProductConfModelDaoImpl(
-                this.cnxProduct);
-
-        int i = _productConfModelDao.countProductConfModel(filters);
-
-        return i;
+    public int countProductConfModel(Map<String, String> filters) {
+        return _productConfModelDao.countProductConfModel(filters);
     }
 
-    protected List<ProductConfModel> getProductConfModelLazy(Map<String, String> filters, int limit, int maxperpage) throws SQLException {
-        ProductConfModelDao _productConfModelDao = new ProductConfModelDaoImpl(
-                this.cnxProduct);
-
-        List<ProductConfModel> _productModelConfs = _productConfModelDao.getProductConfModelLazy(filters, limit, maxperpage);
-
-        return _productModelConfs;
-        
+    public List<ProductConfModel> getProductConfModelLazy(Map<String, String> filters, int limit, int maxperpage) {
+        return _productConfModelDao.getProductConfModelLazy(filters, limit, maxperpage);
     }
 }

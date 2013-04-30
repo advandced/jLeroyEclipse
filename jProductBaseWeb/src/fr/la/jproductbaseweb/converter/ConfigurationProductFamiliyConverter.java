@@ -2,7 +2,6 @@ package fr.la.jproductbaseweb.converter;
 
 import fr.la.jproductbase.metier.ProductFamily;
 import fr.la.jproductbase.service.ServiceInterface;
-import java.sql.SQLException;
 import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
@@ -18,15 +17,8 @@ public class ConfigurationProductFamiliyConverter implements Converter {
 
     public ConfigurationProductFamiliyConverter() {
         System.out.println("get productConfActive");
-        ServiceInterface _serviceInterface = new ServiceInterface();
-        try {
-            productFamilies = _serviceInterface.getProductFamilies();
-            System.out.println("taille list" + productFamilies.size());
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
+        ServiceInterface _serviceInterface = ServiceInterface.getInstance();
+        productFamilies = _serviceInterface.getProductFamilies();
     }
 
     @Override

@@ -22,8 +22,7 @@ public interface FollowingFormModelDao {
      *
      * @throws SQLException
      */
-    public FollowingFormModel getFollowingFormModel(int idFollowingFormModel)
-            throws SQLException;
+    public FollowingFormModel getFollowingFormModel(int idFollowingFormModel);
 
     /**
      * Recherche les mod&eacute;les de fiche suiveuse actifs de la base de
@@ -33,15 +32,13 @@ public interface FollowingFormModelDao {
      *
      * @throws SQLException
      */
-    public List<FollowingFormModel> getAllActiveFollowingFormModel()
-            throws SQLException;
+    public List<FollowingFormModel> getAllActiveFollowingFormModel();
 
-    public List<FollowingFormModel> getAllFollowingFormModel()
-            throws SQLException;
+    public List<FollowingFormModel> getAllFollowingFormModel();
 
     public void addFollowingFormModel(FollowingFormModel followingformmodel);
 
     public void deleteFollowingFormModel(int id);
 
-    public void updateFollowingFormModel(FollowingFormModel followingformmodel) throws SQLException;
+    public void updateFollowingFormModel(FollowingFormModel followingformmodel);
 }

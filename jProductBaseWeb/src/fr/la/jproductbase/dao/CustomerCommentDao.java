@@ -25,8 +25,7 @@ public interface CustomerCommentDao {
 	 * 
 	 * @throws SQLException
 	 */
-	public CustomerComment getCustomerComment(ProductionFailureReport failureReport)
-			throws SQLException;
+	public CustomerComment getCustomerComment(ProductionFailureReport failureReport);
 
 	/**
 	 * Ajoute un commentaire client &agrave; un rapport de d&eacute;fauts dans
@@ -43,9 +42,7 @@ public interface CustomerCommentDao {
 	 * @throws SQLException
 	 * @throws CustomerCommentDaoException
 	 */
-	public CustomerComment addCustomerComment(ProductionFailureReport failureReport,
-			String customerComment) throws SQLException,
-			CustomerCommentDaoException;
+	public CustomerComment addCustomerComment(ProductionFailureReport failureReport, String customerComment);
 
 	/**
 	 * Met &agrave; jour le commentaire client du rapport de d&eacute;fauts dans
@@ -59,8 +56,7 @@ public interface CustomerCommentDao {
 	 * 
 	 * @throws SQLException
 	 */
-	public void updateCustomerComment(ProductionFailureReport failureReport,
-			String customerComment) throws SQLException;
+	public void updateCustomerComment(ProductionFailureReport failureReport, String customerComment);
 
 	/**
 	 * Supprimme le commentaire client du rapport de d&eacute;fauts dans la base
@@ -72,6 +68,5 @@ public interface CustomerCommentDao {
 	 * 
 	 * @throws SQLException
 	 */
-	public void removeCustomerComment(ProductionFailureReport failureReport)
-			throws SQLException;
+	public void removeCustomerComment(ProductionFailureReport failureReport);
 }

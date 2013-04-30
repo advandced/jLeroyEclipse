@@ -1,33 +1,31 @@
 package fr.la.jproductbase.dao;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 
-import javax.naming.NamingException;
-
 import fr.la.jproductbase.metier.ProductLine;
 
-public class ProductLineDaoImpl implements ProductLineDao {
-	// private static String exceptionMsg =
-	// "Gamme de produit inconnue dans la base de données.";
+public class ProductLineDaoImpl extends GenericDao implements ProductLineDao {
 
-	private ConnectionProduct cnxProduct;
+	ConnectionProduct cnxProduct;
 
 	public ProductLineDaoImpl(ConnectionProduct cnxProduct) {
 		this.cnxProduct = cnxProduct;
 	}
 
 	@Override
-	public ProductLine getProductLine(int idProductLine) throws SQLException {
+	public ProductLine getProductLine(int idProductLine) {
 		ProductLine _productLine = null;
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
-					"SELECT * FROM productLine WHERE idProductLine=?");
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement("SELECT * FROM productLine WHERE idProductLine=?");
 			_stmt.setInt(1, idProductLine);
 			_rs = _stmt.executeQuery();
 
@@ -36,16 +34,12 @@ public class ProductLineDaoImpl implements ProductLineDao {
 			} else {
 				_productLine = null;
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _productLine;

@@ -1,32 +1,33 @@
 package fr.la.jproductbase.dao;
 
 import fr.la.jproductbase.metier.ApparentCauseCustomer;
+
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import javax.naming.NamingException;
 
-public class ApparentCauseCustomerDaoImpl implements ApparentCauseCustomerDao {
-	private static String exceptionMsg = "Cause probable client inconnu dans la base de données.";
+public class ApparentCauseCustomerDaoImpl extends GenericDao implements ApparentCauseCustomerDao {
 
-	private ConnectionProduct cnxProduct;
+	ConnectionProduct cnxProduct;
 
 	public ApparentCauseCustomerDaoImpl(ConnectionProduct cnxProduct) {
 		this.cnxProduct = cnxProduct;
 	}
 
 	@Override
-	public List<ApparentCauseCustomer> getActiveApparentCausesCustomer()
-			throws SQLException {
+	public List<ApparentCauseCustomer> getActiveApparentCausesCustomer() {
 		List<ApparentCauseCustomer> _apparentCausesCustomer = new ArrayList<ApparentCauseCustomer>();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			c = cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 					"SELECT * FROM apparentCauseCustomer " +
 						" WHERE (state=1)");
 			_rs = _stmt.executeQuery();
@@ -35,30 +36,27 @@ public class ApparentCauseCustomerDaoImpl implements ApparentCauseCustomerDao {
 				ApparentCauseCustomer _apparentCauseCustomer = this.getApparentCauseCustomer(_rs);
 				_apparentCausesCustomer.add(_apparentCauseCustomer);
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _apparentCausesCustomer;
 	}
 	
 	@Override
-	public List<ApparentCauseCustomer> getApparentCausesCustomer()
-			throws SQLException {
+	public List<ApparentCauseCustomer> getApparentCausesCustomer() {
 		List<ApparentCauseCustomer> _apparentCausesCustomer = new ArrayList<ApparentCauseCustomer>();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			c = cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 					"SELECT * FROM apparentCauseCustomer ");
 			_rs = _stmt.executeQuery();
 
@@ -66,29 +64,27 @@ public class ApparentCauseCustomerDaoImpl implements ApparentCauseCustomerDao {
 				ApparentCauseCustomer _apparentCauseCustomer = this.getApparentCauseCustomer(_rs);
 				_apparentCausesCustomer.add(_apparentCauseCustomer);
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _apparentCausesCustomer;
 	}
 
 	@Override
-	public ApparentCauseCustomer getApparentCauseCustomer(int idApparentCauseCustomer) throws SQLException {
+	public ApparentCauseCustomer getApparentCauseCustomer(int idApparentCauseCustomer) {
 		ApparentCauseCustomer _apparentCauseCustomer = null;
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			c = cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 					"SELECT * FROM apparentCauseCustomer WHERE idApparentCauseCustomer=?");
 			_stmt.setInt(1, idApparentCauseCustomer);
 			_rs = _stmt.executeQuery();
@@ -98,32 +94,27 @@ public class ApparentCauseCustomerDaoImpl implements ApparentCauseCustomerDao {
 			} else {
 				_apparentCauseCustomer = null;
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _apparentCauseCustomer;
 	}
 
 	@Override
-	public ApparentCauseCustomer addApparentCauseCustomer(ApparentCauseCustomer apparentCauseCustomer)
-			throws SQLException, ApparentCauseDaoException {
+	public ApparentCauseCustomer addApparentCauseCustomer(ApparentCauseCustomer apparentCauseCustomer) {
 		ApparentCauseCustomer _apparentCauseCustomer = apparentCauseCustomer;
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct
-					.getCnx()
-					.prepareStatement(
+			c = cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 							"INSERT INTO apparentCauseCustomer "
 									+ "(state, description) "
 									+ "VALUES (?, ?)");
@@ -131,8 +122,7 @@ public class ApparentCauseCustomerDaoImpl implements ApparentCauseCustomerDao {
 			_stmt.setString(2, apparentCauseCustomer.getDescription());
 			_stmt.executeUpdate();
 
-			_stmt = this.cnxProduct.getCnx()
-					.prepareStatement(
+			_stmt = c.prepareStatement(
 							"SELECT * FROM apparentCauseCustomer "
 									+ "WHERE (state=?) "
 									+ " AND (description=?)");
@@ -143,34 +133,29 @@ public class ApparentCauseCustomerDaoImpl implements ApparentCauseCustomerDao {
 			if (_rs.next()) {
 				_apparentCauseCustomer = this.getApparentCauseCustomer(_rs);
 			} else {
-				throw new ApparentCauseDaoException(exceptionMsg);
+				throw new IllegalStateException();
 			}
 
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _apparentCauseCustomer;
 	}
 
 	@Override
-	public void updateApparentCauseCustomer(ApparentCauseCustomer apparentCauseCustomer)
-			throws SQLException, ApparentCauseDaoException {
+	public void updateApparentCauseCustomer(ApparentCauseCustomer apparentCauseCustomer) {
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct
-					.getCnx()
-					.prepareStatement(
+			c = cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 							"UPDATE apparentCauseCustomer "
 									+ "SET state=?, description=?"
 									+ " WHERE (idApparentCauseCustomer=?)");
@@ -180,7 +165,7 @@ public class ApparentCauseCustomerDaoImpl implements ApparentCauseCustomerDao {
 			_stmt.executeUpdate();
 
 			// Update object
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			_stmt = c.prepareStatement(
 					"SELECT * FROM apparentCauseCustomer" + " WHERE (idApparentCauseCustomer=?)");
 			_stmt.setInt(1, apparentCauseCustomer.getIdApparentCauseCustomer());
 
@@ -188,37 +173,33 @@ public class ApparentCauseCustomerDaoImpl implements ApparentCauseCustomerDao {
 			if (_rs.next()) {
 				this.getApparentCauseCustomer(_rs);
 			} else {
-				throw new ApparentCauseDaoException(exceptionMsg);
+				throw new IllegalStateException();
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 	}
 
 	@Override
-	public void removeApparentCauseCustomer(ApparentCauseCustomer apparentCauseCustomer) throws SQLException {
+	public void removeApparentCauseCustomer(ApparentCauseCustomer apparentCauseCustomer) {
+		Connection c = null;
 		PreparedStatement _stmt = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			c = cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 					"DELETE FROM apparentCauseCustomer " + "WHERE (idApparentCauseCustomer=?)");
 			_stmt.setInt(1, apparentCauseCustomer.getIdApparentCauseCustomer());
 			_stmt.executeUpdate();
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_stmt);
+			close(c);
 		}
 	}
 

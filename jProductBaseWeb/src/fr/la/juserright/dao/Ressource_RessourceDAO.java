@@ -1,48 +1,54 @@
 package fr.la.juserright.dao;
 
+import fr.la.jproductbase.dao.GenericDao;
 import fr.la.juserright.metier.Ressource;
 import fr.la.juserright.metier.Ressource_Ressource;
-import fr.la.juserright.service.ServiceUserRight;
+
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
-import javax.naming.NamingException;
 
-public class Ressource_RessourceDAO implements ModelDAO<Ressource_Ressource> {
+public class Ressource_RessourceDAO extends GenericDao implements ModelDAO<Ressource_Ressource> {
 
 	private ConnectionUserRight cnxUserRight;
+	RessourceDAO _ressourceDao;
 
-	private ServiceUserRight moduleGlobal = new ServiceUserRight();
+	//private ServiceUserRight moduleGlobal = new ServiceUserRight();
 
-	public Ressource_RessourceDAO(ConnectionUserRight cnxUserRight) {
+	public Ressource_RessourceDAO(ConnectionUserRight cnxUserRight, RessourceDAO ressourceDao) {
 		this.cnxUserRight = cnxUserRight;
+		_ressourceDao = ressourceDao;
 	}
 
     @Override
-	public void create(Ressource_Ressource _object) throws SQLException {
+	public void create(Ressource_Ressource _object) {
+    	Connection c = null;
 		PreparedStatement _stmt = null;
 
 		try {
-			_stmt = this.cnxUserRight.getCnx().prepareStatement(
+			c = cnxUserRight.getCnx();
+			_stmt = c.prepareStatement(
 					"INSERT INTO ressource (idressource) " + "VALUES ('"
 							+ _object.getIdressource() + "');");
 			_stmt.executeUpdate();
-
-		} catch (NamingException e) {
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_stmt);
+			close(c);
 		}
 	}
 
-	public Ressource_Ressource create(int idressource) throws SQLException {
+	public Ressource_Ressource create(int idressource) {
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		Ressource_Ressource _ressource_ressource = null;
 		try {
-			_stmt = this.cnxUserRight.getCnx().prepareStatement(
+			c = cnxUserRight.getCnx();
+			_stmt = c.prepareStatement(
 					"INSERT INTO ressource_ressource (idressource) "
 							+ "VALUES ('" + idressource + "');",
 					Statement.RETURN_GENERATED_KEYS);
@@ -52,24 +58,25 @@ public class Ressource_RessourceDAO implements ModelDAO<Ressource_Ressource> {
 				int i = (int) generatedKeys.getLong(1);
 				_ressource_ressource = this.read(i);
 			}
-		} catch (NamingException e) {
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_stmt);
+			close(c);
 		}
 		return _ressource_ressource;
 	}
 
     @Override
-	public Ressource_Ressource read(Ressource_Ressource _object)
-			throws SQLException {
+	public Ressource_Ressource read(Ressource_Ressource _object) {
+    	Connection c = null;
 		Ressource_Ressource _ressource_ressource = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxUserRight.getCnx().prepareStatement(
+			c = cnxUserRight.getCnx();
+			_stmt = c.prepareStatement(
 					"SELECT * FROM ressource_ressource"
 							+ " WHERE idressource = ?;");
 			_stmt.setInt(1, _object.getIdressource().getIdressource());
@@ -79,26 +86,25 @@ public class Ressource_RessourceDAO implements ModelDAO<Ressource_Ressource> {
 			} else {
 				_ressource_ressource = null;
 			}
-		} catch (NamingException e) {
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 		return _ressource_ressource;
 	}
 
-	public Ressource_Ressource read(int _idRessource_Ressource)
-			throws SQLException {
+	public Ressource_Ressource read(int _idRessource_Ressource) {
 		Ressource_Ressource _ressource_ressource = null;
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxUserRight.getCnx().prepareStatement(
+			c = cnxUserRight.getCnx();
+			_stmt = c.prepareStatement(
 					"SELECT * FROM ressource_ressource"
 							+ " WHERE idressource_ressource = ?;");
 			_stmt.setInt(1, _idRessource_Ressource);
@@ -108,56 +114,52 @@ public class Ressource_RessourceDAO implements ModelDAO<Ressource_Ressource> {
 			} else {
 				_ressource_ressource = null;
 			}
-		} catch (NamingException e) {
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 		return _ressource_ressource;
 	}
 
     @Override
-	public List<Ressource_Ressource> readAll() throws SQLException {
+	public List<Ressource_Ressource> readAll() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
     @Override
-	public void update(Ressource_Ressource _object) throws SQLException {
+	public void update(Ressource_Ressource _object) {
 		// TODO Auto-generated method stub
 
 	}
 
     @Override
-	public void delete(Ressource_Ressource _object) throws SQLException {
+	public void delete(Ressource_Ressource _object) {
+    	Connection c = null;
 		PreparedStatement _stmt = null;
 
 		try {
-			_stmt = this.cnxUserRight.getCnx().prepareStatement(
+			c = cnxUserRight.getCnx();
+			_stmt = c.prepareStatement(
 					"DELETE FROM ressource_ressource WHERE idressource = "
 							+ _object.getIdressource().getIdressource() + ";");
 			_stmt.executeUpdate();
 
-		} catch (NamingException e) {
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_stmt);
+			close(c);
 		}
 	}
 
-	public Ressource_Ressource getRessource_Ressource(ResultSet _rs)
-			throws SQLException {
+	public Ressource_Ressource getRessource_Ressource(ResultSet _rs) throws SQLException {
 		int _idRessource_Ressource = _rs.getInt("idressource_ressource");
-		Ressource _idRessource = moduleGlobal.getRessource(_rs
-				.getInt("idressource"));
-		Ressource_Ressource _rr = new Ressource_Ressource(
-				_idRessource_Ressource, _idRessource);
-
+		Ressource _idRessource = _ressourceDao.read(_rs.getInt("idressource"));
+		Ressource_Ressource _rr = new Ressource_Ressource(_idRessource_Ressource, _idRessource);
 		return _rr;
 	}
 

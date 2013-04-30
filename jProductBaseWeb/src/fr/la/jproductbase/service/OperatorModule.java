@@ -1,97 +1,53 @@
 package fr.la.jproductbase.service;
 
-import java.sql.SQLException;
 import java.util.List;
 
-import javax.naming.NamingException;
-
-import fr.la.jproductbase.dao.ConnectionOperator;
 import fr.la.jproductbase.dao.OperatorDao;
-import fr.la.jproductbase.dao.OperatorDaoException;
-import fr.la.jproductbase.dao.OperatorDaoImpl;
 import fr.la.jproductbase.metier.Operator;
 
 public class OperatorModule {
-	private ConnectionOperator cnxOperator;
 
-	protected OperatorModule(ConnectionOperator cnxOperator) {
-		this.cnxOperator = cnxOperator;
+	OperatorDao _operatorDao;
+	
+	public OperatorModule(OperatorDao operatorDao) {
+		_operatorDao = operatorDao;
 	}
 
-	protected Operator getOperator(String code) throws SQLException {
-		OperatorDao _operatorDao = new OperatorDaoImpl(this.cnxOperator);
-
+	public Operator getOperator(String code) {
 		Operator _operator = _operatorDao.getOperator(code);
-
 		return _operator;
 	}
 
 	// TODO resoudre pourquoi cette methode n'etait pas presente dans
 	// operatorModule
-	protected Operator getOperator(int idOperator) throws SQLException {
-		OperatorDao _operatorDao = new OperatorDaoImpl(this.cnxOperator);
-
+	public Operator getOperator(int idOperator) {
 		Operator _operator = _operatorDao.getOperator(idOperator);
-
 		return _operator;
 	}
 
-	protected List<Operator> getActiveOperators() throws SQLException {
-		OperatorDao _operatorDao = new OperatorDaoImpl(this.cnxOperator);
-
+	public List<Operator> getActiveOperators() {
 		List<Operator> _operators = _operatorDao.getActiveOperators();
-
 		return _operators;
 	}
 
 	// 13-12-11 : RMO ; Creation de la méthode
-	protected List<Operator> getOperators() throws SQLException {
-		OperatorDao _operatorDao = new OperatorDaoImpl(this.cnxOperator);
-
+	public List<Operator> getOperators() {
 		List<Operator> _operators = _operatorDao.getOperators();
-
 		return _operators;
 	}
 
 	// 12-12-11 : RMO : Creation de la méthode
-	protected Operator addOperator(String firstName, String lastName,
-			String code, int state) throws SQLException, NamingException {
-		OperatorDao _operatorDao = new OperatorDaoImpl(this.cnxOperator);
-
-		Operator _operator = null;
-		try {
-			this.cnxOperator.getCnx().setAutoCommit(false);
-			_operator = _operatorDao.addOperator(firstName, lastName, code,
-					state);
-			this.cnxOperator.getCnx().commit();
-		} catch (OperatorDaoException e) {
-			this.cnxOperator.getCnx().rollback();
-			e.printStackTrace();
-		}
-
-		return _operator;
+	public Operator addOperator(String firstName, String lastName, String code, int state) {
+		return _operatorDao.addOperator(firstName, lastName, code, state);
 	}
 
 	// 12-12-11 : RMO : Creation de la méthode
-	protected void updateOperator(Operator operatorToUpdate)
-			throws SQLException, NamingException {
-		OperatorDao _operatorDao = new OperatorDaoImpl(this.cnxOperator);
-
-		try {
-			this.cnxOperator.getCnx().setAutoCommit(false);
-			_operatorDao.updateOperator(operatorToUpdate);
-			this.cnxOperator.getCnx().commit();
-		} catch (OperatorDaoException e) {
-			this.cnxOperator.getCnx().rollback();
-			e.printStackTrace();
-		}
+	public void updateOperator(Operator operatorToUpdate) {
+		_operatorDao.updateOperator(operatorToUpdate);
 	}
 
 	// 12-12-11 : RMO : Creation de la méthode
-	protected void deleteOperator(Operator operatorToDelete)
-			throws SQLException {
-		OperatorDao _operatorDao = new OperatorDaoImpl(this.cnxOperator);
-
+	public void deleteOperator(Operator operatorToDelete) {
 		_operatorDao.deleteOperator(operatorToDelete);
 	}
 }

@@ -105,8 +105,7 @@ public class XMLTesterModule {
 	 * @throws JDOMException
 	 */
 	public void updatePreTesterReportXml(String xmlFileName, String testResult,
-			boolean confirmTestResult, StringBuffer customerComment)
-			throws JDOMException, IOException {
+			boolean confirmTestResult, StringBuffer customerComment) {
 		PreTesterReportDaoXml _testerDaoXml = new PreTesterReportDaoXml(
 				xmlFileName);
 		_testerDaoXml.writePreTesterReportResult(testResult, confirmTestResult,

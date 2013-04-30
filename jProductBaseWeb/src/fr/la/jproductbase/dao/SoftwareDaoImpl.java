@@ -1,5 +1,6 @@
 package fr.la.jproductbase.dao;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -7,30 +8,29 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.naming.NamingException;
-
 import fr.la.jproductbase.metier.Product;
 import fr.la.jproductbase.metier.ProductConf;
 import fr.la.jproductbase.metier.Software;
 
-public class SoftwareDaoImpl implements SoftwareDao {
+public class SoftwareDaoImpl extends GenericDao implements SoftwareDao {
 
-    private static String exceptionMsg = "Logiciel inconnu dans la base de données.";
-    private ConnectionProduct cnxProduct;
+    ConnectionProduct cnxProduct;
 
     public SoftwareDaoImpl(ConnectionProduct cnxProduct) {
         this.cnxProduct = cnxProduct;
     }
 
     @Override
-    public List<Software> getSoftwares(Product product) throws SQLException {
+    public List<Software> getSoftwares(Product product) {
         List<Software> _softwares = new ArrayList<Software>();
+        Connection c = null;
         PreparedStatement _stmt = null;
         ResultSet _rs = null;
 
         try {
             int _idProduct = product.getIdProduct();
-            _stmt = this.cnxProduct.getCnx().prepareStatement(
+            c = this.cnxProduct.getCnx();
+            _stmt = c.prepareStatement(
                     "SELECT * FROM software "
                     + " WHERE (software.idSoftware IN"
                     + " (SELECT idSoftware FROM product_software"
@@ -45,31 +45,28 @@ public class SoftwareDaoImpl implements SoftwareDao {
                 // Update product object
                 product.addSoftware(_software);
             }
-        } catch (NamingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } finally {
-            if (null != _rs) {
-                _rs.close();
-            }
-            if (null != _stmt) {
-                _stmt.close();
-            }
-        }
+		} catch (SQLException e) {
+			handleDAOException(e);
+		} finally {
+			close(_rs);
+			close(_stmt);
+			close(c);
+		}
 
         return _softwares;
     }
 
     @Override
-    public List<Software> getSoftwares(ProductConf productConf)
-            throws SQLException {
+    public List<Software> getSoftwares(ProductConf productConf) {
         List<Software> _softwares = new ArrayList<Software>();
+        Connection c = null;
         PreparedStatement _stmt = null;
         ResultSet _rs = null;
 
         try {
             int _idProductConf = productConf.getIdProductConf();
-            _stmt = this.cnxProduct.getCnx().prepareStatement(
+            c = this.cnxProduct.getCnx();
+            _stmt = c.prepareStatement(
                     "SELECT * FROM software "
                     + " WHERE (software.idSoftware IN"
                     + " (SELECT idSoftware FROM productConf_software"
@@ -84,30 +81,27 @@ public class SoftwareDaoImpl implements SoftwareDao {
                 // Update product object
                 productConf.addSoftware(_software);
             }
-        } catch (NamingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } finally {
-            if (null != _rs) {
-                _rs.close();
-            }
-            if (null != _stmt) {
-                _stmt.close();
-            }
-        }
+		} catch (SQLException e) {
+			handleDAOException(e);
+		} finally {
+			close(_rs);
+			close(_stmt);
+			close(c);
+		}
 
         return _softwares;
     }
 
     @Override
-    public Software getSoftware(String name, String version)
-            throws SQLException {
+    public Software getSoftware(String name, String version) {
         Software _software = null;
+        Connection c = null;
         PreparedStatement _stmt = null;
         ResultSet _rs = null;
 
         try {
-            _stmt = this.cnxProduct.getCnx().prepareStatement(
+        	c = this.cnxProduct.getCnx();
+            _stmt = c.prepareStatement(
                     "SELECT * FROM software " + " WHERE (name=?)"
                     + " AND (version=?)");
             _stmt.setString(1, name);
@@ -117,30 +111,27 @@ public class SoftwareDaoImpl implements SoftwareDao {
             while (_rs.next()) {
                 _software = this.getSoftware(_rs);
             }
-        } catch (NamingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } finally {
-            if (null != _rs) {
-                _rs.close();
-            }
-            if (null != _stmt) {
-                _stmt.close();
-            }
-        }
+		} catch (SQLException e) {
+			handleDAOException(e);
+		} finally {
+			close(_rs);
+			close(_stmt);
+			close(c);
+		}
 
         return _software;
     }
 
     @Override
-    public Software addSoftware(String name, String version)
-            throws SQLException, SoftwareDaoException {
+    public Software addSoftware(String name, String version) {
         Software _software = null;
+        Connection c = null;
         PreparedStatement _stmt = null;
         ResultSet _rs = null;
 
         try {
-            _stmt = this.cnxProduct.getCnx().prepareStatement(
+        	c = this.cnxProduct.getCnx();
+            _stmt = c.prepareStatement(
                     "INSERT INTO software (state, name, version)"
                     + " VALUES (?, ?, ?)");
             _stmt.setInt(1, 1);
@@ -149,7 +140,7 @@ public class SoftwareDaoImpl implements SoftwareDao {
             _stmt.executeUpdate();
 
             // Retrieve product data
-            _stmt = this.cnxProduct.getCnx().prepareStatement(
+            _stmt = c.prepareStatement(
                     "SELECT * FROM software" + " WHERE (name=?)"
                     + " 	AND (version=?)");
             _stmt.setString(1, name);
@@ -157,34 +148,31 @@ public class SoftwareDaoImpl implements SoftwareDao {
 
             _rs = _stmt.executeQuery();
             if (!_rs.next()) {
-                throw new SoftwareDaoException(exceptionMsg);
+                throw new IllegalStateException();
             }
-        } catch (NamingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } finally {
-            if (null != _rs) {
-                _rs.close();
-            }
-            if (null != _stmt) {
-                _stmt.close();
-            }
-        }
+		} catch (SQLException e) {
+			handleDAOException(e);
+		} finally {
+			close(_rs);
+			close(_stmt);
+			close(c);
+		}
 
         return _software;
     }
 
     @Override
-    public void addProductSoftware(Product product, Software software)
-            throws SQLException, SoftwareDaoException {
+    public void addProductSoftware(Product product, Software software) {
         int _idProduct = product.getIdProduct();
         int _idSoftware = software.getIdSoftware();
 
+        Connection c = null;
         PreparedStatement _stmt = null;
         ResultSet _rs = null;
 
         try {
-            _stmt = this.cnxProduct.getCnx().prepareStatement(
+        	c = this.cnxProduct.getCnx();
+            _stmt = c.prepareStatement(
                     "INSERT INTO product_software (idProduct, idSoftware)"
                     + " VALUES (?, ?)");
             _stmt.setInt(1, _idProduct);
@@ -192,7 +180,7 @@ public class SoftwareDaoImpl implements SoftwareDao {
             _stmt.executeUpdate();
 
             // Retrieve product_product data
-            _stmt = this.cnxProduct.getCnx().prepareStatement(
+            _stmt = c.prepareStatement(
                     "SELECT * FROM product_software" + " WHERE (idProduct=?)"
                     + " AND (idSoftware=?)");
             _stmt.setInt(1, _idProduct);
@@ -200,46 +188,42 @@ public class SoftwareDaoImpl implements SoftwareDao {
 
             _rs = _stmt.executeQuery();
             if (!_rs.next()) {
-                throw new SoftwareDaoException(exceptionMsg);
+                throw new IllegalStateException();
             }
-        } catch (NamingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } finally {
-            if (null != _rs) {
-                _rs.close();
-            }
-            if (null != _stmt) {
-                _stmt.close();
-            }
-        }
+		} catch (SQLException e) {
+			handleDAOException(e);
+		} finally {
+			close(_rs);
+			close(_stmt);
+			close(c);
+		}
     }
 
     @Override
-    public void removeProductSoftware(Product product, Software software)
-            throws SQLException {
-        if ((null != product) && (null != software)) {
-            PreparedStatement _stmt = null;
-            try {
-                _stmt = this.cnxProduct.getCnx().prepareStatement(
-                        "DELETE FROM product_software "
-                        + "WHERE ((idProduct=?)"
-                        + " AND (idSoftware=?))");
-            } catch (NamingException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-            _stmt.setInt(1, product.getIdProduct());
-            _stmt.setInt(2, software.getIdSoftware());
-            _stmt.executeUpdate();
+    public void removeProductSoftware(Product product, Software software) {
+        if (product == null || software == null)
+        	throw new IllegalArgumentException();
+        
+        Connection c = null;
+        PreparedStatement _stmt = null;
+        try {
+        	c = this.cnxProduct.getCnx();
+            _stmt = c.prepareStatement(
+                    "DELETE FROM product_software "
+                    + "WHERE ((idProduct=?)"
+                    + " AND (idSoftware=?))");
+        _stmt.setInt(1, product.getIdProduct());
+        _stmt.setInt(2, software.getIdSoftware());
+        _stmt.executeUpdate();
 
-            // Update product
-            product.removeSoftware(software);
-
-            _stmt.close();
-        } else {
-            // Nothing to do
-        }
+        // Update product
+        product.removeSoftware(software);
+		} catch (SQLException e) {
+			handleDAOException(e);
+		} finally {
+			close(_stmt);
+			close(c);
+		}
     }
 
     /*
@@ -266,44 +250,42 @@ public class SoftwareDaoImpl implements SoftwareDao {
     }
 
     @Override
-    public List<Software> getSoftwares() throws SQLException {
+    public List<Software> getSoftwares() {
         List<Software> _softwares = new ArrayList<Software>();
+        Connection c = null;
         PreparedStatement _stmt = null;
         ResultSet _rs = null;
 
         try {
-            _stmt = this.cnxProduct.getCnx().prepareStatement(
-                    "SELECT * FROM software ");
+        	c = this.cnxProduct.getCnx();
+            _stmt = c.prepareStatement("SELECT * FROM software");
             _rs = _stmt.executeQuery();
 
             while (_rs.next()) {
                 Software _software = this.getSoftware(_rs);
                 _softwares.add(_software);
             }
-        } catch (NamingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } finally {
-            if (null != _rs) {
-                _rs.close();
-            }
-            if (null != _stmt) {
-                _stmt.close();
-            }
-        }
+		} catch (SQLException e) {
+			handleDAOException(e);
+		} finally {
+			close(_rs);
+			close(_stmt);
+			close(c);
+		}
 
         return _softwares;
     }
 
     @Override
-    public List<Software> getActiveSoftwares() throws SQLException {
+    public List<Software> getActiveSoftwares() {
         List<Software> _softwares = new ArrayList<Software>();
+        Connection c  = null;
         PreparedStatement _stmt = null;
         ResultSet _rs = null;
 
         try {
-            _stmt = this.cnxProduct.getCnx().prepareStatement(
-                    "SELECT * FROM software " + " WHERE (state=?) ORDER BY name;");
+        	c = this.cnxProduct.getCnx();
+            _stmt = c.prepareStatement("SELECT * FROM software WHERE (state=?) ORDER BY name;");
             _stmt.setInt(1, 1);
             _rs = _stmt.executeQuery();
 
@@ -311,27 +293,26 @@ public class SoftwareDaoImpl implements SoftwareDao {
                 Software _software = this.getSoftware(_rs);
                 _softwares.add(_software);
             }
-        } catch (NamingException e) {
-        } finally {
-            if (null != _rs) {
-                _rs.close();
-            }
-            if (null != _stmt) {
-                _stmt.close();
-            }
-        }
+		} catch (SQLException e) {
+			handleDAOException(e);
+		} finally {
+			close(_rs);
+			close(_stmt);
+			close(c);
+		}
         return _softwares;
     }
 
     @Override
-    public Software addSoftware(int state, String name, String version)
-            throws SQLException, SoftwareDaoException {
+    public Software addSoftware(int state, String name, String version) {
         Software _software = null;
+        Connection c = null;
         PreparedStatement _stmt = null;
         ResultSet _rs = null;
 
         try {
-            _stmt = this.cnxProduct.getCnx().prepareStatement(
+        	c = this.cnxProduct.getCnx();
+            _stmt = c.prepareStatement(
                     "INSERT INTO software (state, name, version)"
                     + " VALUES (?, ?, ?)");
             _stmt.setInt(1, state);
@@ -340,7 +321,7 @@ public class SoftwareDaoImpl implements SoftwareDao {
             _stmt.executeUpdate();
 
             // Retrieve software data
-            _stmt = this.cnxProduct.getCnx().prepareStatement(
+            _stmt = c.prepareStatement(
                     "SELECT * FROM software" + " WHERE (name=?)"
                     + " 	AND (version=?)");
             _stmt.setString(1, name);
@@ -348,31 +329,28 @@ public class SoftwareDaoImpl implements SoftwareDao {
 
             _rs = _stmt.executeQuery();
             if (!_rs.next()) {
-                throw new SoftwareDaoException(exceptionMsg);
+                throw new IllegalStateException();
             }
-        } catch (NamingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } finally {
-            if (null != _rs) {
-                _rs.close();
-            }
-            if (null != _stmt) {
-                _stmt.close();
-            }
-        }
+		} catch (SQLException e) {
+			handleDAOException(e);
+		} finally {
+			close(_rs);
+			close(_stmt);
+			close(c);
+		}
 
         return _software;
     }
 
     @Override
-    public void updateSoftware(Software softwareToUpdate) throws SQLException,
-            SoftwareDaoException {
+    public void updateSoftware(Software softwareToUpdate) {
 
+    	Connection c = null;
         PreparedStatement _stmt = null;
 
         try {
-            _stmt = this.cnxProduct.getCnx().prepareStatement(
+        	c = this.cnxProduct.getCnx();
+            _stmt = c.prepareStatement(
                     "UPDATE software " + "SET state=?, name=?, version=?"
                     + " WHERE (idSoftware=?)");
             _stmt.setInt(1, softwareToUpdate.getState());
@@ -381,52 +359,49 @@ public class SoftwareDaoImpl implements SoftwareDao {
             _stmt.setInt(4, softwareToUpdate.getIdSoftware());
             _stmt.executeUpdate();
 
-            _stmt = this.cnxProduct.getCnx().prepareStatement(
+            _stmt = c.prepareStatement(
                     "SELECT * FROM software" + " WHERE (idSoftware=?)");
             _stmt.setInt(1, softwareToUpdate.getIdSoftware());
 
             ResultSet _rs = _stmt.executeQuery();
             if (!_rs.next()) {
-                throw new SoftwareDaoException(exceptionMsg);
+                throw new IllegalStateException();
             }
-        } catch (NamingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } finally {
-            if (null != _stmt) {
-                _stmt.close();
-            }
-        }
+		} catch (SQLException e) {
+			handleDAOException(e);
+		} finally {
+			close(_stmt);
+			close(c);
+		}
     }
 
     @Override
-    public void deleteSoftware(Software softwareToDelete) throws SQLException {
-
+    public void deleteSoftware(Software softwareToDelete)  {
+    	Connection c = null;
         PreparedStatement _stmt = null;
-
         try {
-            _stmt = this.cnxProduct.getCnx().prepareStatement(
+        	c = this.cnxProduct.getCnx();
+            _stmt = c.prepareStatement(
                     "DELETE FROM software " + " WHERE (idSoftware=?)");
             _stmt.setInt(1, softwareToDelete.getIdSoftware());
             _stmt.executeUpdate();
-        } catch (NamingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } finally {
-            if (null != _stmt) {
-                _stmt.close();
-            }
-        }
+		} catch (SQLException e) {
+			handleDAOException(e);
+		} finally {
+			close(_stmt);
+		}
     }
 
     @Override
-    public Software getSoftware(int idSoftware) throws SQLException {
+    public Software getSoftware(int idSoftware) {
         Software _software = null;
+        Connection c = null;
         PreparedStatement _stmt = null;
         ResultSet _rs = null;
 
         try {
-            _stmt = this.cnxProduct.getCnx().prepareStatement(
+        	c = this.cnxProduct.getCnx();
+            _stmt = c.prepareStatement(
                     "SELECT * FROM software " + " WHERE (idSoftware=?)");
             _stmt.setInt(1, idSoftware);
             _rs = _stmt.executeQuery();
@@ -434,36 +409,30 @@ public class SoftwareDaoImpl implements SoftwareDao {
             while (_rs.next()) {
                 _software = this.getSoftware(_rs);
             }
-        } catch (NamingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } finally {
-            if (null != _rs) {
-                _rs.close();
-            }
-            if (null != _stmt) {
-                _stmt.close();
-            }
-        }
+		} catch (SQLException e) {
+			handleDAOException(e);
+		} finally {
+			close(_rs);
+			close(_stmt);
+			close(c);
+		}
 
         return _software;
     }
 
-    // 10-01-12 : RMO : Creation de la methode
     @Override
-    public void removeProductConfSoftware(ProductConf productConf,
-            Software software) throws SQLException {
-        if ((null != productConf) && (null != software)) {
-            PreparedStatement _stmt = null;
-            try {
-                _stmt = this.cnxProduct.getCnx().prepareStatement(
-                        "DELETE FROM productConf_software "
-                        + "WHERE ((idProductConf=?)"
-                        + " AND (idSoftware=?))");
-            } catch (NamingException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
+    public void removeProductConfSoftware(ProductConf productConf, Software software) {
+        if (productConf == null || software == null) 
+        	throw new IllegalArgumentException();
+        
+        Connection c = null;
+        PreparedStatement _stmt = null;
+        try {
+        	c = this.cnxProduct.getCnx();
+            _stmt = c.prepareStatement(
+                    "DELETE FROM productConf_software "
+                    + "WHERE ((idProductConf=?)"
+                    + " AND (idSoftware=?))");
             _stmt.setInt(1, productConf.getIdProductConf());
             _stmt.setInt(2, software.getIdSoftware());
             _stmt.executeUpdate();
@@ -471,25 +440,27 @@ public class SoftwareDaoImpl implements SoftwareDao {
             // Update product
             productConf.removeSoftware(software);
 
-            _stmt.close();
-        } else {
-            // Nothing to do
-        }
+		} catch (SQLException e) {
+			handleDAOException(e);
+		} finally {
+			close(_stmt);
+			close(c);
+		}
 
     }
 
-    // 10-01-12 : RMO : Creation de la methode
     @Override
-    public void addProductConfSoftware(ProductConf productConf,
-            Software software) throws SQLException, SoftwareDaoException {
+    public void addProductConfSoftware(ProductConf productConf, Software software) {
         int _idProductConf = productConf.getIdProductConf();
         int _idSoftware = software.getIdSoftware();
 
+        Connection c = null;
         PreparedStatement _stmt = null;
         ResultSet _rs = null;
 
         try {
-            _stmt = this.cnxProduct.getCnx().prepareStatement(
+        	c = this.cnxProduct.getCnx();
+            _stmt = c.prepareStatement(
                     "INSERT INTO productConf_software (idProductConf, idSoftware)"
                     + " VALUES (?, ?)");
             _stmt.setInt(1, _idProductConf);
@@ -497,7 +468,7 @@ public class SoftwareDaoImpl implements SoftwareDao {
             _stmt.executeUpdate();
 
             // Retrieve productConf_product data
-            _stmt = this.cnxProduct.getCnx().prepareStatement(
+            _stmt = c.prepareStatement(
                     "SELECT * FROM productConf_software"
                     + " WHERE (idProductConf=?)"
                     + " AND (idSoftware=?)");
@@ -506,19 +477,15 @@ public class SoftwareDaoImpl implements SoftwareDao {
 
             _rs = _stmt.executeQuery();
             if (!_rs.next()) {
-                throw new SoftwareDaoException(exceptionMsg);
+                throw new IllegalStateException();
             }
-        } catch (NamingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } finally {
-            if (null != _rs) {
-                _rs.close();
-            }
-            if (null != _stmt) {
-                _stmt.close();
-            }
-        }
+		} catch (SQLException e) {
+			handleDAOException(e);
+		} finally {
+			close(_rs);
+			close(_stmt);
+			close(c);
+		}
 
     }
 }

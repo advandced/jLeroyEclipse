@@ -23,7 +23,7 @@ public interface OperatorDao {
 	 * 
 	 * @throws SQLException
 	 */
-	public Operator getOperator(String code) throws SQLException;
+	public Operator getOperator(String code);
 
 	/**
 	 * Recherche un op&eacute;rateur de la base de donn&eacute;es &agrave;
@@ -36,7 +36,7 @@ public interface OperatorDao {
 	 * 
 	 * @throws SQLException
 	 */
-	public Operator getOperator(int idOperator) throws SQLException;
+	public Operator getOperator(int idOperator);
 
 	/**
 	 * Recherche les op&eacute;rateurs actifs de la base de donn&eacute;es.
@@ -45,7 +45,7 @@ public interface OperatorDao {
 	 * 
 	 * @throws SQLException
 	 */
-	public List<Operator> getActiveOperators() throws SQLException;
+	public List<Operator> getActiveOperators();
 
 	/**
 	 * Recherche les op&eacute;rateurs de la base de donn&eacute;es.
@@ -54,13 +54,12 @@ public interface OperatorDao {
 	 * 
 	 * @throws SQLException
 	 */
-	public List<Operator> getOperators() throws SQLException;
+	public List<Operator> getOperators();
 
 	// TODO s'occuper de la javadoc des 3 nouvelles méthodes
-	public Operator addOperator(String lastName, String firstName, String code,
-			int state) throws SQLException, OperatorDaoException;
+	public Operator addOperator(String lastName, String firstName, String code,	int state);
 
-	public void updateOperator(Operator operatorToUpdate) throws SQLException, OperatorDaoException;
+	public void updateOperator(Operator operatorToUpdate);
 
-	public void deleteOperator(Operator operatorToDelete) throws SQLException;
+	public void deleteOperator(Operator operatorToDelete);
 }

@@ -35,8 +35,9 @@ public class ProductIntegrationHandler extends DefaultHandler implements Seriali
 	}
 
 	// Détection d'ouverture de balise
+	/*
 	public void startElement(String uri, String localName, String qName,
-			Attributes attributes) throws SAXException {
+			Attributes attributes)  {
 		if (qName.equals("product")) {
 			// Init product data
 			this.product = null;
@@ -48,18 +49,10 @@ public class ProductIntegrationHandler extends DefaultHandler implements Seriali
 			if (qName.equals("component")) {
 				if (null == this.product) {
 					// Record product
-					try {
-						ServiceInterface _serviceInterface = new ServiceInterface();
-						ProductConf _productConf = _serviceInterface
-								.getProductConf(this.reference,
-										this.majorIndex, this.minorIndex);
-						this.product = new Product(_productConf, this.datecode,
-								this.serialNumber, this.providerCode);
+					ServiceInterface _serviceInterface = new ServiceInterface();
+					ProductConf _productConf = _serviceInterface.getProductConf(this.reference,this.majorIndex, this.minorIndex);
+						this.product = new Product(_productConf, this.datecode,this.serialNumber, this.providerCode);
 						this.product.setProductComponents(new ArrayList<Product>());
-					} catch (Exception e) {
-						// Propage l'exception
-						throw new SAXException(e.getMessage());
-					}
 				} else {
 					// Product already recorded
 				}
@@ -74,7 +67,8 @@ public class ProductIntegrationHandler extends DefaultHandler implements Seriali
 			}
 		}
 	}
-
+	*/
+	
 	// Détection de caractères
 	public void characters(char[] ch, int start, int length)
 			throws SAXException {
@@ -85,45 +79,27 @@ public class ProductIntegrationHandler extends DefaultHandler implements Seriali
 	}
 
 	// Détection de fermeture de balise
-	public void endElement(String uri, String localName, String qName)
-			throws SAXException {
+	/*
+	public void endElement(String uri, String localName, String qName) {
 		if (qName.equals("product")) {
-			// Save product to bdd
-			try {
-				ServiceInterface _serviceInterface = new ServiceInterface();
-				_serviceInterface.setProduct(this.product);
-			} catch (Exception e) {
-				// Propage l'exception
-				throw new SAXException(e.getMessage());
-			}
+			ServiceInterface _serviceInterface = new ServiceInterface();
+			_serviceInterface.setProduct(this.product);
 		} else {
 			if (qName.equals("component")) {
 				// Record component
-				try {
-					ServiceInterface _serviceInterface = new ServiceInterface();
-					ProductConf _productConf = _serviceInterface
-							.getProductConf(this.reference, this.majorIndex,
-									this.minorIndex);
-					Product _component = new Product(_productConf,
-							this.datecode, this.serialNumber, this.providerCode);
-					this.product.addProductComponent(_component);
-				} catch (Exception e) {
-					e.printStackTrace();
-
-					// Propage l'exception
-					throw new SAXException(e.getMessage());
-				}
+				ServiceInterface _serviceInterface = new ServiceInterface();
+				ProductConf _productConf = _serviceInterface
+						.getProductConf(this.reference, this.majorIndex,
+								this.minorIndex);
+				Product _component = new Product(_productConf,
+						this.datecode, this.serialNumber, this.providerCode);
+				this.product.addProductComponent(_component);
 			} else {
 				if (qName.equals("software")) {
 					// Record software
-					try {
-						Software _software = new Software(this.name,
-								this.version);
-						this.product.addSoftware(_software);
-					} catch (Exception e) {
-						// Propage l'exception
-						throw new SAXException(e.getMessage());
-					}
+					Software _software = new Software(this.name,
+							this.version);
+					this.product.addSoftware(_software);
 				} else {
 					// Update data
 					if (qName.equals("reference")) {
@@ -168,4 +144,5 @@ public class ProductIntegrationHandler extends DefaultHandler implements Seriali
 
 		this.buffer = null;
 	}
+	*/
 }

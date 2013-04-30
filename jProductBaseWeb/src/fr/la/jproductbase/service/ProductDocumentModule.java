@@ -1,153 +1,84 @@
 package fr.la.jproductbase.service;
 
-import java.sql.SQLException;
 import java.util.List;
 
-import fr.la.jproductbase.dao.ConnectionProduct;
 import fr.la.jproductbase.dao.ProductDocumentDao;
-import fr.la.jproductbase.dao.ProductDocumentDaoException;
-import fr.la.jproductbase.dao.ProductDocumentDaoImpl;
 import fr.la.jproductbase.dao.ProductDocumentTypeDao;
-import fr.la.jproductbase.dao.ProductDocumentTypeDaoException;
-import fr.la.jproductbase.dao.ProductDocumentTypeDaoImpl;
 import fr.la.jproductbase.metier.Product;
 import fr.la.jproductbase.metier.ProductDocument;
 import fr.la.jproductbase.metier.ProductDocumentType;
 
 public class ProductDocumentModule {
-	private ConnectionProduct cnxProduct;
+	
+	ProductDocumentDao _productDocumentDao;
+	ProductDocumentTypeDao _productDocumentTypeDao;
 
-	protected ProductDocumentModule(ConnectionProduct cnxProduct) {
-		this.cnxProduct = cnxProduct;
+	public ProductDocumentModule(ProductDocumentDao productDocumentDao, ProductDocumentTypeDao productDocumentTypeDao) {
+		_productDocumentDao = productDocumentDao;
+		_productDocumentTypeDao = productDocumentTypeDao;
 	}
 
 	// 20-06-12 : RMO : Creation des méthodes - ajout de documents et de types de document dans la BD
-	protected ProductDocument addProductDocument(int state, String title, String link, ProductDocumentType productDocumentType, Product product)
-			throws SQLException, ProductDocumentDaoException {
-		ProductDocumentDao _productDocumentDao = new ProductDocumentDaoImpl(this.cnxProduct);
-
-		ProductDocument _productDocument = _productDocumentDao.addProductDocument(state, title, link, productDocumentType, product);
-
-		return _productDocument;
+	public ProductDocument addProductDocument(int state, String title, String link, ProductDocumentType productDocumentType, Product product) {
+		return _productDocumentDao.addProductDocument(state, title, link, productDocumentType, product);
 	}
 	
-	protected ProductDocumentType addProductDocumentType(int state, String name)
-			throws SQLException, ProductDocumentTypeDaoException {
-		ProductDocumentTypeDao _productDocumentTypeDao = new ProductDocumentTypeDaoImpl(this.cnxProduct);
-
-		ProductDocumentType _productDocumentType = _productDocumentTypeDao.addProductDocumentType(state, name);
-
-		return _productDocumentType;
+	public ProductDocumentType addProductDocumentType(int state, String name) {
+		return _productDocumentTypeDao.addProductDocumentType(state, name);
 	}
 	
 	// 20-06-12 : RMO : Creation des méthodes - mise à jour de documents et de types de document dans la BD
-	protected ProductDocumentType updateProductDocumentType(ProductDocumentType productDocumentTypeToUpdate)
-			throws SQLException, ProductDocumentTypeDaoException {
-		ProductDocumentTypeDao _productDocumentTypeDao = new ProductDocumentTypeDaoImpl(this.cnxProduct);
-
-		ProductDocumentType _productDocumentTypeUpdated = _productDocumentTypeDao.updateProductDocumentType(productDocumentTypeToUpdate);
-		
-		return _productDocumentTypeUpdated;
+	public ProductDocumentType updateProductDocumentType(ProductDocumentType productDocumentTypeToUpdate) {
+		return _productDocumentTypeDao.updateProductDocumentType(productDocumentTypeToUpdate);
 	}
 	
-	protected ProductDocument updateProductDocument(ProductDocument productDocumentToUpdate)
-			throws SQLException, ProductDocumentDaoException {
-		ProductDocumentDao _productDocumentDao = new ProductDocumentDaoImpl(this.cnxProduct);
-
-		ProductDocument _productDocumentUpdated = _productDocumentDao.updateProductDocument(productDocumentToUpdate);
-		
-		return _productDocumentUpdated;
+	public ProductDocument updateProductDocument(ProductDocument productDocumentToUpdate) {
+		return _productDocumentDao.updateProductDocument(productDocumentToUpdate);
 	}
 
 	// 20-06-12 : RMO : Creation des méthodes - récup des documents et des types de document existants dans la BD
-	protected ProductDocumentType getProductDocumentType(String name)
-			throws SQLException {
-		ProductDocumentTypeDao _productDocumentTypeDao = new ProductDocumentTypeDaoImpl(this.cnxProduct);
-
-		ProductDocumentType _productDocumentType = _productDocumentTypeDao.getProductDocumentType(name);
-
-		return _productDocumentType;
+	public ProductDocumentType getProductDocumentType(String name) {
+		return _productDocumentTypeDao.getProductDocumentType(name);
 	}
 
-	protected ProductDocumentType getProductDocumentType(int idProductDocumentType) throws SQLException {
-		ProductDocumentTypeDao _productDocumentTypeDao = new ProductDocumentTypeDaoImpl(this.cnxProduct);
-
-		ProductDocumentType _productDocumentType = _productDocumentTypeDao.getProductDocumentType(idProductDocumentType);
-
-		return _productDocumentType;
+	public ProductDocumentType getProductDocumentType(int idProductDocumentType) {
+		return _productDocumentTypeDao.getProductDocumentType(idProductDocumentType);
 	}
 
-	protected List<ProductDocumentType> getProductDocumentTypes() throws SQLException {
-		ProductDocumentTypeDao _productDocumentTypeDao = new ProductDocumentTypeDaoImpl(this.cnxProduct);
-
-		List<ProductDocumentType> _productDocumentTypes = _productDocumentTypeDao.getProductDocumentTypes();
-
-		return _productDocumentTypes;
+	public List<ProductDocumentType> getProductDocumentTypes() {
+		return _productDocumentTypeDao.getProductDocumentTypes();
 	}
 
-	protected List<ProductDocumentType> getActiveProductDocumentTypes() throws SQLException {
-		ProductDocumentTypeDao _productDocumentTypeDao = new ProductDocumentTypeDaoImpl(this.cnxProduct);
-
-		List<ProductDocumentType> _productDocumentTypes = _productDocumentTypeDao.getActiveProductDocumentTypes();
-
-		return _productDocumentTypes;
+	public List<ProductDocumentType> getActiveProductDocumentTypes() {
+		return _productDocumentTypeDao.getActiveProductDocumentTypes();
 	}
 	
-	protected ProductDocument getProductDocument(String title, String link)
-			throws SQLException {
-		ProductDocumentDao _productDocumentDao = new ProductDocumentDaoImpl(this.cnxProduct);
-
-		ProductDocument _productDocument = _productDocumentDao.getProductDocument(title, link);
-
-		return _productDocument;
+	public ProductDocument getProductDocument(String title, String link) {
+		return _productDocumentDao.getProductDocument(title, link);
 	}
 
-	protected ProductDocument getProductDocument(int idProductDocument) throws SQLException {
-		ProductDocumentDao _productDocumentDao = new ProductDocumentDaoImpl(this.cnxProduct);
-
-		ProductDocument _productDocument = _productDocumentDao.getProductDocument(idProductDocument);
-
-		return _productDocument;
+	public ProductDocument getProductDocument(int idProductDocument) {
+		return _productDocumentDao.getProductDocument(idProductDocument);
 	}
 
-	protected List<ProductDocument> getProductDocuments() throws SQLException {
-		ProductDocumentDao _productDocumentDao = new ProductDocumentDaoImpl(this.cnxProduct);
-
-		List<ProductDocument> _productDocuments = _productDocumentDao.getProductDocuments();
-
-		return _productDocuments;
+	public List<ProductDocument> getProductDocuments() {
+		return _productDocumentDao.getProductDocuments();
 	}
 
-	protected List<ProductDocument> getActiveProductDocuments() throws SQLException {
-		ProductDocumentDao _productDocumentDao = new ProductDocumentDaoImpl(this.cnxProduct);
-
-		List<ProductDocument> _productDocuments = _productDocumentDao.getActiveProductDocuments();
-
-		return _productDocuments;
+	public List<ProductDocument> getActiveProductDocuments() {
+		return _productDocumentDao.getActiveProductDocuments();
 	}
 	
-	protected List<ProductDocument> getProductDocuments(Product product) throws SQLException {
-		ProductDocumentDao _productDocumentDao = new ProductDocumentDaoImpl(this.cnxProduct);
-
-		List<ProductDocument> _productDocuments = _productDocumentDao.getProductDocuments(product);
-
-		return _productDocuments;
+	public List<ProductDocument> getProductDocuments(Product product) {
+		return _productDocumentDao.getProductDocuments(product);
 	}
 	
-	protected List<ProductDocument> getProductDocuments(Product product, ProductDocumentType productDocumentType) throws SQLException {
-		ProductDocumentDao _productDocumentDao = new ProductDocumentDaoImpl(this.cnxProduct);
-
-		List<ProductDocument> _productDocuments = _productDocumentDao.getProductDocuments(product, productDocumentType);
-
-		return _productDocuments;
+	public List<ProductDocument> getProductDocuments(Product product, ProductDocumentType productDocumentType) {
+		return _productDocumentDao.getProductDocuments(product, productDocumentType);
 	}
 	
-	protected List<ProductDocument> getFEDDProductDocuments(Product product, ProductDocumentType productDocumentType) throws SQLException {
-		ProductDocumentDao _productDocumentDao = new ProductDocumentDaoImpl(this.cnxProduct);
-
-		List<ProductDocument> _productDocuments = _productDocumentDao.getFEDDProductDocuments(product, productDocumentType);
-
-		return _productDocuments;
+	public List<ProductDocument> getFEDDProductDocuments(Product product, ProductDocumentType productDocumentType) {
+		return _productDocumentDao.getFEDDProductDocuments(product, productDocumentType);
 	}
 	
 }

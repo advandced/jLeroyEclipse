@@ -20,7 +20,7 @@ import fr.la.jproductbaseweb.beanmanaged.modelForm.NumCommandeForm;
 @SessionScoped
 public class NumCommandeBean {
 
-	private ServiceInterface moduleGlobal = new ServiceInterface();
+	private ServiceInterface moduleGlobal = ServiceInterface.getInstance();
 
 	private String search;
 

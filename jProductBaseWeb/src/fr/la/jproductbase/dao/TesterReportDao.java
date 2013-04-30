@@ -27,7 +27,7 @@ public interface TesterReportDao {
 	 * 
 	 * @throws SQLException
 	 */
-	public TesterReport getTesterReport(int idTesterReport) throws SQLException;
+	public TesterReport getTesterReport(int idTesterReport);
 
 	/**
 	 * Recherche un rapport de test de la base de donn&eacute;es.
@@ -43,9 +43,7 @@ public interface TesterReportDao {
 	 * 
 	 * @throws SQLException
 	 */
-	public TesterReport getTesterReport(Timestamp reportDate,
-			TestType testType, Product product)
-			throws SQLException;
+	public TesterReport getTesterReport(Timestamp reportDate, TestType testType, Product product);
 
 	/**
 	 * Recherche un rapport de test de la base de donn&eacute;es.
@@ -63,9 +61,7 @@ public interface TesterReportDao {
 	 * 
 	 * @throws SQLException
 	 */
-	public TesterReport getTesterReport(Timestamp reportDate,
-			TestType testType, Tester tester, Product product)
-			throws SQLException;
+	public TesterReport getTesterReport(Timestamp reportDate, TestType testType, Tester tester, Product product);
 
 	/**
 	 * Ajoute un rapport testeur &agrave; la base de donn&eacute;es.
@@ -78,8 +74,7 @@ public interface TesterReportDao {
 	 * @throws SQLException
 	 * @throws TesterReportDaoException
 	 */
-	public TesterReport addTesterReport(TesterReport testerReport)
-			throws SQLException, TesterReportDaoException;
+	public TesterReport addTesterReport(TesterReport testerReport);
 
 	/**
 	 * Ajoute un rapport testeur &agrave; la base de donn&eacute;es.
@@ -102,9 +97,7 @@ public interface TesterReportDao {
 	 * @throws SQLException
 	 * @throws TesterReportDaoException
 	 */
-	public TesterReport addTesterReport(TestType testType, Tester tester,
-			Timestamp date, String operatorCode, Product product)
-			throws SQLException, TesterReportDaoException;
+	public TesterReport addTesterReport(TestType testType, Tester tester, Timestamp date, String operatorCode, Product product);
 
 	/**
 	 * Ajoute un rapport testeur &agrave; la base de donn&eacute;es.
@@ -128,9 +121,7 @@ public interface TesterReportDao {
 	 * @throws SQLException
 	 * @throws TesterReportDaoException
 	 */
-	public TesterReport addTesterReport(int state, TestType testType,
-			Timestamp timestamp, String operatorCode, Product product,
-			String result) throws SQLException, TesterReportDaoException;
+	public TesterReport addTesterReport(int state, TestType testType, Timestamp timestamp, String operatorCode, Product product, String result);
 
 	/**
 	 * Met &agrave; jour un rapport de test &agrave; la base de donn&eacute;es.
@@ -142,8 +133,7 @@ public interface TesterReportDao {
 	 * 
 	 * @throws SQLException
 	 */
-	public void updateTesterReport(TesterReport testerReport,
-			TesterReport testerReportNext) throws SQLException;
+	public void updateTesterReport(TesterReport testerReport,TesterReport testerReportNext);
 
 	/**
 	 * Met &agrave; jour un rapport de test &agrave; la base de donn&eacute;es.
@@ -166,7 +156,7 @@ public interface TesterReportDao {
 	 */
 	public void updateTesterReport(ProductionFailureReport failureReport,
 			TestType testType, Tester tester, java.sql.Date reportDate,
-			String operatorCode, Product product) throws SQLException, TesterReportDaoException;
+			String operatorCode, Product product);
 
 	/**
 	 * Liste des rapports des testeurs dans le flux d'un produit dans la base de
@@ -179,8 +169,7 @@ public interface TesterReportDao {
 	 * 
 	 * @throws SQLException
 	 */
-	public List<TesterReport> getInFlowTesterReport(Product product)
-			throws SQLException;
+	public List<TesterReport> getInFlowTesterReport(Product product);
 
 	/**
 	 * Recherche les rapports de testeurs dont le r&eacute;sultat est "Failed"
@@ -190,8 +179,7 @@ public interface TesterReportDao {
 	 * 
 	 * @throws SQLException
 	 */
-	public List<TesterReport> getTesterReportsFailedInflow()
-			throws SQLException;
+	public List<TesterReport> getTesterReportsFailedInflow();
 
 	/**
 	 * Recherche les rapports de testeurs devant apparaitre sur le fiche
@@ -208,6 +196,5 @@ public interface TesterReportDao {
 	 * 
 	 * @throws SQLException
 	 */
-	public List<TesterReport> getTesterReportsFollowingForm(Product product)
-			throws SQLException;
+	public List<TesterReport> getTesterReportsFollowingForm(Product product);
 }

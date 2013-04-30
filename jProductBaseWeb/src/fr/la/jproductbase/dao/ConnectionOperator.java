@@ -1,39 +1,25 @@
 package fr.la.jproductbase.dao;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Connection;
-import java.sql.SQLException;
 
-import javax.naming.NamingException;
-
-import fr.la.configfilereader.ConfigFileReaderException;
+import fr.la.connection.ConnectionPool;
 
 public class ConnectionOperator implements Serializable {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
-	private Connection cnx;
 	private ConnectionPool connectionPool;
 
-	public ConnectionOperator() throws ConfigFileReaderException, IOException, SQLException {
+	public ConnectionOperator() {
 		connectionPool = new ConnectionPool();
 	}
 
-	public Connection getCnx() throws SQLException, NamingException {
-		if (null == this.cnx) {
-			
-			this.cnx = connectionPool.getConnection("java:comp/env/jdbc/_leroyOperatorPool");
-		} else {
-			// Connexion already open
+	public Connection getCnx() {
+		try {
+			return connectionPool.getConnection("java:comp/env/jdbc/_leroyOperatorPool");
+		} catch (Exception e) {
+			throw new RuntimeException(e);
 		}
-		
-		return cnx;
 	}
 
-	public void closeCnx() {
-		connectionPool.closeConnection(this.cnx);
-		this.cnx = null;
-	}
 }

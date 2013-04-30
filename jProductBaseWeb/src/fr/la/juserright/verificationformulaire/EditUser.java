@@ -9,7 +9,7 @@ import fr.la.juserright.service.ServiceUserRight;
 
 public class EditUser {
 
-	private ServiceUserRight moduleGlobal = new ServiceUserRight();
+	private ServiceUserRight moduleGlobal = ServiceUserRight.getInstance();
 
 	public EditUser(User userSelected) throws SQLException, ErrorException {
 

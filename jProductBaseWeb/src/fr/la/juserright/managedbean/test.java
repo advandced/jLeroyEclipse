@@ -13,7 +13,7 @@ import fr.la.juserright.service.ServiceUserRight;
 @SessionScoped
 public class test {
 
-	private ServiceUserRight moduleGlobal = new ServiceUserRight();
+	private ServiceUserRight moduleGlobal = ServiceUserRight.getInstance();
 	
 	private List<User> listUser;
 	

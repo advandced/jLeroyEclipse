@@ -26,8 +26,7 @@ public interface ProductConfModelDao {
      *
      * @throws SQLException
      */
-    ProductConfModel getProductConfModel(int idProductConfModel)
-            throws SQLException;
+    ProductConfModel getProductConfModel(int idProductConfModel);
 
     /**
      * Recherche un mod&eacute;le de configuration produit de la base de
@@ -40,7 +39,7 @@ public interface ProductConfModelDao {
      *
      * @throws SQLException
      */
-    ProductConfModel getProductConfModel(String reference) throws SQLException;
+    ProductConfModel getProductConfModel(String reference);
 
     /**
      * Recherche les mod&eacute;les de configurations produit actives de la base
@@ -52,8 +51,7 @@ public interface ProductConfModelDao {
      *
      * @throws SQLException
      */
-    public List<ProductConfModel> getActiveProductConfModels(
-            ProductType productType) throws SQLException;
+    public List<ProductConfModel> getActiveProductConfModels(ProductType productType);
 
     /**
      * Recherche les mod&eacute;les de configurations produit actives de la base
@@ -63,7 +61,7 @@ public interface ProductConfModelDao {
      *
      * @throws SQLException
      */
-    public List<ProductConfModel> getActiveProductConfModels() throws SQLException;
+    public List<ProductConfModel> getActiveProductConfModels();
 
     /**
      * Recherche tous les mod&eacute;les de configuration produit de la base de
@@ -73,7 +71,7 @@ public interface ProductConfModelDao {
      *
      * @throws SQLException
      */
-    public List<ProductConfModel> getProductConfModels() throws SQLException;
+    public List<ProductConfModel> getProductConfModels();
 
     /**
      * Recherche tous les mod&eacute;les de configuration produit de la base de
@@ -85,15 +83,15 @@ public interface ProductConfModelDao {
      *
      * @throws SQLException
      */
-    public List<ProductConfModel> getProductConfModels(int type) throws SQLException;
+    public List<ProductConfModel> getProductConfModels(int type);
 
-    public void addProductConfModels(ProductConfModel _productConfModel) throws SQLException;
+    public void addProductConfModels(ProductConfModel _productConfModel);
 
-    public void delProductConfModels(int id) throws SQLException;
+    public void delProductConfModels(int id);
 
-    public void updateProductConfModels(ProductConfModel productConfModel) throws SQLException;
+    public void updateProductConfModels(ProductConfModel productConfModel);
 
-    public List<ProductConfModel> getProductConfModelLazy(Map<String, String> filters, int limit, int maxperpage) throws SQLException;
+    public List<ProductConfModel> getProductConfModelLazy(Map<String, String> filters, int limit, int maxperpage);
 
-    public int countProductConfModel(Map<String, String> filters) throws SQLException;
+    public int countProductConfModel(Map<String, String> filters);
 }

@@ -1,5 +1,6 @@
 package fr.la.jproductbase.dao;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -7,27 +8,26 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.naming.NamingException;
-
 import fr.la.jproductbase.metier.Tester;
 
-public class TesterDaoImpl implements TesterDao {
-	private static String exceptionMsg = "Testeur inconnu dans la base de données.";
+public class TesterDaoImpl extends GenericDao implements TesterDao {
 
-	private ConnectionTester cnxTester;
+	ConnectionTester cnxTester;
 
 	public TesterDaoImpl(ConnectionTester cnxTester) {
 		this.cnxTester = cnxTester;
 	}
 
 	@Override
-	public Tester getTester(int idTester) throws SQLException {
+	public Tester getTester(int idTester) {
 		Tester _tester = null;
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxTester.getCnx().prepareStatement(
+			c = this.cnxTester.getCnx();
+			_stmt = c.prepareStatement(
 					"SELECT * FROM tester " + "WHERE (idTester=?)");
 			_stmt.setInt(1, idTester);
 			_rs = _stmt.executeQuery();
@@ -37,30 +37,27 @@ public class TesterDaoImpl implements TesterDao {
 			} else {
 				_tester = null;
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _tester;
 	}
 
 	@Override
-	public Tester getTester(String name) throws SQLException {
+	public Tester getTester(String name) {
 		Tester _tester = null;
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxTester.getCnx().prepareStatement(
-					"SELECT * FROM tester" + " WHERE (name=?)");
+			c = this.cnxTester.getCnx();
+			_stmt = c.prepareStatement("SELECT * FROM tester WHERE (name=?)");
 			_stmt.setString(1, name);
 			_rs = _stmt.executeQuery();
 
@@ -69,76 +66,66 @@ public class TesterDaoImpl implements TesterDao {
 			} else {
 				_tester = null;
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _tester;
 	}
 
 	@Override
-	public List<Tester> getActiveTesters() throws SQLException {
+	public List<Tester> getActiveTesters() {
 		List<Tester> _testers = new ArrayList<Tester>();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxTester.getCnx().prepareStatement(
-					"SELECT * FROM tester " + "WHERE (state = 1)");
+			c = this.cnxTester.getCnx();
+			_stmt = c.prepareStatement("SELECT * FROM tester WHERE (state = 1)");
 			_rs = _stmt.executeQuery();
 
 			while (_rs.next()) {
 				Tester _tester = this.getTester(_rs);
 				_testers.add(_tester);
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _testers;
 	}
 	
 	@Override
-	public List<Tester> getTesters() throws SQLException {
+	public List<Tester> getTesters() {
 		List<Tester> _testers = new ArrayList<Tester>();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxTester.getCnx().prepareStatement(
-					"SELECT * FROM tester");
+			c = this.cnxTester.getCnx();
+			_stmt = c.prepareStatement("SELECT * FROM tester");
 			_rs = _stmt.executeQuery();
 
 			while (_rs.next()) {
 				Tester _tester = this.getTester(_rs);
 				_testers.add(_tester);
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _testers;
@@ -163,7 +150,7 @@ public class TesterDaoImpl implements TesterDao {
 	}
 
 	@Override
-	public Tester addTester(String name) throws SQLException, TesterDaoException {
+	public Tester addTester(String name) {
 		/*Tester _tester = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
@@ -200,20 +187,22 @@ public class TesterDaoImpl implements TesterDao {
 	}
 	
 	@Override
-	public Tester addTester(String name, int state) throws SQLException, TesterDaoException {
+	public Tester addTester(String name, int state) {
 		Tester _tester = null;
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxTester.getCnx().prepareStatement(
+			c = this.cnxTester.getCnx();
+			_stmt = c.prepareStatement(
 					"INSERT INTO tester (state, name)" + " VALUES (?, ?)");
 			_stmt.setInt(1, state);
 			_stmt.setString(2, name);
 			_stmt.executeUpdate();
 
 			// Retrieve testerReport data
-			_stmt = this.cnxTester.getCnx().prepareStatement(
+			_stmt = c.prepareStatement(
 					"SELECT * FROM tester WHERE (name=?) AND (state=?)");
 			_stmt.setString(1, name);
 			_stmt.setInt(2, state);
@@ -222,31 +211,28 @@ public class TesterDaoImpl implements TesterDao {
 			if (_rs.next()) {
 				_tester = this.getTester(_rs);
 			} else {
-				throw new TesterDaoException(exceptionMsg);
+				throw new IllegalStateException();
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _tester;
 	}
 	
 	@Override
-	public void updateTester(Tester tester)
-			throws SQLException, TesterDaoException {
+	public void updateTester(Tester tester) {
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxTester.getCnx().prepareStatement(
+			c = this.cnxTester.getCnx();
+			_stmt = c.prepareStatement(
 					"UPDATE tester " + "SET state=?, name=? "
 							+ " WHERE (idTester=?)");
 			_stmt.setInt(1, tester.getState());
@@ -255,7 +241,7 @@ public class TesterDaoImpl implements TesterDao {
 			_stmt.executeUpdate();
 
 			// Update object
-			_stmt = this.cnxTester.getCnx().prepareStatement(
+			_stmt = c.prepareStatement(
 					"SELECT * FROM tester"
 							+ " WHERE (idTester=?)");
 			_stmt.setInt(1, tester.getIdTester());
@@ -264,18 +250,14 @@ public class TesterDaoImpl implements TesterDao {
 			if (_rs.next()) {
 				this.getTester(_rs);
 			} else {
-				throw new TesterDaoException(exceptionMsg);
+				throw new IllegalStateException();
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 	}
 }

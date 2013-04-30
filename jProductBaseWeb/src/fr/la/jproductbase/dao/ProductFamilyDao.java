@@ -23,7 +23,7 @@ public interface ProductFamilyDao {
 	 * 
 	 * @throws SQLException
 	 */
-	ProductFamily getProductFamily(int idProductFamily) throws SQLException;
+	ProductFamily getProductFamily(int idProductFamily);
 
 	/**
 	 * Recherche une famille de produit de la base de donn&eacute;es.
@@ -35,7 +35,7 @@ public interface ProductFamilyDao {
 	 * 
 	 * @throws SQLException
 	 */
-	ProductFamily getProductFamily(String name) throws SQLException;
+	ProductFamily getProductFamily(String name);
 
 	/**
 	 * Recherche les familles de produit de la base de donn&eacute;es.
@@ -44,7 +44,7 @@ public interface ProductFamilyDao {
 	 * 
 	 * @throws SQLException
 	 */
-	List<ProductFamily> getProductFamilies() throws SQLException;
+	List<ProductFamily> getProductFamilies();
 	
 	/**
 	 * Recherche les familles de produit de la base de donn&eacute;es
@@ -56,7 +56,7 @@ public interface ProductFamilyDao {
 	 * 
 	 * @throws SQLException
 	 */
-	List<ProductFamily> getProductFamilies(int type) throws SQLException;
+	List<ProductFamily> getProductFamilies(int type);
 
 	/**
 	 * Recherche les familles de produit actives de la base de donn&eacute;es.
@@ -65,16 +65,12 @@ public interface ProductFamilyDao {
 	 * 
 	 * @throws SQLException
 	 */
-	List<ProductFamily> getActiveProductFamilies() throws SQLException;
+	List<ProductFamily> getActiveProductFamilies();
 
 	// 15-12-11 : RMO : Création de 3 nouvelles méthodes //TODO RMO : JavaDoc
-	ProductFamily addProductFamily(String name, int state,
-			ProductType productType) throws SQLException,
-			ProductFamilyDaoException;
+	ProductFamily addProductFamily(String name, int state, ProductType productType);
 
-	void updateProductFamily(ProductFamily productFamilyToUpdate)
-			throws SQLException, ProductFamilyDaoException;
+	void updateProductFamily(ProductFamily productFamilyToUpdate);
 
-	void deleteProductFamily(ProductFamily productFamilyToDelete)
-			throws SQLException;
+	void deleteProductFamily(ProductFamily productFamilyToDelete);
 }

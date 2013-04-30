@@ -65,20 +65,17 @@ public class AfterSaleCom implements Serializable {
 		this.orderComment = OrderComment;
 	}
 
-	public AfterSaleCom(int aftersalecom, String numDevis, float montantDevis,
-			Date dateDevis, String comm) throws SQLException,
-			ConfigFileReaderException, IOException {
+	public AfterSaleCom(int aftersalecom, String numDevis, float montantDevis, Date dateDevis, String comm) {
 		this.idAfterSaleCom = aftersalecom;
 		this.quotationNumber = numDevis;
 		this.quotationComment = comm;
 		this.quotationDate = dateDevis;
 		this.savPrice = montantDevis;
 	}
-
-	public AfterSaleCom(int aftersalecom, String numDevis, float montantDevis,
-			Date dateDevis, String comm, int aftersalereport)
-			throws SQLException, ConfigFileReaderException, IOException {
-		ServiceInterface moduleGlobal = new ServiceInterface();
+	
+	/*
+	public AfterSaleCom(int aftersalecom, String numDevis, float montantDevis, Date dateDevis, String comm, int aftersalereport) {
+		ServiceInterface moduleGlobal = ServiceInterface();
 		this.afterSaleReport = moduleGlobal.getAfterSaleReport(aftersalereport);
 		this.idAfterSaleCom = aftersalecom;
 		this.quotationNumber = numDevis;
@@ -86,9 +83,9 @@ public class AfterSaleCom implements Serializable {
 		this.quotationDate = dateDevis;
 		this.savPrice = montantDevis;
 	}
+	*/
 
-	public AfterSaleCom(int aftersalecom, int numCmd, Date dateCmd)
-			throws SQLException, ConfigFileReaderException, IOException {
+	public AfterSaleCom(int aftersalecom, int numCmd, Date dateCmd) {
 		this.idAfterSaleCom = aftersalecom;
 		this.savOrderNumber = numCmd;
 		this.savOrderDate = dateCmd;

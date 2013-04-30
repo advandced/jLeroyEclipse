@@ -185,20 +185,20 @@ public class ProductConf implements Serializable {
 	 * @throws IOException
 	 * @throws ConfigFileReaderException
 	 */
-	public List<ProductConf> getProductConfComponents()
-			throws ConfigFileReaderException, IOException, SQLException {
+	/*
+	public List<ProductConf> getProductConfComponents() {
 		if (null == this.productConfComponents) {
 			// Retreive productConfComponents
 			ServiceInterface _serviceInterface = new ServiceInterface();
-			this.productConfComponents = _serviceInterface
-					.getProductConfComponents(this);
+			this.productConfComponents = _serviceInterface.getProductConfComponents(this);
 		} else {
 			// data already
 		}
 
 		return productConfComponents;
 	}
-
+	*/
+	
 	/**
 	 * @param productConfComponents
 	 *            the productConfComponents to set

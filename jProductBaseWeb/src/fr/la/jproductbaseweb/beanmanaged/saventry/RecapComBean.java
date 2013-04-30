@@ -10,7 +10,6 @@ import javax.faces.bean.SessionScoped;
 import org.primefaces.context.RequestContext;
 
 import fr.la.configfilereader.ConfigFileReaderException;
-import fr.la.jproductbase.dao.AfterSaleReportDaoException;
 import fr.la.jproductbase.metier.AfterSaleCom;
 import fr.la.jproductbaseweb.beanmanaged.modelForm.RecapComForm;
 import fr.la.jproductbaseweb.beanmanaged.modeltable.AfterSaleComLazy;
@@ -23,8 +22,7 @@ public class RecapComBean {
 
 	private AfterSaleCom selectedAfterSaleCom;
 
-	public RecapComBean() throws SQLException, ConfigFileReaderException,
-			IOException, AfterSaleReportDaoException, ParseException {
+	public RecapComBean() {
 		this.refreshlistAfterSaleCom();
 	}
 	
@@ -44,9 +42,7 @@ public class RecapComBean {
 		this.selectedAfterSaleCom = selectedAfterSaleCom;
 	}
 
-	public void refreshlistAfterSaleCom() throws SQLException,
-			ConfigFileReaderException, IOException,
-			AfterSaleReportDaoException, ParseException {
+	public void refreshlistAfterSaleCom() {
 		this.listAfterSaleCom =  new AfterSaleComLazy();
 	}
 
@@ -55,8 +51,7 @@ public class RecapComBean {
 		context.execute("dialogDetailCom.show()");
 	}
 
-	public void hideDetail() throws SQLException, ConfigFileReaderException,
-			IOException, AfterSaleReportDaoException, ParseException {
+	public void hideDetail() {
 		this.refreshlistAfterSaleCom();
 		RequestContext context = RequestContext.getCurrentInstance();
 		context.execute("dialogDetailCom.hide()");
@@ -67,8 +62,7 @@ public class RecapComBean {
 		context.execute("dialogEditCom.show()");
 	}
 
-	public void hideEdit() throws SQLException, ConfigFileReaderException,
-			IOException, AfterSaleReportDaoException, ParseException {
+	public void hideEdit() {
 		this.refreshlistAfterSaleCom();
 		RequestContext context = RequestContext.getCurrentInstance();
 		context.execute("dialogEditCom.hide()");

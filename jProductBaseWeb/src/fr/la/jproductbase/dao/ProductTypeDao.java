@@ -22,7 +22,7 @@ public interface ProductTypeDao {
 	 * 
 	 * @throws SQLException
 	 */
-	ProductType getProductType(int idProductType) throws SQLException;
+	ProductType getProductType(int idProductType);
 
 	/**
 	 * Recherche un mod&eacute;le de produit de la base de donn&eacute;es.
@@ -34,7 +34,7 @@ public interface ProductTypeDao {
 	 * 
 	 * @throws SQLException
 	 */
-	ProductType getProductType(String name) throws SQLException;
+	ProductType getProductType(String name);
 
 	/**
 	 * Recherche les mod&eacute;les de produit de la base de donn&eacute;es.
@@ -43,7 +43,7 @@ public interface ProductTypeDao {
 	 * 
 	 * @throws SQLException
 	 */
-	List<ProductType> getProductTypes() throws SQLException;
+	List<ProductType> getProductTypes();
 
 	/**
 	 * Recherche les mod&eacute;les de produit actifs de la base de
@@ -53,15 +53,13 @@ public interface ProductTypeDao {
 	 * 
 	 * @throws SQLException
 	 */
-	List<ProductType> getActiveProductTypes() throws SQLException;
+	List<ProductType> getActiveProductTypes();
 
 	// 15-12-11 : RMO : Création de 3 nouvelles méthodes //TODO RMO : JavaDoc
-	ProductType addProductType(String name, int state) throws SQLException,
-			ProductDaoException;
+	ProductType addProductType(String name, int state);
 
-	void updateProductType(ProductType productTypeToUpdate)
-			throws SQLException, ProductDaoException;
+	void updateProductType(ProductType productTypeToUpdate);
 
-	void deleteProductType(ProductType productTypeToDelete) throws SQLException;
+	void deleteProductType(ProductType productTypeToDelete);
 
 }

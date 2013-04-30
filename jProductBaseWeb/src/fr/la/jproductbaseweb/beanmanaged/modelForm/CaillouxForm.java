@@ -14,7 +14,7 @@ import java.io.Serializable;
 public class CaillouxForm implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private ServiceInterface moduleGlobal = new ServiceInterface();
+    private ServiceInterface moduleGlobal = ServiceInterface.getInstance();
     private Date debut;
     private Date fin;
     List<AfterSaleCom> listaftersalecom;

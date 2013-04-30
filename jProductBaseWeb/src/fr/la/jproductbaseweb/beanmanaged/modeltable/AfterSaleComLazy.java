@@ -23,19 +23,10 @@ public class AfterSaleComLazy extends LazyDataModel<AfterSaleCom> {
 	@Override
 	public List<AfterSaleCom> load(int startingAt, int maxPerPage,
 			String sortField, SortOrder sortOrder, Map<String, String> filters) {
-		this.moduleGlobal = new ServiceInterface();
+		this.moduleGlobal = ServiceInterface.getInstance();
 		int countSizeResult = 0;
-		try {
-			this.afterSaleCom = this.moduleGlobal.getLazyRecapCom(startingAt,
-					maxPerPage);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		try {
-			countSizeResult = this.moduleGlobal.countRecapCom();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		this.afterSaleCom = this.moduleGlobal.getLazyRecapCom(startingAt,maxPerPage);
+		countSizeResult = this.moduleGlobal.countRecapCom();
 		setRowCount(countSizeResult);
 		setPageSize(maxPerPage);
 		return this.afterSaleCom;

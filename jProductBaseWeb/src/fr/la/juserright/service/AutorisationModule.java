@@ -1,102 +1,57 @@
 package fr.la.juserright.service;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import fr.la.juserright.dao.AutorisationDAO;
-import fr.la.juserright.dao.ConnectionUserRight;
-import fr.la.juserright.dao.FactoryDAO;
 import fr.la.juserright.metier.Autorisation;
 
 public class AutorisationModule {
 	
-	private ConnectionUserRight cnxUserRight;
+	AutorisationDAO _autorisationDao;
 
-	protected AutorisationModule(ConnectionUserRight cnxUserRight) {
-		this.cnxUserRight = cnxUserRight;
+	public AutorisationModule(AutorisationDAO autorisationDao) {
+		_autorisationDao = autorisationDao;
 	}
 	
-	protected void createAutorisation(Autorisation _autorisation) throws SQLException {
-		
-		AutorisationDAO _autorisationDao = FactoryDAO.getAutorisationDAO(this.cnxUserRight);
-		
+	public void createAutorisation(Autorisation _autorisation) {
 		_autorisationDao.create(_autorisation);
-		
 	}
 	
-	protected List<Autorisation> getAllAutorisation() throws SQLException {
-		
-		AutorisationDAO _autorisationDao = FactoryDAO.getAutorisationDAO(this.cnxUserRight);
-		
+	public List<Autorisation> getAllAutorisation() {
 		List<Autorisation> _autorisation = _autorisationDao.readAll();
-		
 		return _autorisation;
-		
 	}
 	
-	protected List<Autorisation> getAutorisationWithIdPermission(int idpermission) throws SQLException {
-		
-		AutorisationDAO _autorisationDao = FactoryDAO.getAutorisationDAO(this.cnxUserRight);
-		
+	public List<Autorisation> getAutorisationWithIdPermission(int idpermission) {
 		List<Autorisation> _autorisation = _autorisationDao.getAutorisationWithIdPermission(idpermission);
-		
 		return _autorisation;
-		
 	}
 	
-	protected List<Autorisation> getAutorisationWithIdRessource(int idressource) throws SQLException {
-		
-		AutorisationDAO _autorisationDao = FactoryDAO.getAutorisationDAO(this.cnxUserRight);
-		
+	public List<Autorisation> getAutorisationWithIdRessource(int idressource) {
 		List<Autorisation> _autorisation = _autorisationDao.getAutorisationWithIdRessource(idressource);
-		
 		return _autorisation;
-		
 	}
 
-	protected List<Autorisation> getAutorisationWithIdRole(int idrole) throws SQLException {
-		
-		AutorisationDAO _autorisationDao = FactoryDAO.getAutorisationDAO(this.cnxUserRight);
-		
+	public List<Autorisation> getAutorisationWithIdRole(int idrole) {
 		List<Autorisation> _autorisation = _autorisationDao.getAutorisationWithIdRole(idrole);
-		
 		return _autorisation;
-		
 	}
 	
-	protected void updateAutorisation(Autorisation _autorisation) throws SQLException {
-		
-		AutorisationDAO _autorisationDao = FactoryDAO.getAutorisationDAO(this.cnxUserRight);
-		
+	public void updateAutorisation(Autorisation _autorisation) {
 		_autorisationDao.update(_autorisation);
-		
 	}
 	
-	protected void deleteAutorisation(Autorisation _autorisation) throws SQLException {
-		
-		AutorisationDAO _autorisationDao = FactoryDAO.getAutorisationDAO(this.cnxUserRight);
-		
+	public void deleteAutorisation(Autorisation _autorisation) {
 		_autorisationDao.delete(_autorisation);
-		
 	}
 	
-	protected Autorisation checkAutorisationExists(Autorisation _autorisation) throws SQLException {
-		
-		AutorisationDAO _autorisationDao = FactoryDAO.getAutorisationDAO(this.cnxUserRight);
-		
+	public Autorisation checkAutorisationExists(Autorisation _autorisation) {
 		Autorisation __autorisation = _autorisationDao.checkAutorisationExists(_autorisation);
-		
 		return __autorisation;
-		
 	}
 	
-	protected List<Autorisation> getAutorisationByLogin(String _login) throws SQLException{
-
-		AutorisationDAO _autorisationDao = FactoryDAO.getAutorisationDAO(this.cnxUserRight);
-		
+	public List<Autorisation> getAutorisationByLogin(String _login) {
 		List<Autorisation> __autorisation = _autorisationDao.getAutorisationByLogin(_login);
-		
 		return __autorisation;
-		
 	}
 }

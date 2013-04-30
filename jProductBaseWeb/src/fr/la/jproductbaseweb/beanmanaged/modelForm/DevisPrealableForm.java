@@ -9,7 +9,7 @@ import java.util.List;
 public class DevisPrealableForm implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private ServiceInterface moduleGlobal = new ServiceInterface();
+    private ServiceInterface moduleGlobal = ServiceInterface.getInstance();
     private List<AfterSaleCom> listAfterSaleCom;
 
     public DevisPrealableForm(List<AfterSaleCom> listAfterSaleCom)

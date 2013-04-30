@@ -83,25 +83,19 @@ public class GestConfigurationProduct extends GestFormAbstract<ProductConf> {
     }
 
     private void refresh() {
-        try {
-            this.objectList = this.moduleGolbal.getProductConfs();
-            @SuppressWarnings("unused")
-			ProductConfModelConverter _productConfModel = new ProductConfModelConverter();
-            ConfigurationProductFamiliyConverter _configurationProductFamily = new ConfigurationProductFamiliyConverter();
-            this.productConfModelList = moduleGolbal.getActiveProductConfModels();
-            for (ProductConfModel l : this.productConfModelList) {
-                System.out.println(l.getReference());
-            }
-            this.productFamilyList = _configurationProductFamily
-                    .getProductConfList();
-            this.productSupplyList = this.moduleGolbal
-                    .getActiveProductSupplies();
-            this.followingFormModelList = this.moduleGolbal
-                    .getAllActiveFollowingFormModel();
-        } catch (SQLException e) {
-        } catch (ConfigFileReaderException e) {
-        } catch (IOException e) {
+        this.objectList = this.moduleGolbal.getProductConfs();
+		ProductConfModelConverter _productConfModel = new ProductConfModelConverter();
+        ConfigurationProductFamiliyConverter _configurationProductFamily = new ConfigurationProductFamiliyConverter();
+        this.productConfModelList = moduleGolbal.getActiveProductConfModels();
+        for (ProductConfModel l : this.productConfModelList) {
+            System.out.println(l.getReference());
         }
+        this.productFamilyList = _configurationProductFamily
+                .getProductConfList();
+        this.productSupplyList = this.moduleGolbal
+                .getActiveProductSupplies();
+        this.followingFormModelList = this.moduleGolbal
+                .getAllActiveFollowingFormModel();
     }
 
     public void checkBoxElement() {
@@ -122,15 +116,7 @@ public class GestConfigurationProduct extends GestFormAbstract<ProductConf> {
         }
 
         this.getSelectedObject().setProductConfComponents(_listElementSave);
-
-        try {
-            this.productConfsList = this.getSelectedObject()
-                    .getProductConfComponents();
-        } catch (ConfigFileReaderException e) {
-        } catch (IOException e) {
-        } catch (SQLException e) {
-        }
-
+        this.productConfsList =  moduleGolbal.getProductConfComponents( this.getSelectedObject() );
     }
 
     public void checkBoxSoftware() {
@@ -175,8 +161,7 @@ public class GestConfigurationProduct extends GestFormAbstract<ProductConf> {
         this.stateConfProduct = getSelectedObject().getState();
 
         try {
-            this.productConfsList = getSelectedObject()
-                    .getProductConfComponents();
+            this.productConfsList = moduleGolbal.getProductConfComponents( getSelectedObject() );
             this.softwareList = getSelectedObject().getProductConfSoftwares();
             this.cardElementList = new ArrayList<ElementBean>();
             getElementCard();
@@ -252,7 +237,7 @@ public class GestConfigurationProduct extends GestFormAbstract<ProductConf> {
         for (ProductConf productCard : productElementList) {
             ElementBean _elementBean = new ElementBean();
             if (getSelectedObject() != null && (productCard.getIdProductConf() != getSelectedObject().getIdProductConf())) {
-                for (ProductConf prodConf : getSelectedObject().getProductConfComponents()) {
+                for (ProductConf prodConf : moduleGolbal.getProductConfComponents( getSelectedObject() )) {
                     if (prodConf.getIdProductConf() == productCard.getIdProductConf()) {
                         _elementBean.setSelectedElement(true);
                         System.out.println("1");

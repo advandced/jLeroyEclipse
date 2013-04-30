@@ -20,15 +20,8 @@ public class ProductSupplyConverter implements Converter {
 
 	public ProductSupplyConverter() {
 		System.out.println("get productConfActive");
-		ServiceInterface _serviceInterface = new ServiceInterface();
-		try {
-			productSupplyConverter = _serviceInterface
-					.getActiveProductSupplies();
-			System.out.println("taille list" + productSupplyConverter.size());
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		ServiceInterface _serviceInterface = ServiceInterface.getInstance();
+		productSupplyConverter = _serviceInterface.getActiveProductSupplies();
 	}
 
 	@Override

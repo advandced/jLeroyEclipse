@@ -19,7 +19,7 @@ public interface TestTypeDao {
 	 * 
 	 * @throws SQLException
 	 */
-	public List<TestType> getTestTypes() throws SQLException;
+	public List<TestType> getTestTypes();
 
 	/**
 	 * Recherche un type de test de la base de donn&eacute;es.
@@ -31,7 +31,7 @@ public interface TestTypeDao {
 	 * 
 	 * @throws SQLException
 	 */
-	public TestType getTestType(int idTestType) throws SQLException;
+	public TestType getTestType(int idTestType);
 
 	/**
 	 * Recherche un type de test de la base de donn&eacute;es.
@@ -43,7 +43,7 @@ public interface TestTypeDao {
 	 * 
 	 * @throws SQLException
 	 */
-	public TestType getTestType(String name) throws SQLException;
+	public TestType getTestType(String name);
 	
 	/**
 	 * Ajoute un type de test &agrave; la base de donn&eacute;es.
@@ -60,7 +60,7 @@ public interface TestTypeDao {
 	 * @throws SQLException
 	 * @throws TesterDaoException 
 	 */
-	public TestType addTestType(String name, int state, boolean needTester) throws SQLException, TestTypeDaoException;
+	public TestType addTestType(String name, int state, boolean needTester);
 	
 	/**
 	 * Met &agrave; jour un type de test dans la base de donn&eacute;s.
@@ -71,6 +71,6 @@ public interface TestTypeDao {
 	 * @throws SQLException
 	 * @throws TesterDaoException
 	 */
-	public void updateTestType(TestType testType) throws SQLException, TestTypeDaoException;
+	public void updateTestType(TestType testType);
 	
 }

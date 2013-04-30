@@ -1,5 +1,6 @@
 package fr.la.jproductbase.dao;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -7,29 +8,26 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.naming.NamingException;
-
 import fr.la.jproductbase.metier.ProductSupply;
 
-public class ProductSupplyDaoImpl implements ProductSupplyDao {
-	private static String exceptionMsg = "Tension d'alimentation de produit inconnue dans la base de données.";
+public class ProductSupplyDaoImpl extends GenericDao implements ProductSupplyDao {
 
-	private ConnectionProduct cnxProduct;
+	ConnectionProduct cnxProduct;
 
 	public ProductSupplyDaoImpl(ConnectionProduct cnxProduct) {
 		this.cnxProduct = cnxProduct;
 	}
 
 	@Override
-	public ProductSupply getProductSupply(int idProductSupply)
-			throws SQLException {
+	public ProductSupply getProductSupply(int idProductSupply) {
 		ProductSupply _productSupply = null;
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
-					"SELECT * FROM productSupply WHERE idProductSupply=?");
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement("SELECT * FROM productSupply WHERE idProductSupply=?");
 			_stmt.setInt(1, idProductSupply);
 			_rs = _stmt.executeQuery();
 
@@ -38,29 +36,27 @@ public class ProductSupplyDaoImpl implements ProductSupplyDao {
 			} else {
 				_productSupply = null;
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _productSupply;
 	}
 
 	@Override
-	public ProductSupply getProductSupply(String name) throws SQLException {
+	public ProductSupply getProductSupply(String name) {
 		ProductSupply _productSupply = null;
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 					"SELECT * FROM productSupply WHERE name=?");
 			_stmt.setString(1, name);
 			_rs = _stmt.executeQuery();
@@ -70,60 +66,54 @@ public class ProductSupplyDaoImpl implements ProductSupplyDao {
 			} else {
 				_productSupply = null;
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _productSupply;
 	}
 
 	@Override
-	public List<ProductSupply> getProductSupplies() throws SQLException {
+	public List<ProductSupply> getProductSupplies() {
 		List<ProductSupply> _productSupplies = new ArrayList<ProductSupply>();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
-					"SELECT * FROM productSupply");
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement("SELECT * FROM productSupply");
 			_rs = _stmt.executeQuery();
 
 			while (_rs.next()) {
 				ProductSupply _productSupply = this.getProductSupply(_rs);
 				_productSupplies.add(_productSupply);
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _productSupplies;
 	}
 
 	@Override
-	public List<ProductSupply> getActiveProductSupplies() throws SQLException {
+	public List<ProductSupply> getActiveProductSupplies() {
 		List<ProductSupply> _activeProductSupplies = new ArrayList<ProductSupply>();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
-					"SELECT * FROM productSupply " + " WHERE (state=?)");
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement("SELECT * FROM productSupply WHERE (state=?)");
 			_stmt.setInt(1, 1);
 			_rs = _stmt.executeQuery();
 
@@ -131,16 +121,12 @@ public class ProductSupplyDaoImpl implements ProductSupplyDao {
 				ProductSupply _productSupply = this.getProductSupply(_rs);
 				_activeProductSupplies.add(_productSupply);
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _activeProductSupplies;
@@ -166,15 +152,16 @@ public class ProductSupplyDaoImpl implements ProductSupplyDao {
 	}
 
 	@Override
-	public ProductSupply addProductSupply(String name, int state)
-			throws SQLException, ProductDaoException {
+	public ProductSupply addProductSupply(String name, int state) {
 
 		ProductSupply _productSupply = null;
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 					"INSERT INTO productSupply (name, state)"
 							+ " VALUES (?, ?)");
 			_stmt.setString(1, name);
@@ -182,7 +169,7 @@ public class ProductSupplyDaoImpl implements ProductSupplyDao {
 			_stmt.executeUpdate();
 
 			// Retrieve productSupply data
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			_stmt = c.prepareStatement(
 					"SELECT * FROM productSupply" + " WHERE (name=?)"
 							+ " 	AND (state=?)");
 			_stmt.setString(1, name);
@@ -192,31 +179,28 @@ public class ProductSupplyDaoImpl implements ProductSupplyDao {
 			if (_rs.next()) {
 				_productSupply = this.getProductSupply(_rs);
 			} else {
-				throw new ProductDaoException(exceptionMsg);
+				throw new IllegalStateException();
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _productSupply;
 	}
 
 	@Override
-	public void updateProductSupply(ProductSupply productSupplyToUpdate)
-			throws SQLException, ProductDaoException {
+	public void updateProductSupply(ProductSupply productSupplyToUpdate) {
 
+		Connection c = null;
 		PreparedStatement _stmt = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 					"UPDATE productSupply "
 							+ "SET name=?, state=?"
 							+ " WHERE (idProductSupply=?)");
@@ -225,44 +209,39 @@ public class ProductSupplyDaoImpl implements ProductSupplyDao {
 			_stmt.setInt(3, productSupplyToUpdate.getIdProductSupply());
 			_stmt.executeUpdate();
 
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			_stmt = c.prepareStatement(
 					"SELECT * FROM productSupply WHERE (idProductSupply = ?)");
 			_stmt.setInt(1, productSupplyToUpdate.getIdProductSupply());
 
 			ResultSet _rs = _stmt.executeQuery();
 			if (!_rs.next()) {
-				throw new ProductDaoException(exceptionMsg);
+				throw new IllegalStateException();
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_stmt);
+			close(c);
 		}
 	}
 
 	@Override
-	public void deleteProductSupply(ProductSupply productSupplyToDelete)
-			throws SQLException {
-		// TODO Auto-generated method stub
+	public void deleteProductSupply(ProductSupply productSupplyToDelete) {
+		Connection c = null;
 		PreparedStatement _stmt = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx()
-					.prepareStatement(
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 							"DELETE FROM productSupply "
 									+ " WHERE (idProductSupply=?)");
 			_stmt.setInt(1, productSupplyToDelete.getIdProductSupply());
 			_stmt.executeUpdate();
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_stmt);
+			close(c);
 		}
 	}
 }

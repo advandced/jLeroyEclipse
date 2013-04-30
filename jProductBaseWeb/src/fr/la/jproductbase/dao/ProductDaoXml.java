@@ -1,9 +1,7 @@
 package fr.la.jproductbase.dao;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -12,7 +10,6 @@ import org.jdom.Element;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 
-import fr.la.configfilereader.ConfigFileReaderException;
 import fr.la.jproductbase.metier.JProductBaseParameters;
 
 public class ProductDaoXml {
@@ -22,8 +19,7 @@ public class ProductDaoXml {
 	public void addProduct(String productConfReference,
 			String productConfMajorIndex, String productConfMinorIndex,
 			String serialNumber, String datecode, String[][] productComponents,
-			String[][] productSoftwares) throws ConfigFileReaderException,
-			IOException {
+			String[][] productSoftwares) {
 		// Product
 		Element _productElt = new Element("product");
 		this.racine.addContent(_productElt);
@@ -118,8 +114,7 @@ public class ProductDaoXml {
 		}
 
 		// Répertoire du fichier xml
-		JProductBaseParameters _jProductBaseParameters = JProductBaseParameters
-				.getInstance();
+		JProductBaseParameters _jProductBaseParameters = JProductBaseParameters.getInstance();
 		String _fileDirectory = _jProductBaseParameters.getDataFilesDirectory();
 		// Nom du fichier xml
 		Date _now = new Date();
@@ -136,8 +131,12 @@ public class ProductDaoXml {
 	 * 
 	 * @param fileName Chemin et nom du fichier.
 	 */
-	private void save(String fileName) throws FileNotFoundException, IOException {
+	private void save(String fileName) {
 		XMLOutputter sortie = new XMLOutputter(Format.getPrettyFormat());
-		sortie.output(this.document, new FileOutputStream(fileName));
+		try {
+			sortie.output(this.document, new FileOutputStream(fileName));
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 }

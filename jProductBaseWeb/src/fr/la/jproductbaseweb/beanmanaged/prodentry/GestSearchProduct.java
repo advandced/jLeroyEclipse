@@ -1,6 +1,20 @@
 package fr.la.jproductbaseweb.beanmanaged.prodentry;
 
-import fr.la.configfilereader.ConfigFileReaderException;
+import java.io.Serializable;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
+
+import org.primefaces.component.commandbutton.CommandButton;
+import org.primefaces.component.dialog.Dialog;
+import org.primefaces.event.TabChangeEvent;
+
 import fr.la.jproductbase.metier.Product;
 import fr.la.jproductbase.metier.ProductDocument;
 import fr.la.jproductbase.metier.ProductFamily;
@@ -11,19 +25,6 @@ import fr.la.jproductbaseweb.beanmanaged.SoftwareBean;
 import fr.la.jproductbaseweb.beanmanaged.exception.ProductModifyException;
 import fr.la.jproductbaseweb.beanmanaged.modelForm.ProductModifyForm;
 import fr.la.jproductbaseweb.beanmanaged.modeltable.ProductLazyList;
-import java.io.IOException;
-import java.io.Serializable;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
-import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
-import org.primefaces.component.commandbutton.CommandButton;
-import org.primefaces.component.dialog.Dialog;
-import org.primefaces.event.TabChangeEvent;
 
 @ManagedBean(name = "gestSearchProduct")
 @SessionScoped
@@ -42,7 +43,7 @@ public class GestSearchProduct extends GestFormSearchAbstract<Product> implement
 
     public GestSearchProduct() {
         super();
-        this.moduleGlobale = new ServiceInterface();
+        this.moduleGlobale = ServiceInterface.getInstance();
         this.state = -1;
         this.products = new ProductLazyList(2);
 
@@ -66,9 +67,7 @@ public class GestSearchProduct extends GestFormSearchAbstract<Product> implement
 
     @Override
     public void detailAction() {
-        // TODO Auto-generated method stub
-        System.out.println("detail action "
-                + getSelectedObject().getProductConf().getReference());
+        
         this.reference = getSelectedObject().getProductConf().getReference();
         this.serialNumber = getSelectedObject().getSerialNumber();
         this.macAdress = getSelectedObject().getMacAddress();
@@ -79,23 +78,16 @@ public class GestSearchProduct extends GestFormSearchAbstract<Product> implement
                 + getSelectedObject().getProductConf().getMajorIndex() + "~"
                 + getSelectedObject().getProductConf().getMinorIndex();
 
-        try {
-            this.elementList = this.selectedObject.getProductComponents();
-            getElementCard();
-            this.softwareList = this.selectedObject.getProductSoftwares();
-            getSoftwareElement();
-            this.productDocumentSelected = moduleGlobale.getProductDocuments(getSelectedObject());
-        } catch (ConfigFileReaderException e) {
-            // TODO Auto-generated catch block
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-        }
+        this.elementList = moduleGlobale.getProductComponents(this.selectedObject);
+        getElementCard();
+        this.softwareList = this.selectedObject.getProductSoftwares();
+        getSoftwareElement();
+        this.productDocumentSelected = moduleGlobale.getProductDocuments(getSelectedObject());
+
 
     }
 
-    private void getSoftwareElement() throws SQLException {
+    private void getSoftwareElement() {
         this.softwareElementList = new ArrayList<SoftwareBean>();
         List<Software> _softwareElementList = this.moduleGlobale
                 .getActiveSoftwares();
@@ -127,21 +119,15 @@ public class GestSearchProduct extends GestFormSearchAbstract<Product> implement
 
     }
 
-    private void getElementCard() throws SQLException,
-            ConfigFileReaderException, IOException {
-        System.out.println("getElementCard");
+    private void getElementCard() {
         this.cardElementList = new ArrayList<CardElementBean>();
         // get cards list for product
-        List<Product> _productList = this.moduleGlobale.getProductsEnables(
-                selectedObject.getIdProduct(), null);
-        System.out.println(_productList.size());
-        System.out.println(getSelectedObject() == null);
-        System.out.println("la taille de la liste des cartes pour le produit"
-                + this.selectedObject.getProductComponents());
+        List<Product> _productList = this.moduleGlobale.getProductsEnables(selectedObject.getIdProduct(), null);
+
         for (Product productCard : _productList) {
             CardElementBean _elementBean = new CardElementBean();
 
-            for (Product prodConf : this.selectedObject.getProductComponents()) {
+            for (Product prodConf : moduleGlobale.getProductComponents(this.selectedObject) ) {
 
                 if (prodConf.getProductConf().getIdProductConf() == productCard
                         .getProductConf().getIdProductConf()) {

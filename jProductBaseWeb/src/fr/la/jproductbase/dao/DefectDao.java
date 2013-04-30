@@ -24,8 +24,7 @@ public interface DefectDao {
 	 * 
 	 * @throws SQLException
 	 */
-	public List<Defect> getDefects(TesterReport testerReport)
-			throws SQLException;
+	public List<Defect> getDefects(TesterReport testerReport);
 
 	/**
 	 * Ajoute un d&eacute;faut de rapport testeur &agrave; la base de
@@ -41,7 +40,6 @@ public interface DefectDao {
 	 * @throws SQLException
 	 * @throws DefectDaoException
 	 */
-	public Defect addDefect(Defect defect, TesterReport testerReport)
-			throws SQLException, DefectDaoException;
+	public Defect addDefect(Defect defect, TesterReport testerReport);
 
 }

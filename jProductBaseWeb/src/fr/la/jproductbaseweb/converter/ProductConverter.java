@@ -25,29 +25,9 @@ private List<Product> productConverter;
 	
 	public ProductConverter(){
 	System.out.println("get productConfActive");
-	ServiceInterface _serviceInterface = new ServiceInterface();
-	ProductType _productType = null;
-	try {
-		_productType = _serviceInterface.getProductType("Carte");
-	} catch (SQLException e1) {
-		// TODO Auto-generated catch block
-		e1.printStackTrace();
-	} catch (ConfigFileReaderException e1) {
-		// TODO Auto-generated catch block
-		e1.printStackTrace();
-	} catch (IOException e1) {
-		// TODO Auto-generated catch block
-		e1.printStackTrace();
-	}
-	try {
-		productConverter = _serviceInterface.getProducts(_productType);
-		System.out.println("taille list : "+productConverter.size());
-		
-	} catch (SQLException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-			
+	ServiceInterface _serviceInterface = ServiceInterface.getInstance();
+	ProductType _productType = _serviceInterface.getProductType("Carte");
+	productConverter = _serviceInterface.getProducts(_productType);
 }
 
 

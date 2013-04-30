@@ -9,7 +9,7 @@ import java.io.Serializable;
 public class RecapComForm implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private ServiceInterface moduleGlobal = new ServiceInterface();
+    private ServiceInterface moduleGlobal = ServiceInterface.getInstance();
     private int idaftersalecom;
     private String quotationNumber;
     private Date quotationDate;

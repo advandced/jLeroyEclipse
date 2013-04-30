@@ -29,7 +29,7 @@ public class ProductConfModelBean implements Serializable {
     private List<ProductConfModel> listProductConfModel;
     private ProductConfModel selectedProductConfModel = new ProductConfModel();
     private ProductConfModel newProductConfModel = new ProductConfModel();
-    private ServiceInterface moduleGlobal = new ServiceInterface();
+    private ServiceInterface moduleGlobal = ServiceInterface.getInstance();
 
     public ProductConfModelBean() throws SQLException {
         this.refresh();

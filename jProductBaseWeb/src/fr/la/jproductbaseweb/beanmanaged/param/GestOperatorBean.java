@@ -1,7 +1,6 @@
 package fr.la.jproductbaseweb.beanmanaged.param;
 
 import fr.la.configfilereader.ConfigFileReaderException;
-import fr.la.jproductbase.dao.OperatorDaoException;
 import fr.la.jproductbase.metier.Operator;
 import fr.la.jproductbase.service.ServiceInterface;
 import fr.la.jproductbaseweb.beanmanaged.exception.OperatorException;
@@ -45,23 +44,15 @@ public class GestOperatorBean implements Serializable {
     private String valueAction;
 
     public GestOperatorBean() {
-
-        this.moduleGlobal = new ServiceInterface();
+        this.moduleGlobal = ServiceInterface.getInstance();
         this.selectedOp = new Operator();
         this.action = null;
-        this.operatorList = new ArrayList<>();
-        try {
-            this.operatorList = moduleGlobal.getOperators();
-            // System.out.println("la taille"+_listeOperateursBD.size()+" le nom "+
-            // _listeOperateursBD.get(0).getFirstName());
-        } catch (SQLException e) {
-        }
+        this.operatorList = new ArrayList<Operator>();
+        this.operatorList = moduleGlobal.getOperators();
     }
 
     public void modify() {
         this.action = "modify";
-        System.out.println("click modify" + getSelectedOp().getFirstName()
-                + " value action " + this.action);
         this.firstNameOP = getSelectedOp().getFirstName();
         this.lastNameOP = getSelectedOp().getLastName();
         this.codeOP = getSelectedOp().getCode();
@@ -156,7 +147,9 @@ public class GestOperatorBean implements Serializable {
                         new FacesMessage("Modification effectué", "Opérateur "
                         + this.lastNameOP));
                 hideDialog(_dialog);
-            } catch (ConfigFileReaderException | IOException | SQLException e) {
+            } catch (ConfigFileReaderException e) {
+            } catch (IOException e) {
+            } catch (SQLException e) {
             } catch (OperatorException e) {
                 // TODO Auto-generated catch block
                 FacesContext context = FacesContext.getCurrentInstance();
@@ -165,33 +158,33 @@ public class GestOperatorBean implements Serializable {
                         "tous les champs sont obligatoires"));
             }
         } else {
-            try {
-                createOperatorGOpe();
-                FacesContext context = FacesContext.getCurrentInstance();
-                context.addMessage(null, new FacesMessage(
-                        "Enregistrement Effectué", "Opérateur "
-                        + this.lastNameOP));
-                hideDialog(_dialog);
-            } catch (ConfigFileReaderException | IOException | SQLException | OperatorDaoException e) {
-            } catch (OperatorException e) {
-                // TODO Auto-generated catch block
-                FacesContext context = FacesContext.getCurrentInstance();
+            createOperatorGOpe();
+            FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(
+                    "Enregistrement Effectué", "Opérateur "
+                    + this.lastNameOP));
+            hideDialog(_dialog);
+            
+            /*
+             * SUR ERREUR :
+             * 
+             *                FacesContext context = FacesContext.getCurrentInstance();
                 context.addMessage(null, new FacesMessage(
                         FacesMessage.SEVERITY_WARN, "Erreur Formulaire",
                         "tous les champs sont obligatoires"));
-            }
+             * 
+             */
+
+            
         }
     }
 
-    private void createOperatorGOpe() throws ConfigFileReaderException,
-            IOException, SQLException, OperatorDaoException, OperatorException, NamingException {
+    private void createOperatorGOpe() {
         // Creation d'objet pour manipuler les donnees de la base
-        System.out.println("creation d'un opérateur");
-        ServiceInterface _serviceInterface = new ServiceInterface();
+        ServiceInterface _serviceInterface = ServiceInterface.getInstance();
 
 
-        OperatorForm _opForm = new OperatorForm(this.lastNameOP, this.firstNameOP,
-                this.codeOP, this.stateOP);
+        OperatorForm _opForm = new OperatorForm(this.lastNameOP, this.firstNameOP, this.codeOP, this.stateOP);
 
         _serviceInterface.addOperator(_opForm.getSurName(), _opForm.getName(),
                 _opForm.getCode(), _opForm.getState());
@@ -203,7 +196,7 @@ public class GestOperatorBean implements Serializable {
     private void updateOperatorGOpe() throws ConfigFileReaderException,
             IOException, SQLException, OperatorException, NamingException {
         // Creation d'objet pour manipuler les donnees de la base
-        ServiceInterface _serviceInterface = new ServiceInterface();
+        ServiceInterface _serviceInterface = ServiceInterface.getInstance();
         // On recup l'operateur, on le modifie avec les infos recup dans la
         // requete
         int idOperatorToUpdate = getSelectedOp().getIdOperator();

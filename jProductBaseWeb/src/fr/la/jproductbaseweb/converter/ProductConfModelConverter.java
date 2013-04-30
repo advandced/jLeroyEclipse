@@ -18,17 +18,8 @@ public class ProductConfModelConverter implements Converter {
 
     public ProductConfModelConverter() {
         System.out.println("get productConfActive");
-        ServiceInterface _serviceInterface = new ServiceInterface();
-        try {
-            productConfModelList = _serviceInterface
-                    .getActiveProductConfModels();
-            System.out.println("taille list : " + productConfModelList.size());
-
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
+        ServiceInterface _serviceInterface = ServiceInterface.getInstance();
+        productConfModelList = _serviceInterface.getActiveProductConfModels();
     }
 
     @Override

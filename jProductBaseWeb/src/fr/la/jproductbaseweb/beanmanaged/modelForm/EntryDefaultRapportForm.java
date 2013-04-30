@@ -1,6 +1,5 @@
 package fr.la.jproductbaseweb.beanmanaged.modelForm;
 
-import java.sql.SQLException;
 import java.util.Date;
 
 import fr.la.jproductbase.metier.Product;
@@ -21,9 +20,10 @@ public class EntryDefaultRapportForm implements Serializable {
     private String serialNumber;
     private Product product;
 
-    public EntryDefaultRapportForm(String failureReportComment, Date date,
-            String operatorCode, String failureCode)
-            throws ApparentCauseException {
+    public EntryDefaultRapportForm(String failureReportComment, 
+    								Date date,
+    								String operatorCode, 
+    								String failureCode) {
 
         this.setFailureReportComment(failureReportComment);
         this.setDate(date);
@@ -34,20 +34,12 @@ public class EntryDefaultRapportForm implements Serializable {
                 || date == null
                 || (operatorCode == null || operatorCode.isEmpty())
                 || failureCode.isEmpty()) {
-
-            if (failureReportComment.isEmpty()) {
-                // System.out.println("failureReportComment vide");
-            } else if (date == null) {
-                System.out.println("date null");
-            } else if (operatorCode == null) {
-                System.out.println("operator null");
-            } else if (operatorCode.isEmpty()) {
-                System.out.println("operator vide");
+        	/*
             } else if (failureCode.isEmpty()) {
                 System.out.println("failure Code vide");
                 throw new ApparentCauseException();
             }
-
+			*/
         }
     }
 
@@ -65,15 +57,9 @@ public class EntryDefaultRapportForm implements Serializable {
         } else {
 
             this.product = null;
-            ServiceInterface _service = new ServiceInterface();
+            ServiceInterface _service = ServiceInterface.getInstance();
 
-            try {
-                this.product = _service.getProduct(reference, serialNumber,
-                        datecode);
-            } catch (SQLException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
+            this.product = _service.getProduct(reference, serialNumber, datecode);
             if (this.product == null) {
                 System.out.println("le produit n'existe pas");
                 throw new EntryDefaultRapportException();

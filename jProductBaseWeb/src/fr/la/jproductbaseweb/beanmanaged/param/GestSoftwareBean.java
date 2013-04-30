@@ -1,6 +1,5 @@
 package fr.la.jproductbaseweb.beanmanaged.param;
 
-import fr.la.jproductbase.dao.SoftwareDaoException;
 import fr.la.jproductbase.metier.Software;
 import fr.la.jproductbase.service.ServiceInterface;
 import fr.la.jproductbaseweb.beanmanaged.exception.SoftwareException;
@@ -53,11 +52,8 @@ public class GestSoftwareBean implements Serializable {
     }
 
     public GestSoftwareBean() {
-        this.serviceInterface = new ServiceInterface();
-        try {
-            this.listSoftware = this.serviceInterface.getSoftwares();
-        } catch (SQLException e) {
-        }
+        this.serviceInterface = ServiceInterface.getInstance();
+        this.listSoftware = this.serviceInterface.getSoftwares();
     }
 
     public void modify() {
@@ -96,31 +92,20 @@ public class GestSoftwareBean implements Serializable {
             }
 
         } else {
-            try {
-                createSoftware();
-                FacesContext context = FacesContext.getCurrentInstance();
-                context.addMessage(null, new FacesMessage("Creation Effectuee",
-                        "Logiciel " + this.nameSoft));
-                hideDialog(_dialog);
-            } catch (SQLException | SoftwareDaoException e) {
-            } catch (SoftwareException e) {
-                // TODO Auto-generated catch block
-                FacesContext context = FacesContext.getCurrentInstance();
-                context.addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_WARN,
-                        "Erreur Formulaire", e.toString()));
-            }
+            createSoftware();
+            FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage("Creation Effectuee",
+                    "Logiciel " + this.nameSoft));
+            hideDialog(_dialog);
         }
     }
 
-    private void createSoftware() throws SQLException, SoftwareDaoException,
-            SoftwareException, NamingException {
+    private void createSoftware() {
 
         // Creation d'objet pour manipuler les donnees de la base
-        ServiceInterface _serviceInterface = new ServiceInterface();
+        ServiceInterface _serviceInterface = ServiceInterface.getInstance();
         // On crée un nouveau logiciel avec les infos recup dans la requete
-        SoftwareForm _softForm = new SoftwareForm(this.nameSoft,
-                this.versionSoft, this.stateSoft);
+        SoftwareForm _softForm = new SoftwareForm(this.nameSoft, this.versionSoft, this.stateSoft);
 
         _serviceInterface.addSoftware(_softForm.getState(),
                 _softForm.getName(), _softForm.getVersion());
@@ -132,7 +117,7 @@ public class GestSoftwareBean implements Serializable {
     private void updateSoftware() throws SQLException, SoftwareException,
             NamingException {
 
-        ServiceInterface _serviceInterface = new ServiceInterface();
+        ServiceInterface _serviceInterface = ServiceInterface.getInstance();
         // On recup le logiciel, on le modifie avec les infos recup dans la
         // requete
         Software softwareToBeUpdated = null;

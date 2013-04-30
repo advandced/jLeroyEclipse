@@ -1,5 +1,6 @@
 package fr.la.jproductbase.dao;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -7,28 +8,26 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.naming.NamingException;
-
 import fr.la.jproductbase.metier.ProductType;
 
-public class ProductTypeDaoImpl implements ProductTypeDao {
-	private static String exceptionMsg = "Configuration produit inconnue dans la base de données.";
+public class ProductTypeDaoImpl extends GenericDao implements ProductTypeDao {
 
-	private ConnectionProduct cnxProduct;
+	ConnectionProduct cnxProduct;
 
 	public ProductTypeDaoImpl(ConnectionProduct cnxProduct) {
 		this.cnxProduct = cnxProduct;
 	}
 
 	@Override
-	public ProductType getProductType(int idProductType) throws SQLException {
+	public ProductType getProductType(int idProductType) {
 		ProductType _productType = null;
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
-					"SELECT * FROM productType WHERE idProductType=?");
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement("SELECT * FROM productType WHERE idProductType=?");
 			_stmt.setInt(1, idProductType);
 			_rs = _stmt.executeQuery();
 
@@ -37,30 +36,27 @@ public class ProductTypeDaoImpl implements ProductTypeDao {
 			} else {
 				_productType = null;
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _productType;
 	}
 
 	@Override
-	public ProductType getProductType(String name) throws SQLException {
+	public ProductType getProductType(String name)  {
 		ProductType _productType = null;
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
-					"SELECT * FROM productType WHERE name=?");
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement("SELECT * FROM productType WHERE name=?");
 			_stmt.setString(1, name);
 			_rs = _stmt.executeQuery();
 
@@ -69,60 +65,54 @@ public class ProductTypeDaoImpl implements ProductTypeDao {
 			} else {
 				_productType = null;
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _productType;
 	}
 
 	@Override
-	public List<ProductType> getProductTypes() throws SQLException {
+	public List<ProductType> getProductTypes() {
 		List<ProductType> _productSupplies = new ArrayList<ProductType>();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
-					"SELECT * FROM productType");
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement("SELECT * FROM productType");
 			_rs = _stmt.executeQuery();
 
 			while (_rs.next()) {
 				ProductType _productType = this.getProductType(_rs);
 				_productSupplies.add(_productType);
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _productSupplies;
 	}
 
 	@Override
-	public List<ProductType> getActiveProductTypes() throws SQLException {
+	public List<ProductType> getActiveProductTypes() {
 		List<ProductType> _productSupplies = new ArrayList<ProductType>();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
-					"SELECT * FROM productType " + " WHERE (state=?)");
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement("SELECT * FROM productType WHERE (state=?)");
 			_stmt.setInt(1, 1);
 			_rs = _stmt.executeQuery();
 
@@ -130,16 +120,12 @@ public class ProductTypeDaoImpl implements ProductTypeDao {
 				ProductType _productType = this.getProductType(_rs);
 				_productSupplies.add(_productType);
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _productSupplies;
@@ -165,24 +151,22 @@ public class ProductTypeDaoImpl implements ProductTypeDao {
 	}
 
 	@Override
-	public ProductType addProductType(String name, int state)
-			throws SQLException, ProductDaoException {
+	public ProductType addProductType(String name, int state) {
 
 		ProductType _productType = null;
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
-					"INSERT INTO productType (name, state)" + " VALUES (?, ?)");
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement("INSERT INTO productType (name, state) VALUES (?, ?)");
 			_stmt.setString(1, name);
 			_stmt.setInt(2, state);
 			_stmt.executeUpdate();
 
 			// Retrieve productType data
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
-					"SELECT * FROM productType" + " WHERE (name=?)"
-							+ " 	AND (state=?)");
+			_stmt = c.prepareStatement("SELECT * FROM productType WHERE (name=?) AND (state=?)");
 			_stmt.setString(1, name);
 			_stmt.setInt(2, state);
 
@@ -190,76 +174,64 @@ public class ProductTypeDaoImpl implements ProductTypeDao {
 			if (_rs.next()) {
 				_productType = this.getProductType(_rs);
 			} else {
-				throw new ProductDaoException(exceptionMsg);
+				throw new IllegalStateException();
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _productType;
 	}
 
 	@Override
-	public void updateProductType(ProductType operatorToUpdate)
-			throws SQLException, ProductDaoException {
+	public void updateProductType(ProductType operatorToUpdate) {
 
+		Connection c = null;
 		PreparedStatement _stmt = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
-					"UPDATE productType " + "SET name=?, state=?"
-							+ " WHERE (idProductType=?)");
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement("UPDATE productType SET name=?, state=? WHERE (idProductType=?)");
 			_stmt.setString(1, operatorToUpdate.getName());
 			_stmt.setInt(2, operatorToUpdate.getState());
 			_stmt.setInt(3, operatorToUpdate.getIdProductType());
 			_stmt.executeUpdate();
 
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
-					"SELECT * " + "FROM productType "
-							+ "WHERE (idProductType = ?);");
+			_stmt = c.prepareStatement("SELECT * FROM productType WHERE (idProductType = ?);");
 
 			ResultSet _rs = _stmt.executeQuery();
 			if (_rs.next()) {
 
 			} else {
-				throw new ProductDaoException(exceptionMsg);
+				throw new IllegalStateException();
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_stmt);
+			close(c);
 		}
 	}
 
 	@Override
-	public void deleteProductType(ProductType operatorToDelete)
-			throws SQLException {
-		// TODO Auto-generated method stub
+	public void deleteProductType(ProductType operatorToDelete) {
+		Connection c = null;
 		PreparedStatement _stmt = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
-					"DELETE FROM productType " + " WHERE (idProductType=?)");
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(	"DELETE FROM productType WHERE (idProductType=?)");
 			_stmt.setInt(1, operatorToDelete.getIdProductType());
 			_stmt.executeUpdate();
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_stmt);
+			close(c);
 		}
 	}
 

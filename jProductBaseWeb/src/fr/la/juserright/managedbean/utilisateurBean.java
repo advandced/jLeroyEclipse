@@ -24,7 +24,7 @@ import fr.la.juserright.verificationformulaire.EditUserPW;
 @SessionScoped
 public class utilisateurBean {
 
-	private ServiceUserRight moduleGlobal = new ServiceUserRight();
+	private ServiceUserRight moduleGlobal = ServiceUserRight.getInstance();
 
 	private List<User> userList;
 

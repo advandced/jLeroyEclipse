@@ -10,11 +10,11 @@ public class SoftwareForm implements Serializable {
     private String version;
     private int state;
 
-    public SoftwareForm(String name, String version, int state) throws SoftwareException {
+    public SoftwareForm(String name, String version, int state) {
         super();
         if (name.isEmpty() || version.isEmpty()) {
-
-            throw new SoftwareException();
+        	// TODO : ????
+           // throw new SoftwareException();
 
         }
         this.name = name;

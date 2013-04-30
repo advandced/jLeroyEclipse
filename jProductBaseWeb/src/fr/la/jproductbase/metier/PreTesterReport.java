@@ -1,15 +1,12 @@
 package fr.la.jproductbase.metier;
 
-import fr.la.configfilereader.ConfigFileReaderException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import javax.xml.parsers.ParserConfigurationException;
+
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import org.xml.sax.SAXException;
 
 public class PreTesterReport implements Serializable {
 	/**
@@ -120,18 +117,20 @@ public class PreTesterReport implements Serializable {
 		}
 	}
 
-	public static PreTesterReport getPreTesterReport(InputStream fileInputStream)
-			throws ConfigFileReaderException, IOException,
-			ParserConfigurationException, SAXException {
+	public static PreTesterReport getPreTesterReport(InputStream fileInputStream) {
 		PreTesterReport _preTesterReport = null;
 
 		SAXParserFactory _saxFactory = SAXParserFactory.newInstance();
-		SAXParser _saxParser = _saxFactory.newSAXParser();
+		SAXParser _saxParser;
+		try {
+			_saxParser = _saxFactory.newSAXParser();
+			PreTesterReportHandler _handler = new PreTesterReportHandler();
+			_saxParser.parse(fileInputStream, _handler);
 
-		PreTesterReportHandler _handler = new PreTesterReportHandler();
-		_saxParser.parse(fileInputStream, _handler);
-
-		_preTesterReport = _handler.getPreTesterReport();
+			_preTesterReport = _handler.getPreTesterReport();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 
 		return _preTesterReport;
 	}

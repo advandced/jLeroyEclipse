@@ -1,8 +1,6 @@
 package fr.la.jproductbaseweb.userright;
 
-import java.io.IOException;
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,12 +21,12 @@ import fr.la.juserright.service.ServiceUserRight;
 public class UserRightSession implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	ServiceUserRight moduleGlobal = new ServiceUserRight();
+	ServiceUserRight moduleGlobal = ServiceUserRight.getInstance();
 	private String login;
 	private List<Autorisation> autorisationList;
 	private MenuWeb menuWeb;
 
-	public UserRightSession() throws SQLException, IOException {			
+	public UserRightSession() {			
 		FacesContext fcontext = FacesContext.getCurrentInstance();
 
 		LoginBean logBean = (LoginBean) fcontext
@@ -43,7 +41,7 @@ public class UserRightSession implements Serializable {
 		List<Autorisation> permList = moduleGlobal.getAutorisationByLogin(logBean.getUserlogin());
 		for (Autorisation r : permList) {	
 			if (r.getRessource() != null && r.getPermission().getIdpermission() == 1) {
-				paths.add(r.getRessource().getPath());
+				paths.add(r.getRessource().getPath().trim());
 			}
 		}
 
@@ -70,7 +68,7 @@ public class UserRightSession implements Serializable {
 		
 		Ressource _resourceEntrySAV = new Ressource(17,	"/entrySAV/entrySAV.jsf", "Saisie SAV", "entrySAVBean",	"ressource pour SAV", new Ressource(null));
 		Ressource _resourceEntryIntervention = new Ressource(18, "/entrySAV/entryIntervention.jsf",	"Saisir Intervention", "GestEntryInterventionBean",	"Enregistrement Intervention", _resourceEntrySAV);
-		Ressource _ressourceRecapCom = new Ressource(19, "/entrySAV/recapCom.js", "Recap Commerce", "recapCOMBean", "Recapitulatif de la partie Commerce",	_resourceEntrySAV);
+		Ressource _ressourceRecapCom = new Ressource(19, "/entrySAV/recapCom.jsf", "Recap Commerce", "recapCOMBean", "Recapitulatif de la partie Commerce",	_resourceEntrySAV);
 		Ressource _ressourceExpedSav = new Ressource(20, "/entrySAV/expedSAV.jsf", "Expedition SAV", "expedSAVBean", "Gestion des expeditions du SAV",	_resourceEntrySAV);
 		Ressource _ressourceNumCmd = new Ressource(21,	"/entrySAV/numCommande.jsf", "Numero de Commande", "NumCommandeBean", "Attribution du numéro de commande", _resourceEntrySAV);
 		Ressource _ressourceValidControl = new Ressource(22, "/entrySAV/validControl.jsf", "Controle Qualite", "ValidControlBean", "Attribution d'une date de Controle Qualite", _resourceEntrySAV);
@@ -153,18 +151,18 @@ public class UserRightSession implements Serializable {
 
 		if (paths.contains(_autorisationEntryIntervention.getRessource().getPath()))
 			_autorisationList.add(_autorisationEntryIntervention);
-		if (paths.contains(_autorisationRecapCom.getRessource().getPath()))
-			_autorisationList.add(_autorisationRecapCom);
-		if (paths.contains(_autorisationExpedSav.getRessource().getPath()))
-			_autorisationList.add(_autorisationExpedSav);
-		if (paths.contains(_autorisationNumCmd.getRessource().getPath()))
-			_autorisationList.add(_autorisationNumCmd);
 		if (paths.contains(_autorisationValidControl.getRessource().getPath()))
 			_autorisationList.add(_autorisationValidControl);
 		if (paths.contains(_autorisationDevisPrealable.getRessource().getPath()))
 			_autorisationList.add(_autorisationDevisPrealable);
 		if (paths.contains(_autorisationDevisRepa.getRessource().getPath()))
 			_autorisationList.add(_autorisationDevisRepa);
+		if (paths.contains(_autorisationRecapCom.getRessource().getPath()))
+			_autorisationList.add(_autorisationRecapCom);		
+		if (paths.contains(_autorisationNumCmd.getRessource().getPath()))
+			_autorisationList.add(_autorisationNumCmd);		
+		if (paths.contains(_autorisationExpedSav.getRessource().getPath()))
+			_autorisationList.add(_autorisationExpedSav);
 		if (paths.contains(_autorisationFollowing.getRessource().getPath()))
 			_autorisationList.add(_autorisationFollowing);
 		if (paths.contains(_autorisationProductConfModel.getRessource().getPath()))

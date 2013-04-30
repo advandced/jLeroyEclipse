@@ -26,7 +26,7 @@ public interface AfterSaleReportDao {
 	 * @throws IOException
 	 * @throws ConfigFileReaderException
 	 */
-	public List<AfterSaleReport> listAfterSaleReport() throws SQLException;
+	public List<AfterSaleReport> listAfterSaleReport();
 
 	/**
 	 * Recherche les rapport de d&eacute;fauts d'un produit de la base de
@@ -41,8 +41,7 @@ public interface AfterSaleReportDao {
 	 * @throws IOException
 	 * @throws ConfigFileReaderException
 	 */
-	public List<AfterSaleReport> listAfterSaleReport(Product product)
-			throws SQLException, ConfigFileReaderException, IOException;
+	public List<AfterSaleReport> listAfterSaleReport(Product product);
 
 	/**
 	 * Recherche les rapport de d&eacute;fauts d'un produit de la base de
@@ -57,8 +56,7 @@ public interface AfterSaleReportDao {
 	 * @throws IOException
 	 * @throws ConfigFileReaderException
 	 */
-	public List<AfterSaleReport> listAfterSaleReport(int idproduct)
-			throws SQLException, ConfigFileReaderException, IOException;
+	public List<AfterSaleReport> listAfterSaleReport(int idproduct);
 
 	/**
 	 * Recherche les rapport de d&eacute;fauts de la base de donn&eacute;es dont
@@ -75,8 +73,7 @@ public interface AfterSaleReportDao {
 	 * @throws IOException
 	 * @throws ConfigFileReaderException
 	 */
-	public List<AfterSaleReport> listAfterSaleReport(Date fromDate, Date toDate)
-			throws SQLException, ConfigFileReaderException, IOException;
+	public List<AfterSaleReport> listAfterSaleReport(Date fromDate, Date toDate);
 
 	/**
 	 * Recherche un rapport de d&eacute;faut de la base de donn&eacute;es.
@@ -90,8 +87,7 @@ public interface AfterSaleReportDao {
 	 * @throws IOException
 	 * @throws ConfigFileReaderException
 	 */
-	public AfterSaleReport getAfterSaleReport(int idAfterSaleReport)
-			throws SQLException, ConfigFileReaderException, IOException;
+	public AfterSaleReport getAfterSaleReport(int idAfterSaleReport);
 
 	/**
 	 * Ajouter un rapport de d&eacute;faut dans la base de donn&eacute;s.
@@ -118,9 +114,7 @@ public interface AfterSaleReportDao {
 			int functionnalTest, int visualControl, String asker,
 			String intervenant, String InterventionSheetLink, String comment, 
 			ApparentCause apparentCause, String majorIndexIn,
-			String majorIndexOut, Product product)
-			throws SQLException, AfterSaleReportDaoException,
-			ConfigFileReaderException, IOException;
+			String majorIndexOut, Product product);
 
 	/**
 	 * Met &agrave; jour une intervention SAV dans la base de
@@ -143,8 +137,7 @@ public interface AfterSaleReportDao {
 			int functionnalTest, int visualControl, String asker,
 			String intervenant, String InterventionSheetLink, String comment, 
 			ApparentCause apparentCause, String majorIndexIn,
-			String majorIndexOut, Product product)
-			throws SQLException, AfterSaleReportDaoException;
+			String majorIndexOut, Product product);
 	
 	/**
 	 * Met &agrave; jour une intervention SAV dans la base de
@@ -158,21 +151,15 @@ public interface AfterSaleReportDao {
 	 * @throws SQLException
 	 * @throws FailureReportDaoException
 	 */	
-	public AfterSaleReport updateAfterSaleReport(AfterSaleReport afterSaleReport)
-			throws SQLException, AfterSaleReportDaoException;
+	public AfterSaleReport updateAfterSaleReport(AfterSaleReport afterSaleReport);
 	
-	public void updateAfterSaleReportQualityControl(AfterSaleReport AfterSaleReport)
-			throws SQLException, AfterSaleReportDaoException;
+	public void updateAfterSaleReportQualityControl(AfterSaleReport AfterSaleReport);
 
-	public List<AfterSaleReport> SelectAfterSaleReportValidControl()
-			throws SQLException, AfterSaleReportDaoException;
+	public List<AfterSaleReport> SelectAfterSaleReportValidControl();
 
-	public List<AfterSaleReport> SelectAfterSaleReportExpedSAV()
-			throws SQLException, AfterSaleReportDaoException;
+	public List<AfterSaleReport> SelectAfterSaleReportExpedSAV();
 	
-	public void updateAfterSaleReportExpedSAV(AfterSaleReport AfterSaleReport)
-			throws SQLException, AfterSaleReportDaoException;
+	public void updateAfterSaleReportExpedSAV(AfterSaleReport AfterSaleReport);
 	
-	public List<AfterSaleReport> ListDevisRepa() 
-			throws SQLException, ConfigFileReaderException, IOException;
+	public List<AfterSaleReport> ListDevisRepa();
 }

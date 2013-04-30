@@ -26,8 +26,7 @@ public interface ProductionFailureReportDao {
 	 * @throws IOException
 	 * @throws ConfigFileReaderException
 	 */
-	public List<ProductionFailureReport> listProductionFailureReport() throws SQLException,
-			ConfigFileReaderException, IOException;
+	public List<ProductionFailureReport> listProductionFailureReport();
 
 	/**
 	 * Recherche les rapport de d&eacute;fauts d'un produit de la base de
@@ -42,8 +41,7 @@ public interface ProductionFailureReportDao {
 	 * @throws IOException
 	 * @throws ConfigFileReaderException
 	 */
-	public List<ProductionFailureReport> listProductionFailureReport(Product product)
-			throws SQLException, ConfigFileReaderException, IOException;
+	public List<ProductionFailureReport> listProductionFailureReport(Product product);
 
 	/**
 	 * Recherche les rapport de d&eacute;fauts de la base de donn&eacute;es dont
@@ -61,8 +59,7 @@ public interface ProductionFailureReportDao {
 	 * @throws ConfigFileReaderException
 	 * @throws GestRapportDefaultsException 
 	 */
-	public List<ProductionFailureReport> listProductionFailureReport(Date fromDate, Date toDate)
-			throws SQLException, ConfigFileReaderException, IOException;
+	public List<ProductionFailureReport> listProductionFailureReport(Date fromDate, Date toDate);
 
 	/**
 	 * Recherche les rapport de d&eacute;fauts non cl&ocirc;tur&eacute; de la
@@ -74,8 +71,7 @@ public interface ProductionFailureReportDao {
 	 * @throws IOException
 	 * @throws ConfigFileReaderException
 	 */
-	public List<ProductionFailureReport> unclosedProductionFailureReport() throws SQLException,
-			ConfigFileReaderException, IOException;
+	public List<ProductionFailureReport> unclosedProductionFailureReport();
 
 	/**
 	 * Recherche un rapport de d&eacute;faut de la base de donn&eacute;es.
@@ -89,8 +85,7 @@ public interface ProductionFailureReportDao {
 	 * @throws IOException
 	 * @throws ConfigFileReaderException
 	 */
-	public ProductionFailureReport getProductionFailureReport(int idProductionFailureReport)
-			throws SQLException, ConfigFileReaderException, IOException;
+	public ProductionFailureReport getProductionFailureReport(int idProductionFailureReport);
 
 	/**
 	 * Recherche un rapport de d&eacute;faut d'un rapport de testeur de la base
@@ -103,8 +98,7 @@ public interface ProductionFailureReportDao {
 	 * 
 	 * @throws SQLException
 	 */
-	public ProductionFailureReport getProductionFailureReport(TesterReport testerReport)
-			throws SQLException;
+	public ProductionFailureReport getProductionFailureReport(TesterReport testerReport);
 
 	/**
 	 * Ajouter un rapport de d&eacute;faut dans la base de donn&eacute;s.
@@ -125,10 +119,7 @@ public interface ProductionFailureReportDao {
 	 * @throws IOException
 	 * @throws ConfigFileReaderException
 	 */
-	public ProductionFailureReport addProductionFailureReport(Date registrationDate,
-			Product product, TesterReport testerReport, String failureCode)
-			throws SQLException, ProductionFailureReportDaoException,
-			ConfigFileReaderException, IOException;
+	public ProductionFailureReport addProductionFailureReport(Date registrationDate, Product product, TesterReport testerReport, String failureCode);
 
 	/**
 	 * Met &agrave; jour un rapport de d&eacute;faut dans la base de
@@ -146,9 +137,7 @@ public interface ProductionFailureReportDao {
 	 * @throws SQLException
 	 * @throws ProductionFailureReportDaoException
 	 */
-	public void updateProductionFailureReport(ProductionFailureReport failureReport,
-			java.sql.Date registrationDate, Product product, String failureCode)
-			throws SQLException, ProductionFailureReportDaoException;
+	public void updateProductionFailureReport(ProductionFailureReport failureReport, java.sql.Date registrationDate, Product product, String failureCode);
 
 	/**
 	 * Cl&ocirc;turer un rapport de d&eacute;faut dans la base de donn&eacute;s.
@@ -158,6 +147,5 @@ public interface ProductionFailureReportDao {
 	 * 
 	 * @throws SQLException
 	 */
-	public void closeProductionFailureReport(ProductionFailureReport failureReport)
-			throws SQLException;
+	public void closeProductionFailureReport(ProductionFailureReport failureReport);
 }

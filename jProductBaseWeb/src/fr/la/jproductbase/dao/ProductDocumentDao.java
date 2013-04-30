@@ -25,8 +25,7 @@ public interface ProductDocumentDao {
      * @throws SQLException
      * @throws ProductDocumentDaoException
      */
-    public ProductDocument addProductDocument(int state, String title, String link, ProductDocumentType productDocumentType, Product product)
-            throws SQLException, ProductDocumentDaoException;
+    public ProductDocument addProductDocument(int state, String title, String link, ProductDocumentType productDocumentType, Product product);
 
     /**
      * Mise à jour d'un document dans la base de donn&eacute;es.
@@ -38,8 +37,7 @@ public interface ProductDocumentDao {
      * @throws SQLException
      * @throws ProductDocumentDaoException
      */
-    public ProductDocument updateProductDocument(ProductDocument productDocument)
-            throws SQLException, ProductDocumentDaoException;
+    public ProductDocument updateProductDocument(ProductDocument productDocument);
 
     /**
      * Recherche un document de la base de donn&eacute;es.
@@ -50,8 +48,7 @@ public interface ProductDocumentDao {
      *
      * @throws SQLException
      */
-    public ProductDocument getProductDocument(int idProductDocument)
-            throws SQLException;
+    public ProductDocument getProductDocument(int idProductDocument);
 
     /**
      * Recherche un document de la base de donn&eacute;es.
@@ -62,8 +59,7 @@ public interface ProductDocumentDao {
      *
      * @throws SQLException
      */
-    public ProductDocument getProductDocument(String title, String link)
-            throws SQLException;
+    public ProductDocument getProductDocument(String title, String link);
 
     /**
      * Recherche les documents d'un produit de la base de donn&eacute;es.
@@ -74,7 +70,7 @@ public interface ProductDocumentDao {
      *
      * @throws SQLException
      */
-    public List<ProductDocument> getProductDocuments(Product product) throws SQLException;
+    public List<ProductDocument> getProductDocuments(Product product);
 
     /**
      * Recherche les documents en fonction d'un type de document de la base de
@@ -86,7 +82,7 @@ public interface ProductDocumentDao {
      *
      * @throws SQLException
      */
-    public List<ProductDocument> getProductDocuments(ProductDocumentType productDocumentType) throws SQLException;
+    public List<ProductDocument> getProductDocuments(ProductDocumentType productDocumentType);
 
     /**
      * Recherche les documents d'un produit de la base de donn&eacute;es pour un
@@ -99,7 +95,7 @@ public interface ProductDocumentDao {
      *
      * @throws SQLException
      */
-    public List<ProductDocument> getProductDocuments(Product product, ProductDocumentType productDocumentType) throws SQLException;
+    public List<ProductDocument> getProductDocuments(Product product, ProductDocumentType productDocumentType);
 
     /**
      * Recherche les documents d'un produit de la base de donn&eacute;es de FEDD
@@ -112,7 +108,7 @@ public interface ProductDocumentDao {
      *
      * @throws SQLException
      */
-    public List<ProductDocument> getFEDDProductDocuments(Product product, ProductDocumentType productDocumentType) throws SQLException;
+    public List<ProductDocument> getFEDDProductDocuments(Product product, ProductDocumentType productDocumentType);
 
     /**
      * Recherche les documents de la base de donn&eacute;es.
@@ -121,7 +117,7 @@ public interface ProductDocumentDao {
      *
      * @throws SQLException
      */
-    public List<ProductDocument> getProductDocuments()   throws SQLException;
+    public List<ProductDocument> getProductDocuments();
 
     /**
      * Rechercher les documents actifs de la base de donn&eacute;es.
@@ -130,5 +126,5 @@ public interface ProductDocumentDao {
      *
      * @throws SQLException
      */
-    public List<ProductDocument> getActiveProductDocuments() throws SQLException;
+    public List<ProductDocument> getActiveProductDocuments();
 }

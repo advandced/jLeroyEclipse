@@ -43,8 +43,7 @@ public class ProductTest implements Serializable {
 	 */
 	public ProductTest(String productConfReference, String productSerialNumber,
 			String productDatecode, String labviewTestType, boolean inFlow,
-			String operatorCode) throws ConfigFileReaderException, IOException,
-			SQLException, TesterReportException {
+			String operatorCode)  {
 		// Product
 		this.productConfReference = productConfReference;
 		this.productSerialNumber = productSerialNumber;
@@ -155,74 +154,5 @@ public class ProductTest implements Serializable {
 		this.operatorCode = operatorCode;
 	}
 
-	/**
-	 * Recherche du produit &agrave; partir des donn&eacute;es du test produit.
-	 * 
-	 * @return the product
-	 * 
-	 * @throws SQLException
-	 * @throws IOException
-	 * @throws ConfigFileReaderException
-	 * @throws TesterReportException
-	 */
-	public Product getProduct() throws ConfigFileReaderException, IOException,
-			SQLException, TesterReportException {
-		ServiceInterface _serviceInterface = new ServiceInterface();
 
-		// Retreive possible ProductConf
-		List<ProductConf> _productConfs = _serviceInterface
-				.getProductConfs(productConfReference);
-
-		// Retreive possible product
-		List<Product> _products = _serviceInterface.getProducts(
-				productSerialNumber, productDatecode);
-
-		// Retreive product
-		Product _preTesterReportProduct = null;
-		for (Product _product : _products) {
-			ProductConf _productProductConf = _product.getProductConf();
-
-			for (ProductConf _productConf : _productConfs) {
-				if (_productProductConf.getIdProductConf() == _productConf
-						.getIdProductConf()) {
-					if (null == _preTesterReportProduct) {
-						_preTesterReportProduct = _product;
-					} else {
-						// TODO 2 produits avec le même N° de série + datecode
-						// ???
-					}
-				}
-			}
-		}
-		if (null == _preTesterReportProduct) {
-			throw new TesterReportException("Produit inconnu.");
-		}
-
-		return _preTesterReportProduct;
-	}
-
-	/**
-	 * Recherche du type de test &agrave; partir des donn&eacute;es du test
-	 * produit.
-	 * 
-	 * @return the testType
-	 * 
-	 * @throws SQLException
-	 * @throws IOException
-	 * @throws ConfigFileReaderException
-	 * @throws TesterReportException
-	 */
-	public TestType getTestType() throws ConfigFileReaderException,
-			IOException, SQLException, TesterReportException {
-		// Retreive testType
-		LabviewTestType _labviewTestType = LabviewTestType
-				.valueOf(this.labviewTestType);
-		ServiceInterface _serviceInterface = new ServiceInterface();
-		TestType _testType = _serviceInterface.retreiveTestType(_labviewTestType);
-		if (null == _testType) {
-			throw new TesterReportException("Type de test inconnu.");
-		}
-
-		return _testType;
-	}
 }

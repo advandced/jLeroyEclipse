@@ -1,5 +1,6 @@
 package fr.la.jproductbase.dao;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -7,33 +8,27 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.naming.NamingException;
-
 import fr.la.jproductbase.metier.Operator;
 
-public class OperatorDaoImpl implements OperatorDao {
-	private static String exceptionMsg = "Opérateur inconnu dans la base de données.";
+public class OperatorDaoImpl extends GenericDao implements OperatorDao {
 
-	private ConnectionOperator cnxOperator;
+	ConnectionOperator cnxOperator;
 
 	public OperatorDaoImpl(ConnectionOperator cnxOperator) {
 		this.cnxOperator = cnxOperator;
 	}
 
 	@Override
-	public Operator getOperator(int idOperator) throws SQLException {
+	public Operator getOperator(int idOperator) {
 		Operator _operator = null;
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			try {
-				_stmt = this.cnxOperator.getCnx().prepareStatement(
-						"SELECT * FROM operator WHERE idOperator=?");
-			} catch (NamingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			c = this.cnxOperator.getCnx();
+			_stmt = c.prepareStatement("SELECT * FROM operator WHERE idOperator=?");
+
 			_stmt.setInt(1, idOperator);
 			_rs = _stmt.executeQuery();
 
@@ -42,27 +37,27 @@ public class OperatorDaoImpl implements OperatorDao {
 			} else {
 				_operator = null;
 			}
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _operator;
 	}
 
 	@Override
-	public Operator getOperator(String code) throws SQLException {
+	public Operator getOperator(String code) {
 		Operator _operator = null;
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxOperator.getCnx().prepareStatement(
-					"SELECT * FROM operator WHERE code=?");
+			c = this.cnxOperator.getCnx();
+			_stmt = c.prepareStatement("SELECT * FROM operator WHERE code=?");
 			_stmt.setString(1, code);
 			_rs = _stmt.executeQuery();
 
@@ -71,46 +66,39 @@ public class OperatorDaoImpl implements OperatorDao {
 			} else {
 				_operator = null;
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _operator;
 	}
 
 	@Override
-	public List<Operator> getActiveOperators() throws SQLException {
+	public List<Operator> getActiveOperators() {
 		List<Operator> _operators = new ArrayList<Operator>();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxOperator.getCnx().prepareStatement(
-					"SELECT * FROM operator" + " WHERE (state=1)");
+			c = this.cnxOperator.getCnx();
+			_stmt = c.prepareStatement("SELECT * FROM operator" + " WHERE (state=1)");
 			_rs = _stmt.executeQuery();
 
 			while (_rs.next()) {
 				Operator _operator = this.getOperator(_rs);
 				_operators.add(_operator);
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _operators;
@@ -138,14 +126,15 @@ public class OperatorDaoImpl implements OperatorDao {
 	}
 
 	@Override
-	public Operator addOperator(String firstName, String lastName, String code,
-			int state) throws SQLException, OperatorDaoException {
+	public Operator addOperator(String firstName, String lastName, String code,	int state) {
 		Operator _operator = null;
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxOperator.getCnx().prepareStatement(
+			c = this.cnxOperator.getCnx();
+			_stmt = c.prepareStatement(
 					"INSERT INTO operator (firstName, lastName, code, state)"
 							+ " VALUES (?, ?, ?, ?)");
 			_stmt.setString(1, firstName);
@@ -155,7 +144,7 @@ public class OperatorDaoImpl implements OperatorDao {
 			_stmt.executeUpdate();
 
 			// Retrieve operator data
-			_stmt = this.cnxOperator.getCnx().prepareStatement(
+			_stmt = c.prepareStatement(
 					"SELECT * FROM operator" + " WHERE (firstName=?)"
 							+ " 	AND (lastName=?)" + " 	AND (code=?)"
 							+ " 	AND (state=?)");
@@ -168,30 +157,27 @@ public class OperatorDaoImpl implements OperatorDao {
 			if (_rs.next()) {
 				_operator = this.getOperator(_rs);
 			} else {
-				throw new OperatorDaoException(exceptionMsg);
+				throw new IllegalStateException();
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _operator;
 	}
 
 	@Override
-	public void updateOperator(Operator operatorToUpdate) throws SQLException,
-			OperatorDaoException {
+	public void updateOperator(Operator operatorToUpdate)  {
+		Connection c = null;
 		PreparedStatement _stmt = null;
 
 		try {
-			_stmt = this.cnxOperator.getCnx().prepareStatement(
+			c = this.cnxOperator.getCnx();
+			_stmt = c.prepareStatement(
 					"UPDATE operator "
 							+ "SET firstName=?, lastName=?, code=?, state=?"
 							+ " WHERE (idOperator=?)");
@@ -202,73 +188,65 @@ public class OperatorDaoImpl implements OperatorDao {
 			_stmt.setInt(5, operatorToUpdate.getIdOperator());
 			_stmt.executeUpdate();
 			
-			_stmt = this.cnxOperator.getCnx().prepareStatement(
+			_stmt = c.prepareStatement(
 					"SELECT state, code, lastName, firstName FROM operator" 
 							+ " WHERE (idOperator=?)");
 			_stmt.setInt(1, operatorToUpdate.getIdOperator());
 
-			System.out.println(operatorToUpdate.getIdOperator());
-			
 			ResultSet _rs = _stmt.executeQuery();
 			if (_rs.next()) {
 			
 			} else {
-				throw new OperatorDaoException(exceptionMsg);
+				throw new IllegalStateException();
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_stmt);
+			close(c);
 		}
 	}
 
 	@Override
-	public void deleteOperator(Operator operatorToDelete) throws SQLException {
+	public void deleteOperator(Operator operatorToDelete) {
+		Connection c = null;
 		PreparedStatement _stmt = null;
 
 		try {
-			_stmt = this.cnxOperator.getCnx().prepareStatement(
-					"DELETE FROM operator " + " WHERE (idOperator=?)");
+			c = this.cnxOperator.getCnx();
+			_stmt = c.prepareStatement("DELETE FROM operator WHERE (idOperator=?)");
 			_stmt.setInt(1, operatorToDelete.getIdOperator());
 			_stmt.executeUpdate();
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_stmt);
+			close(c);
 		}
 	}
 
 	@Override
-	public List<Operator> getOperators() throws SQLException {
+	public List<Operator> getOperators() {
 		List<Operator> _operators = new ArrayList<Operator>();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxOperator.getCnx().prepareStatement(
-					"SELECT * FROM operator");
+			c = this.cnxOperator.getCnx();
+			_stmt = c.prepareStatement("SELECT * FROM operator");
 			_rs = _stmt.executeQuery();
 
 			while (_rs.next()) {
 				Operator _operator = this.getOperator(_rs);
 				_operators.add(_operator);
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _operators;

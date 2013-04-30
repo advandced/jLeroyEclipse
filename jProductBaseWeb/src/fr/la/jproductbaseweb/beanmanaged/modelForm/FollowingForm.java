@@ -17,7 +17,7 @@ import java.sql.SQLException;
 public class FollowingForm implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private ServiceInterface moduleGlobal = new ServiceInterface();
+    private ServiceInterface moduleGlobal = ServiceInterface.getInstance();
     private FollowingFormModel followingFormModel;
 
     public FollowingForm(FollowingFormModel _followingFormModel) throws SQLException, FollowingFormException {

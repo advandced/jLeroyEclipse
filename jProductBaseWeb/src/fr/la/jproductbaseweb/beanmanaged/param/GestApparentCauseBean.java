@@ -42,20 +42,10 @@ public class GestApparentCauseBean implements Serializable {
      private ApparentCauseCustomer apparentCauseCustomer;*/
 
     public GestApparentCauseBean() {
-
-        this.moduleGlobal = new ServiceInterface();
+        this.moduleGlobal = ServiceInterface.getInstance();
         this.apparentCauseClientConverter = new ApparentCauseClientConverter();
-
-        try {
-            this.apparentCauseList = this.moduleGlobal.getApparentCauses();
-            this.apparentCauseClientList = this.apparentCauseClientConverter.getApparentCauseList();
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-
-
+        this.apparentCauseList = this.moduleGlobal.getApparentCauses();
+        this.apparentCauseClientList = this.apparentCauseClientConverter.getApparentCauseList();
     }
 
     private Dialog getDialogToButton(CommandButton commandButton) {
@@ -99,7 +89,7 @@ public class GestApparentCauseBean implements Serializable {
     }
 
     public void newApparentCause() {
-        this.moduleGlobal = new ServiceInterface();
+        this.moduleGlobal = ServiceInterface.getInstance();
         this.apparentCauseClientConverter = new ApparentCauseClientConverter();
         this.apparentCauseClientList = this.apparentCauseClientConverter.getApparentCauseList();
         this.action = "create";
@@ -154,7 +144,7 @@ public class GestApparentCauseBean implements Serializable {
 
     private void createApparentCause() throws ApparentCauseException {
 
-        ServiceInterface _serviceInterface = new ServiceInterface();
+        ServiceInterface _serviceInterface = ServiceInterface.getInstance();
         // On crée un nouvelle cause probable avec les infos recup dans la
         // requete
         ApparentCauseForm _appaCauseForm = new ApparentCauseForm(this.descriptionApparentCause, this.stateApparentCause, this.apparentCauseCustomer);
@@ -176,7 +166,7 @@ public class GestApparentCauseBean implements Serializable {
 
     private void updateApparentCause() throws ApparentCauseException {
 
-        ServiceInterface _serviceInterface = new ServiceInterface();
+        ServiceInterface _serviceInterface = ServiceInterface.getInstance();
         // On crée un nouvelle cause probable avec les infos recup dans la
         // requete
         ApparentCauseForm _appaCauseForm = new ApparentCauseForm(this.descriptionApparentCause, this.stateApparentCause, this.apparentCauseCustomer);

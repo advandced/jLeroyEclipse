@@ -1,5 +1,6 @@
 package fr.la.jproductbase.dao;
 
+import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -9,8 +10,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.naming.NamingException;
-
 import fr.la.jproductbase.metier.Defect;
 import fr.la.jproductbase.metier.ProductionFailureReport;
 import fr.la.jproductbase.metier.Product;
@@ -18,26 +17,34 @@ import fr.la.jproductbase.metier.TestType;
 import fr.la.jproductbase.metier.Tester;
 import fr.la.jproductbase.metier.TesterReport;
 
-public class TesterReportDaoImpl implements TesterReportDao {
-	private static String exceptionMsg = "Rapport de test inconnu dans la base de données.";
-
-	private ConnectionProduct cnxProduct;
-	private ConnectionTester cnxTester;
-
-	public TesterReportDaoImpl(ConnectionProduct cnxProduct,
-			ConnectionTester cnxTester) {
-		this.cnxProduct = cnxProduct;
+public class TesterReportDaoImpl extends GenericDao implements TesterReportDao {
+	
+	ConnectionTester cnxTester;
+	
+	TestTypeDao _testTypeDao;
+	TesterDao _testerDao;
+	ProductDao _productDao;
+	DefectDao _defectDao;
+	
+	public TesterReportDaoImpl(ConnectionTester cnxTester, TestTypeDao testTypeDao, TesterDao testerDao, ProductDao productDao, DefectDao defectDao) {
 		this.cnxTester = cnxTester;
+		
+		_testTypeDao = testTypeDao;
+		_testerDao = testerDao;
+		_productDao = productDao;
+		_defectDao = defectDao; 
 	}
 
 	@Override
-	public TesterReport getTesterReport(int idTesterReport) throws SQLException {
+	public TesterReport getTesterReport(int idTesterReport) {
 		TesterReport _testerReport = null;
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxTester.getCnx().prepareStatement(
+			c = this.cnxTester.getCnx();
+			_stmt = c.prepareStatement(
 					"SELECT * FROM testerReport WHERE idTesterReport=?");
 			_stmt.setInt(1, idTesterReport);
 			_rs = _stmt.executeQuery();
@@ -47,24 +54,19 @@ public class TesterReportDaoImpl implements TesterReportDao {
 			} else {
 				_testerReport = null;
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _testerReport;
 	}
 
 	@Override
-	public TesterReport getTesterReport(Timestamp reportDate,
-			TestType testType, Product product) throws SQLException {
+	public TesterReport getTesterReport(Timestamp reportDate, TestType testType, Product product) {
 		TesterReport _testerReport = null;
 
 		// Date
@@ -86,11 +88,13 @@ public class TesterReportDaoImpl implements TesterReportDao {
 		} else {
 			// No tester
 		}
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxTester.getCnx().prepareStatement(
+			c = this.cnxTester.getCnx();
+			_stmt = c.prepareStatement(
 					"SELECT * FROM testerReport" + " WHERE (date LIKE '"
 							+ _reportDateFormatted.format(reportDate) + "%')"
 							+ " AND (idTestType=?)" + " AND (idProduct=?)");
@@ -103,25 +107,19 @@ public class TesterReportDaoImpl implements TesterReportDao {
 			} else {
 				_testerReport = null;
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _testerReport;
 	}
 
 	@Override
-	public TesterReport getTesterReport(Timestamp reportDate,
-			TestType testType, Tester tester, Product product)
-			throws SQLException {
+	public TesterReport getTesterReport(Timestamp reportDate, TestType testType, Tester tester, Product product) {
 		TesterReport _testerReport = null;
 
 		// TestType
@@ -147,11 +145,13 @@ public class TesterReportDaoImpl implements TesterReportDao {
 		} else {
 			// No tester
 		}
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxTester.getCnx().prepareStatement(
+			c = this.cnxTester.getCnx();
+			_stmt = c.prepareStatement(
 					"SELECT * FROM testerReport" + " WHERE (date=?)"
 							+ " AND (idTestType=?)" + " AND (idTester=?)"
 							+ " AND (idProduct=?)");
@@ -166,26 +166,22 @@ public class TesterReportDaoImpl implements TesterReportDao {
 			} else {
 				_testerReport = null;
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _testerReport;
 	}
 
 	@Override
-	public TesterReport addTesterReport(TesterReport testerReport)
-			throws SQLException, TesterReportDaoException {
+	public TesterReport addTesterReport(TesterReport testerReport) {
 		TesterReport _testerReport = null;
 		if (null != testerReport) {
+			Connection c = null;
 			PreparedStatement _stmt = null;
 			ResultSet _rs = null;
 
@@ -199,9 +195,8 @@ public class TesterReportDaoImpl implements TesterReportDao {
 			int _idTestType = testerReport.getTestType().getIdTestType();
 			int idProduct = testerReport.getProduct().getIdProduct();
 			try {
-				_stmt = this.cnxTester
-						.getCnx()
-						.prepareStatement(
+				c = this.cnxTester.getCnx();
+				_stmt = c.prepareStatement(
 								"INSERT INTO testerReport (state, date, testVersion, result, consoUmini, consoUnomi, consoUmaxi, idTestType, idTester, operatorCode, idProduct)"
 										+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 				_stmt.setInt(1, testerReport.getState());
@@ -218,7 +213,7 @@ public class TesterReportDaoImpl implements TesterReportDao {
 				_stmt.executeUpdate();
 
 				// Retrieve testerReport data
-				_stmt = this.cnxTester.getCnx().prepareStatement(
+				_stmt = c.prepareStatement(
 						"SELECT * FROM testerReport" + " WHERE (date=?)"
 								+ "	AND (idTestType=?)" + "	AND (idProduct=?)");
 				_stmt.setTimestamp(1, _date);
@@ -229,18 +224,14 @@ public class TesterReportDaoImpl implements TesterReportDao {
 				if (_rs.next()) {
 					_testerReport = this.getTesterReport(_rs);
 				} else {
-					throw new TesterReportDaoException(exceptionMsg);
+					throw new IllegalStateException();
 				}
-			} catch (NamingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			} catch (SQLException e) {
+				handleDAOException(e);
 			} finally {
-				if (null != _rs) {
-					_rs.close();
-				}
-				if (null != _stmt) {
-					_stmt.close();
-				}
+				close(_rs);
+				close(_stmt);
+				close(c);
 			}
 		} else {
 			// No testerReport
@@ -250,9 +241,7 @@ public class TesterReportDaoImpl implements TesterReportDao {
 	}
 
 	@Override
-	public TesterReport addTesterReport(TestType testType, Tester tester,
-			Timestamp date, String operatorCode, Product product)
-			throws SQLException, TesterReportDaoException {
+	public TesterReport addTesterReport(TestType testType, Tester tester, Timestamp date, String operatorCode, Product product) {
 		TesterReport _testerReport = null;
 		int _idTester = 0;
 		if (null != tester) {
@@ -260,13 +249,13 @@ public class TesterReportDaoImpl implements TesterReportDao {
 		} else {
 			// No tester
 		}
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxTester
-					.getCnx()
-					.prepareStatement(
+			c = this.cnxTester.getCnx();
+			_stmt = c.prepareStatement(
 							"INSERT INTO testerReport (state, date, result, idTestType, idTester, operatorCode, idProduct)"
 									+ " VALUES (?, ?, ?, ?, ?, ?, ?)");
 			_stmt.setInt(1, 1);
@@ -279,7 +268,7 @@ public class TesterReportDaoImpl implements TesterReportDao {
 			_stmt.executeUpdate();
 
 			// Retrieve testerReport data
-			_stmt = this.cnxTester.getCnx().prepareStatement(
+			_stmt = c.prepareStatement(
 					"SELECT * FROM testerReport" + " WHERE (date=?)"
 							+ "	AND (idTester=?)" + "	AND (idProduct=?)");
 			_stmt.setTimestamp(1, date);
@@ -290,28 +279,23 @@ public class TesterReportDaoImpl implements TesterReportDao {
 			if (_rs.next()) {
 				_testerReport = this.getTesterReport(_rs);
 			} else {
-				throw new TesterReportDaoException(exceptionMsg);
+				throw new IllegalStateException();
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _testerReport;
 	}
 
 	@Override
-	public TesterReport addTesterReport(int state, TestType testType,
-			Timestamp date, String operatorCode, Product product, String result)
-			throws SQLException, TesterReportDaoException {
+	public TesterReport addTesterReport(int state, TestType testType, Timestamp date, String operatorCode, Product product, String result) {
 		TesterReport _testerReport = null;
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
@@ -319,9 +303,8 @@ public class TesterReportDaoImpl implements TesterReportDao {
 			int _idProduct = product.getIdProduct();
 			int _idTestType = testType.getIdTestType();
 
-			_stmt = this.cnxTester
-					.getCnx()
-					.prepareStatement(
+			c = this.cnxTester.getCnx();
+			_stmt = c.prepareStatement(
 							"INSERT INTO testerReport (state, date, result, idTestType, operatorCode, idProduct)"
 									+ " VALUES (?, ?, ?, ?, ?, ?)");
 			_stmt.setInt(1, state);
@@ -333,7 +316,7 @@ public class TesterReportDaoImpl implements TesterReportDao {
 			_stmt.executeUpdate();
 
 			// Retrieve testerReport data
-			_stmt = this.cnxTester.getCnx().prepareStatement(
+			_stmt = c.prepareStatement(
 					"SELECT * FROM testerReport" + " WHERE (date=?)"
 							+ "	AND (idTestType=?)" + "	AND (idProduct=?)");
 			_stmt.setTimestamp(1, date);
@@ -344,31 +327,28 @@ public class TesterReportDaoImpl implements TesterReportDao {
 			if (_rs.next()) {
 				_testerReport = this.getTesterReport(_rs);
 			} else {
-				throw new TesterReportDaoException(exceptionMsg);
+				throw new IllegalStateException();
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _testerReport;
 	}
 
 	@Override
-	public void updateTesterReport(TesterReport testerReport,
-			TesterReport testerReportNext) throws SQLException {
+	public void updateTesterReport(TesterReport testerReport, TesterReport testerReportNext) {
 		if (null != testerReport) {
+			Connection c = null;
 			PreparedStatement _stmt = null;
 
 			try {
-				_stmt = this.cnxTester.getCnx().prepareStatement(
+				c = this.cnxTester.getCnx();
+				_stmt = c.prepareStatement(
 						"UPDATE testerReport " + "SET idTesterReportNext=? "
 								+ "WHERE (idTesterReport=?)");
 				if (null != testerReportNext) {
@@ -379,14 +359,11 @@ public class TesterReportDaoImpl implements TesterReportDao {
 				_stmt.setInt(2, testerReport.getIdTesterReport());
 				_stmt.executeUpdate();
 
-				// Update object
-			} catch (NamingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			} catch (SQLException e) {
+				handleDAOException(e);
 			} finally {
-				if (null != _stmt) {
-					_stmt.close();
-				}
+				close(_stmt);
+				close(c);
 			}
 		} else {
 			// Nothing to do
@@ -396,20 +373,19 @@ public class TesterReportDaoImpl implements TesterReportDao {
 	@Override
 	public void updateTesterReport(ProductionFailureReport failureReport,
 			TestType testType, Tester tester, Date reportDate,
-			String operatorCode, Product product) throws SQLException,
-			TesterReportDaoException {
+			String operatorCode, Product product) {
 		int _idTester = 0;
 		if (null != tester) {
 			_idTester = tester.getIdTester();
 		} else {
 			// No tester
 		}
+		Connection c = null;
 		PreparedStatement _stmt = null;
 
 		try {
-			_stmt = this.cnxTester
-					.getCnx()
-					.prepareStatement(
+			c = this.cnxTester.getCnx();
+			_stmt = c.prepareStatement(
 							"UPDATE testerReport "
 									+ "SET idTestType=?, idTester=?, operatorCode=?, idProduct=? "
 									+ "WHERE (idTesterReport=?)");
@@ -420,39 +396,36 @@ public class TesterReportDaoImpl implements TesterReportDao {
 			_stmt.setInt(5, failureReport.getTesterReport().getIdTesterReport());
 			_stmt.executeUpdate();
 
-			_stmt = this.cnxTester.getCnx().prepareStatement(
+			_stmt = c.prepareStatement(
 					"SELECT * FROM testerReport WHERE (idTesterReport = ?);");
 
 			_stmt.setInt(1, failureReport.getTesterReport().getIdTesterReport());
 
 			ResultSet _rs = _stmt.executeQuery();
 			if (!_rs.next()) {
-				throw new TesterReportDaoException(exceptionMsg);
+				throw new IllegalStateException();
 			}
 
-			// Update object
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_stmt);
+			close(c);
 		}
 	}
 
 	@Override
-	public List<TesterReport> getInFlowTesterReport(Product product)
-			throws SQLException {
+	public List<TesterReport> getInFlowTesterReport(Product product) {
 		List<TesterReport> _testerReports = new ArrayList<TesterReport>();
 		if (null != product) {
+			Connection c = null;
 			PreparedStatement _stmt = null;
 			ResultSet _rs = null;
 
 			try {
 				int _idProduct = product.getIdProduct();
-
-				_stmt = this.cnxTester.getCnx().prepareStatement(
+				c = this.cnxTester.getCnx();
+				_stmt = c.prepareStatement(
 						"SELECT * FROM testerReport " + "WHERE (state = 1)"
 								+ " AND (idProduct=?)");
 				_stmt.setInt(1, _idProduct);
@@ -462,16 +435,12 @@ public class TesterReportDaoImpl implements TesterReportDao {
 					TesterReport _testerReport = this.getTesterReport(_rs);
 					_testerReports.add(_testerReport);
 				}
-			} catch (NamingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			} catch (SQLException e) {
+				handleDAOException(e);
 			} finally {
-				if (null != _rs) {
-					_rs.close();
-				}
-				if (null != _stmt) {
-					_stmt.close();
-				}
+				close(_rs);
+				close(_stmt);
+				close(c);
 			}
 		} else {
 			// Unknown product
@@ -481,16 +450,16 @@ public class TesterReportDaoImpl implements TesterReportDao {
 	}
 
 	@Override
-	public List<TesterReport> getTesterReportsFollowingForm(Product product)
-			throws SQLException {
+	public List<TesterReport> getTesterReportsFollowingForm(Product product) {
 		List<TesterReport> _testerReports = new ArrayList<TesterReport>();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
 			int _idProduct = product.getIdProduct();
-
-			_stmt = this.cnxTester.getCnx().prepareStatement(
+			c = this.cnxTester.getCnx();
+			_stmt = c.prepareStatement(
 					"SELECT *" + " FROM testerBase.testerReport AS TR"
 							+ " WHERE (TR.state=1)" + " AND (TR.idProduct=?)"
 							+ " AND ((TR.idTesterReport=("
@@ -508,30 +477,27 @@ public class TesterReportDaoImpl implements TesterReportDao {
 				TesterReport _testerReport = this.getTesterReport(_rs);
 				_testerReports.add(_testerReport);
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _testerReports;
 	}
 
 	@Override
-	public List<TesterReport> getTesterReportsFailedInflow()
-			throws SQLException {
+	public List<TesterReport> getTesterReportsFailedInflow() {
 		List<TesterReport> _testerReports = new ArrayList<TesterReport>();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxTester.getCnx().prepareStatement(
+			c = this.cnxTester.getCnx();
+			_stmt = c.prepareStatement(
 					"SELECT * FROM testerReport " + "WHERE (state = 1)"
 							+ " AND (result=?)");
 			_stmt.setString(1, "Failed");
@@ -541,16 +507,12 @@ public class TesterReportDaoImpl implements TesterReportDao {
 				TesterReport _testerReport = this.getTesterReport(_rs);
 				_testerReports.add(_testerReport);
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _testerReports;
@@ -567,14 +529,12 @@ public class TesterReportDaoImpl implements TesterReportDao {
 	private TesterReport getTesterReport(ResultSet rs) throws SQLException {
 		// Retreive testType
 		int _idTestType = rs.getInt("idTestType");
-		TestTypeDao _testTypeDao = new TestTypeDaoImpl(this.cnxTester);
 		TestType _testType = _testTypeDao.getTestType(_idTestType);
 
 		// Retreive tester
 		int _idTester = rs.getInt("idTester");
 		Tester _tester = null;
 		if (0 < _idTester) {
-			TesterDao _testerDao = new TesterDaoImpl(this.cnxTester);
 			_tester = _testerDao.getTester(_idTester);
 		} else {
 			// No tester
@@ -585,7 +545,6 @@ public class TesterReportDaoImpl implements TesterReportDao {
 
 		// Retreive product
 		int _idProduct = rs.getInt("idProduct");
-		ProductDao _productDao = new ProductDaoImpl(this.cnxProduct);
 		Product _product = _productDao.getProduct(_idProduct);
 
 		int _idTesterReport = rs.getInt("idTesterReport");
@@ -601,7 +560,6 @@ public class TesterReportDaoImpl implements TesterReportDao {
 				_testType, _operatorCode, _product, _idTesterReportNext);
 
 		// Retreive defects
-		DefectDao _defectDao = new DefectDaoImpl(this.cnxTester);
 		List<Defect> _defects = _defectDao.getDefects(_testerReport);
 
 		_testerReport.setDefects(_defects);

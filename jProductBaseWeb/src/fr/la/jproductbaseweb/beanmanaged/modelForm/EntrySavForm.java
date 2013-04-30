@@ -99,19 +99,13 @@ public class EntrySavForm implements Serializable {
 
 	}
 
-	public EntrySavForm(String reference, String datecode, String serialNumber,
-			ProductConf productConf) throws EntrySavException, Exception {
+	public EntrySavForm(String reference, String datecode, String serialNumber,	ProductConf productConf) {
 
 		this.reference = reference;
 		this.dateCode = datecode;
 		this.serialNumber = serialNumber;
-		System.out.println(this.reference);
-		System.out.println(this.dateCode);
-		System.out.println(this.serialNumber);
 
-		if (this.reference == null || this.dateCode == null
-				|| this.serialNumber == null) {
-
+		if (this.reference == null || this.dateCode == null	|| this.serialNumber == null) {
 			throw new EntrySavException("Pas de selection de produit");
 		} else {
 			System.out.println("Reference : " + this.reference + " DateCode : "
@@ -123,56 +117,26 @@ public class EntrySavForm implements Serializable {
 			} else {
 
 				this.product = null;
-				ServiceInterface _service = new ServiceInterface();
-				System.out.println("ref " + this.reference);
-				try {
-					if (this.dateCode != null && this.serialNumber != null) {
-						this.product = _service.getProduct(reference,
-								serialNumber, datecode);
-					} else {
-						this.product = _service.getProductWithProductConfRef(reference);
-					}
-					if(this.product == null){
-						throw new EntrySavException("Le produit n'existe pas");
-					}
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				ServiceInterface _service = ServiceInterface.getInstance();
+				if (this.dateCode != null && this.serialNumber != null) {
+					this.product = _service.getProduct(reference, serialNumber, datecode);
+				} else {
+					this.product = _service.getProductWithProductConfRef(reference);
+				}
+				if(this.product == null){
+					throw new EntrySavException("Le produit n'existe pas");
 				}
 				if (this.product == null) {
-					System.out.println("le produit n'existe pas");
-
-					this.product = _service.addProduct(productConf,
-							serialNumber, datecode, "");
-					throw new EntrySavException(
-							"le produit n'existe pas il vient d'etre cree avec l'id "
-									+ this.product.getIdProduct());
+					this.product = _service.addProduct(productConf,	serialNumber, datecode, "");
+					throw new EntrySavException("le produit n'existe pas il vient d'etre cree avec l'id "+ this.product.getIdProduct());
 
 				} else {
-
 					this.product = null;
-					System.out.println("ref " + this.reference);
-					try {
-						this.product = _service.getProduct(reference,
-								serialNumber, datecode);
-					} catch (SQLException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+					this.product = _service.getProduct(reference, serialNumber, datecode);
 					if (this.product == null) {
-						System.out.println("le produit n'existe pas");
-
-						this.product = _service.addProduct(productConf,
-								serialNumber, datecode, "");
-						throw new EntrySavException(
-								"le produit n'existe pas il vient d'etre cree avec l'id "
-										+ this.product.getIdProduct());
-
-					} else {
-
-						System.out.println("le produit existe");
+						this.product = _service.addProduct(productConf, serialNumber, datecode, "");
+						throw new EntrySavException("le produit n'existe pas il vient d'etre cree avec l'id "+ this.product.getIdProduct());
 					}
-
 				}
 			}
 		}

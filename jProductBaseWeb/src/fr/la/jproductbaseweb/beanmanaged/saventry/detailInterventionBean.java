@@ -29,25 +29,16 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.RowEditEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TabChangeEvent;
-import java.text.ParseException;
 
 import fr.la.configfilereader.ConfigFileReaderException;
-import fr.la.jproductbase.dao.AfterSaleReportDaoException;
-import fr.la.jproductbase.dao.CustomerCommentDaoException;
-import fr.la.jproductbase.dao.ElementChangedDaoException;
-import fr.la.jproductbase.dao.FailureDaoException;
-import fr.la.jproductbase.dao.FailureReportCommentDaoException;
-import fr.la.jproductbase.dao.ProductDaoException;
 import fr.la.jproductbase.metier.AfterSaleReport;
 import fr.la.jproductbase.metier.ApparentCause;
 import fr.la.jproductbase.metier.ApparentCauseCustomer;
 import fr.la.jproductbase.metier.ElementChanged;
 import fr.la.jproductbase.metier.Failure;
-import fr.la.jproductbase.metier.JProductBaseException;
 import fr.la.jproductbase.metier.Operator;
 import fr.la.jproductbase.metier.Product;
 import fr.la.jproductbase.metier.ProductConf;
-import fr.la.jproductbase.service.FailureModuleException;
 import fr.la.jproductbase.service.ServiceInterface;
 import fr.la.jproductbaseweb.beanmanaged.exception.EntrySavException;
 import fr.la.jproductbaseweb.beanmanaged.modelForm.EntrySavForm;
@@ -57,7 +48,7 @@ import fr.la.jproductbaseweb.beanmanaged.modelForm.EntrySavForm;
 public class detailInterventionBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private ServiceInterface moduleGlobal = new ServiceInterface();
+	private ServiceInterface moduleGlobal = ServiceInterface.getInstance();
 	private boolean deleteCard = false;
 	private int compteur;
 	private int cptFailure;
@@ -81,28 +72,20 @@ public class detailInterventionBean implements Serializable {
 	private List<Failure> newListFailure;
 
 	public void initialisation() {
-		try {
-			this.listLAICause = moduleGlobal.getApparentCauses();
-			this.listCustormerCause = moduleGlobal
-					.getActiveApparentCausesCustomer();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		this.listLAICause = moduleGlobal.getApparentCauses();
+		this.listCustormerCause = moduleGlobal.getActiveApparentCausesCustomer();
 	}
 
 	public void onChangeTab(TabChangeEvent event) {
 		TabView _tabView = (TabView) event.getSource();
 		this.indexActive = _tabView.getActiveIndex();
-		this.selectedAfterSaleReport = this.listAfterSaleReport
-				.get(indexActive);
+		this.selectedAfterSaleReport = this.listAfterSaleReport.get(indexActive);
 	}
 
 	public String calculateweek() {
 		if (this.listAfterSaleReport.get(this.indexActive).getProduct() != null) {
 			if (this.indexActive == 0) {
-				String datecode = this.listAfterSaleReport
-						.get(this.indexActive).getProduct().getDatecode();
+				String datecode = this.listAfterSaleReport.get(this.indexActive).getProduct().getDatecode();
 
 				Date date = this.getdatefromdatecode(datecode);
 
@@ -111,12 +94,10 @@ public class detailInterventionBean implements Serializable {
 				DateTime dateTime1 = new DateTime(date);
 				DateTime dateTime2 = null;
 
-				if (this.listAfterSaleReport.get(this.indexActive)
-						.getArrivalDate() == null) {
+				if (this.listAfterSaleReport.get(this.indexActive).getArrivalDate() == null) {
 					dateTime2 = new DateTime(new Date());
 				} else {
-					dateTime2 = new DateTime(this.listAfterSaleReport.get(
-							this.indexActive).getArrivalDate());
+					dateTime2 = new DateTime(this.listAfterSaleReport.get(this.indexActive).getArrivalDate());
 				}
 
 				weeks = this.numberofweekbetween(dateTime1, dateTime2);
@@ -127,17 +108,14 @@ public class detailInterventionBean implements Serializable {
 
 				int weeks = 0;
 
-				DateTime dateExped = new DateTime(this.listAfterSaleReport.get(
-						this.indexActive - 1).getExpeditionDate());
+				DateTime dateExped = new DateTime(this.listAfterSaleReport.get(this.indexActive - 1).getExpeditionDate());
 
 				DateTime dateTime2 = null;
 
-				if (this.listAfterSaleReport.get(this.indexActive)
-						.getArrivalDate() == null) {
+				if (this.listAfterSaleReport.get(this.indexActive).getArrivalDate() == null) {
 					dateTime2 = new DateTime(new Date());
 				} else {
-					dateTime2 = new DateTime(this.listAfterSaleReport.get(
-							this.indexActive).getArrivalDate());
+					dateTime2 = new DateTime(this.listAfterSaleReport.get(this.indexActive).getArrivalDate());
 				}
 
 				weeks = this.numberofweekbetween(dateExped, dateTime2);
@@ -153,8 +131,7 @@ public class detailInterventionBean implements Serializable {
 		this.afterSaleReport = new AfterSaleReport(0, null, 1, null, "", "",
 				null, null, null, null, null, -1, -1, "EES-FC", "", "", "",
 				null, null, this.selectedObject);
-		this.afterSaleReport.setMajorIndexIn(this.selectedObject
-				.getProductConf().getMajorIndex());
+		this.afterSaleReport.setMajorIndexIn(this.selectedObject.getProductConf().getMajorIndex());
 
 	}
 
@@ -204,77 +181,38 @@ public class detailInterventionBean implements Serializable {
 	}
 
 	public void modifyProduct(ActionEvent event) {
-		System.out.println("modify");
-		// CommandButton _commandButton = (CommandButton) event.getSource();
-		this.selectedAfterSaleReport = (AfterSaleReport) event.getComponent()
-				.getAttributes().get("selectedAfterSaleReport");
-		System.out.println(this.selectedAfterSaleReport);
-		System.out
-				.println("selected aftersalereport" + selectedAfterSaleReport);
-		// this.selectedAfterSaleReport = selectedAfterSaleReport;
+		this.selectedAfterSaleReport = (AfterSaleReport) event.getComponent().getAttributes().get("selectedAfterSaleReport");
 		FacesContext context = FacesContext.getCurrentInstance();
 		@SuppressWarnings("unused")
-		InterventionSheetModel _intervention = (InterventionSheetModel) context
-				.getApplication()
-				.getExpressionFactory()
-				.createValueExpression(context.getELContext(),
-						"#{interventionSheetLinkModel}",
-						InterventionSheetModel.class)
-				.getValue(context.getELContext());
-		System.out.println("path file name" + InterventionSheetModel.pathFile);
-		this.selectedAfterSaleReport
-				.setInterventionSheetLink(InterventionSheetModel.pathFile);
+		InterventionSheetModel _intervention = (InterventionSheetModel) context.getApplication().getExpressionFactory().createValueExpression(
+																		context.getELContext(),
+																		"#{interventionSheetLinkModel}",
+																		InterventionSheetModel.class).getValue(context.getELContext());
+		this.selectedAfterSaleReport.setInterventionSheetLink(InterventionSheetModel.pathFile);
 		int cptFailure = 0;
 		if (this.selectedAfterSaleReport.getFailures() != null) {
 			for (Failure failure : this.selectedAfterSaleReport.getFailures()) {
-				System.out.println("id processing "
-						+ failure.getProduct().getIdProduct());
 				if (this.newListFailure != null) {
 					for (Failure newFailure : this.newListFailure) {
-						System.out.println("test verificcation"
-								+ failure.getIdFailure() + " == "
-								+ newFailure.getIdFailure());
-						if (failure.getIdFailure() == newFailure.getIdFailure()
-								&& failure.getProduct().getIdProduct() == newFailure
-										.getProduct().getIdProduct()
-								&& failure.getFailureCode().equals(
-										newFailure.getFailureCode())) {
-
-							// failure.setIdFailure(0);
-
-							this.selectedAfterSaleReport.getFailures()
-									.get(cptFailure).setIdFailure(0);
-
-							System.out.println("format id " + failure);
+						if (failure.getIdFailure() == newFailure.getIdFailure() 	&& failure.getProduct().getIdProduct() == newFailure.getProduct().getIdProduct() && failure.getFailureCode().equals(newFailure.getFailureCode())) {
+							this.selectedAfterSaleReport.getFailures().get(cptFailure).setIdFailure(0);
 						}
-
 					}
 				}
 				Product _productSearched = null;
 				EntrySavForm _entrySAV = null;
-				try {
-					_entrySAV = new EntrySavForm(
-							this.selectedAfterSaleReport.getFailures()
-									.get(cptFailure).getProduct()
-									.getProductConf().getReference(),
-							this.selectedAfterSaleReport.getFailures()
-									.get(cptFailure).getProduct().getDatecode(),
-							this.selectedAfterSaleReport.getFailures()
-									.get(cptFailure).getProduct()
-									.getSerialNumber(),
-							this.selectedAfterSaleReport.getFailures()
-									.get(cptFailure).getProduct()
-									.getProductConf());
-				} catch (EntrySavException e) {
-					// TODO Auto-generated catch block
-					FacesContext.getCurrentInstance().addMessage(
-							null,
-							new FacesMessage(FacesMessage.SEVERITY_WARN,
-									"Erreur", e.getMessage()));
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				_entrySAV = new EntrySavForm(
+						this.selectedAfterSaleReport.getFailures()
+								.get(cptFailure).getProduct()
+								.getProductConf().getReference(),
+						this.selectedAfterSaleReport.getFailures()
+								.get(cptFailure).getProduct().getDatecode(),
+						this.selectedAfterSaleReport.getFailures()
+								.get(cptFailure).getProduct()
+								.getSerialNumber(),
+						this.selectedAfterSaleReport.getFailures()
+								.get(cptFailure).getProduct()
+								.getProductConf());
 				_productSearched = _entrySAV.getProduct();
 				this.selectedAfterSaleReport.getFailures().get(cptFailure)
 						.setProduct(_productSearched);
@@ -287,7 +225,6 @@ public class detailInterventionBean implements Serializable {
 
 		}
 
-		try {
 			@SuppressWarnings("unused")
 			EntrySavForm _entrySAVForm = new EntrySavForm(
 					this.selectedAfterSaleReport.getMajorIndexOut(),
@@ -328,7 +265,7 @@ public class detailInterventionBean implements Serializable {
 						_newProductConf.isIdentifiable(),
 						_newProductConf.getState(),
 						_newProductConf.getFollowingForm(),
-						_newProductConf.getProductConfComponents(),
+						moduleGlobal.getProductConfComponents( _newProductConf ),
 						_newProductConf.getProductConfSoftwares());
 			}
 
@@ -353,94 +290,32 @@ public class detailInterventionBean implements Serializable {
 			}
 			System.out.println(this.getAfterSaleReport());
 
-			AfterSaleReport _newAfterSaleReport = this.moduleGlobal
-					.setAfterSaleReport(this.selectedAfterSaleReport);
+			AfterSaleReport _newAfterSaleReport = this.moduleGlobal.setAfterSaleReport(this.selectedAfterSaleReport);
 
 			this.getAfterSaleReport().setIdAfterSaleReport(
 					_newAfterSaleReport.getIdAfterSaleReport());
 
 			this.selectedAfterSaleReport = _newAfterSaleReport;
 			if (this.newListFailure == null) {
-				this.newListFailure = new ArrayList<>();
+				this.newListFailure = new ArrayList<Failure>();
 			}
 			this.newListFailure.clear();
-			System.out.println(this.getAfterSaleReport());
 
 			context = FacesContext.getCurrentInstance();
 
 			context.addMessage(null, new FacesMessage("Modification Reussie"));
 			this.refresh();
-			// hideDialog(dialog);
-
-		} catch (EntrySavException e1) {
-			// TODO Auto-generated catch block
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_WARN, "Erreur", e1
-							.getMessage()));
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (FailureModuleException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (AfterSaleReportDaoException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (FailureDaoException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ElementChangedDaoException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (FailureReportCommentDaoException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (CustomerCommentDaoException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ConfigFileReaderException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JProductBaseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ProductDaoException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		// System.out.println(this.selectedObject.getProductConf().getReference()
-		// +" / "+this.selectedAfterSaleReport.getMajorIndexOut());
 
 	}
 
 	public void handleCauseClientChange() {
 		if (this.getSelectedApparentCauseCustomer() == null) {
-			try {
-				this.listLAICause = this.moduleGlobal.getApparentCauses();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			this.listLAICause = this.moduleGlobal.getApparentCauses();
 		} else {
 			List<ApparentCause> _apparentCauses = new ArrayList<ApparentCause>();
 			this.listLAICause = new ArrayList<ApparentCause>();
-			try {
-				_apparentCauses = this.moduleGlobal.getApparentCauses();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			_apparentCauses = this.moduleGlobal.getApparentCauses();
+
 			for (ApparentCause apparentCause : _apparentCauses) {
 				if (apparentCause.getApparentCauseCustomer()
 						.getIdApparentCauseCustomer() == this
@@ -453,87 +328,32 @@ public class detailInterventionBean implements Serializable {
 	}
 
 	public void newFailure(String cardChanged) {
-
 		this.cptFailure++;
-		System.out.println("valeur de cptFailure" + cptFailure);
 		if (cardChanged.equals("false")) {
-			System.out.println("action" + cardChanged);
 			Product _product = new Product();
 			_product.setProductConf(new ProductConf());
 			List<ElementChanged> _listElements = new ArrayList<ElementChanged>();
-
 			this.listElementChangedToSave = new ArrayList<ElementChanged>();
-			Failure _failure = new Failure(this.cptFailure, new Date(), "", "",
-					"", "", "", new Operator(), _product, _listElements, false);
+			Failure _failure = new Failure(this.cptFailure, new Date(), "", "",	"", "", "", new Operator(), _product, _listElements, false);
 			List<Failure> _failures = new ArrayList<Failure>();
-
-			if (this.selectedAfterSaleReport.getIdAfterSaleReport() == 0
-					&& this.selectedAfterSaleReport.getFailures() == null) {
-
-				System.out.println("create failure list");
+			if (this.selectedAfterSaleReport.getIdAfterSaleReport() == 0 || this.selectedAfterSaleReport.getFailures() == null) {
 				this.selectedAfterSaleReport.setFailures(_failures);
-
 			}
-
-			System.out.println("rajout de la ligne failure dans la liste : "
-					+ _failure);
-
 			this.selectedAfterSaleReport.getFailures().add(_failure);
 			addFailureinList(_failure);
 		} else {
-
 			List<ElementChanged> _listElements = new ArrayList<ElementChanged>();
-
 			this.listElementChangedToSave = new ArrayList<ElementChanged>();
-
 			Product _product = new Product();
 			_product.setProductConf(new ProductConf());
-
-			Failure _failure = new Failure(this.cptFailure, new Date(), "", "",
-					"", "", "", new Operator(), _product, _listElements, false,
-					this.selectedFailure);
-
-			System.out.println("creation new faiurel " + _failure);
-
+			Failure _failure = new Failure(this.cptFailure, new Date(), "", "",	"", "", "", new Operator(), _product, _listElements, false,	this.selectedFailure);
 			List<Failure> _failures = new ArrayList<Failure>();
-
-			if (this.selectedAfterSaleReport.getIdAfterSaleReport() == 0
-					&& this.selectedAfterSaleReport.getFailures() == null) {
-
-				System.out.println("create failure list");
+			if (this.selectedAfterSaleReport.getIdAfterSaleReport() == 0 && this.selectedAfterSaleReport.getFailures() == null) {
 				this.selectedAfterSaleReport.setFailures(_failures);
-
 			}
-			System.out.println("rajout de la ligne failure dans la liste : "
-					+ _failure);
 			this.selectedAfterSaleReport.getFailures().add(_failure);
-
-			System.out.println("selected aftersale report List failure :"
-					+ this.selectedAfterSaleReport.getFailures());
-
 			addFailureinList(_failure);
-
 		}
-
-		/*
-		 * Product _product = new Product();
-		 * 
-		 * List<ElementChanged> _listElements = new ArrayList<ElementChanged>();
-		 * 
-		 * this.listElementChangedToSave = new ArrayList<ElementChanged>();
-		 * Failure _failure = new Failure(0, new Date(), "", "", "", "", "",
-		 * null, _product, _listElements, false); List<Failure> _failures = new
-		 * ArrayList<Failure>(); this.listFailure.add(_failure);
-		 * System.out.println(this.selectedAfterSaleReport); if
-		 * (this.selectedAfterSaleReport.getIdAfterSaleReport() == 0 &&
-		 * this.selectedAfterSaleReport.getFailures() == null) {
-		 * 
-		 * System.out.println("create failure list");
-		 * this.selectedAfterSaleReport.setFailures(_failures);
-		 * 
-		 * } this.selectedAfterSaleReport.getFailures().add(_failure);
-		 */
-
 	}
 
 	private void addFailureinList(Failure _failure) {
@@ -585,7 +405,7 @@ public class detailInterventionBean implements Serializable {
 						if (_cellEditor.getFacet("input") instanceof SelectOneMenu) {
 							SelectOneMenu _html = (SelectOneMenu) _cellEditor
 									.getFacet("input");
-							try {
+
 								this.productCardSelected = this.moduleGlobal
 										.getProduct(Integer.parseInt(_html
 												.getValue().toString()));
@@ -614,19 +434,8 @@ public class detailInterventionBean implements Serializable {
 									}
 								} else {
 								}
-								System.out.println(_failure.getProduct()
-										.getDatecode());
-
-							} catch (NumberFormatException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							} catch (SQLException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
 							this.listElementChangedToSave = new ArrayList<ElementChanged>();
 							// System.out.println(this.productCardSelected);
-							System.out.println(_failure);
 
 						}
 					}
@@ -934,20 +743,8 @@ public class detailInterventionBean implements Serializable {
 	}
 
 	public void selectedProductFailure() {
-		System.out.println("selected produtct"
-				+ this.selectedFailure.getProduct().getIdProduct());
-		Product _product = null;
-
-		try {
-			_product = this.moduleGlobal.getProduct(this.selectedFailure
-					.getProduct().getIdProduct());
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
+		Product _product = this.moduleGlobal.getProduct(this.selectedFailure.getProduct().getIdProduct());
 		this.selectedFailure.setProduct(_product);
-
 	}
 
 	public void addTopo() {
@@ -999,17 +796,11 @@ public class detailInterventionBean implements Serializable {
 	}
 
 	public void refresh() {
-		try {
-			this.selectedObject = moduleGlobal.getProduct(this.idIntervention);
-			this.listAfterSaleReport = moduleGlobal
-					.getAfterSaleReports(this.idIntervention);
-			this.newAfterSaleReport();
-			this.listAfterSaleReport.add(this.afterSaleReport);
-			this.compteur = this.listAfterSaleReport.size();
-		} catch (SQLException | ConfigFileReaderException | IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		this.selectedObject = moduleGlobal.getProduct(this.idIntervention);
+		this.listAfterSaleReport = moduleGlobal.getAfterSaleReports(this.idIntervention);
+		this.newAfterSaleReport();
+		this.listAfterSaleReport.add(this.afterSaleReport);
+		this.compteur = this.listAfterSaleReport.size();
 	}
 
 	public int getIdIntervention() {

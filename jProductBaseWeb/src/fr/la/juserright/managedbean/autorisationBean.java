@@ -20,7 +20,7 @@ import fr.la.juserright.verificationformulaire.EditAutorisation;
 @SessionScoped
 public class autorisationBean {
 
-	private ServiceUserRight moduleGlobal = new ServiceUserRight();
+	private ServiceUserRight moduleGlobal = ServiceUserRight.getInstance();
 
 	private String RoleSelected;
 

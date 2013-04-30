@@ -1,5 +1,6 @@
 package fr.la.jproductbase.dao;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -7,29 +8,27 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.naming.NamingException;
-
 import fr.la.jproductbase.metier.ElementChanged;
 import fr.la.jproductbase.metier.Failure;
 
-public class ElementChangedDaoImpl implements ElementChangedDao {
-	private static String exceptionMsg = "Elément de composant inconnu dans la base de données.";
+public class ElementChangedDaoImpl extends GenericDao implements ElementChangedDao {
 
-	private ConnectionProduct cnxProduct;
+	ConnectionProduct cnxProduct;
 
 	public ElementChangedDaoImpl(ConnectionProduct cnxProduct) {
 		this.cnxProduct = cnxProduct;
 	}
 
 	@Override
-	public List<ElementChanged> getElementsChanged(Failure failure)
-			throws SQLException {
+	public List<ElementChanged> getElementsChanged(Failure failure) {
 		List<ElementChanged> _elementsChanged = new ArrayList<ElementChanged>();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 					"SELECT * FROM elementChanged WHERE idFailure=?");
 			_stmt.setInt(1, failure.getIdFailure());
 			_rs = _stmt.executeQuery();
@@ -41,32 +40,28 @@ public class ElementChangedDaoImpl implements ElementChangedDao {
 				// Update failure object
 				//failure.addElementChanged(_elementChanged);
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _elementsChanged;
 	}
 
 	@Override
-	public ElementChanged addElementChanged(ElementChanged elementChanged,
-			Failure failure) throws SQLException, ElementChangedDaoException {
+	public ElementChanged addElementChanged(ElementChanged elementChanged, Failure failure) {
 		ElementChanged _elementChanged = null;
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
-		
-		System.out.println("addFailure");
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 					"INSERT INTO elementChanged (topoRef, idFailure)"
 							+ " VALUES (?, ?)");
 			_stmt.setString(1, elementChanged.getCode());
@@ -74,7 +69,7 @@ public class ElementChangedDaoImpl implements ElementChangedDao {
 			_stmt.executeUpdate();
 
 			// Retrieve elementChanged data
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			_stmt = c.prepareStatement(
 					"SELECT * FROM elementChanged" + " WHERE (idFailure=?)");
 			_stmt.setInt(1, failure.getIdFailure());
 
@@ -82,31 +77,29 @@ public class ElementChangedDaoImpl implements ElementChangedDao {
 			if (_rs.next()) {
 				_elementChanged = this.getElementChanged(_rs);
 			} else {
-				throw new ElementChangedDaoException(exceptionMsg);
+				throw new IllegalStateException();
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _elementChanged;
 	}
 
 	@Override
-	public void updateElementChanged(ElementChanged elementChanged,
-			Failure failure) throws SQLException, ElementChangedDaoException {
+	public void updateElementChanged(ElementChanged elementChanged,	Failure failure) {
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 					"UPDATE elementChanged " + "SET topoRef=?"
 							+ " WHERE (idElementChanged=?)");
 			_stmt.setString(1, elementChanged.getCode());
@@ -114,7 +107,7 @@ public class ElementChangedDaoImpl implements ElementChangedDao {
 			_stmt.executeUpdate();
 
 			// Update object
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			_stmt = c.prepareStatement(
 					"SELECT * FROM elementChanged"
 							+ " WHERE (idElementChanged=?)");
 			_stmt.setInt(1, elementChanged.getIdElementChanged());
@@ -123,39 +116,36 @@ public class ElementChangedDaoImpl implements ElementChangedDao {
 			if (_rs.next()) {
 				this.getElementChanged(_rs);
 			} else {
-				throw new ElementChangedDaoException(exceptionMsg);
+				throw new IllegalStateException();
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 	}
 
 	@Override
-	public void removeElementChanged(ElementChanged elementChanged)
-			throws SQLException {
+	public void removeElementChanged(ElementChanged elementChanged) {
+		Connection c = null;
 		PreparedStatement _stmt = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 					"DELETE FROM elementChanged "
 							+ "WHERE (idElementChanged=?)");
 			_stmt.setInt(1, elementChanged.getIdElementChanged());
 			_stmt.executeUpdate();
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_stmt);
+			close(c);
 		}
 	}
 

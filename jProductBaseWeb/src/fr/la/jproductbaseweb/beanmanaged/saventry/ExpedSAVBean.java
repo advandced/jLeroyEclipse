@@ -12,9 +12,6 @@ import javax.faces.context.FacesContext;
 import javax.naming.NamingException;
 
 import fr.la.configfilereader.ConfigFileReaderException;
-import fr.la.jproductbase.dao.AfterSaleReportDaoException;
-import fr.la.jproductbase.dao.ElementChangedDaoException;
-import fr.la.jproductbase.dao.FailureDaoException;
 import fr.la.jproductbase.metier.AfterSaleCom;
 import fr.la.jproductbase.service.ServiceInterface;
 import fr.la.jproductbaseweb.beanmanaged.exception.ExpedSAVException;
@@ -24,7 +21,7 @@ import fr.la.jproductbaseweb.beanmanaged.modelForm.ExpedSAVForm;
 @SessionScoped
 public class ExpedSAVBean {
 
-	private ServiceInterface moduleGlobal = new ServiceInterface();
+	private ServiceInterface moduleGlobal = ServiceInterface.getInstance();
 
 	private List<AfterSaleCom> listAfterSaleCom;
 
@@ -34,13 +31,11 @@ public class ExpedSAVBean {
 	
 	private Boolean dataNotFound;
 	
-	public ExpedSAVBean() throws SQLException, ConfigFileReaderException,
-			IOException, AfterSaleReportDaoException, ParseException {
+	public ExpedSAVBean() {
 		this.refresh();
 	}
 
-	public void refresh() throws SQLException, ConfigFileReaderException,
-			IOException, ParseException {
+	public void refresh() {
 		this.listAfterSaleCom = moduleGlobal.getAfterSaleComExped();
 		if(this.listAfterSaleCom.size() == 0){
 			this.dataFound = false;
@@ -83,19 +78,8 @@ public class ExpedSAVBean {
 		this.dataNotFound = dataNotFound;
 	}
 
-	public void Enregistrer() throws SQLException, ConfigFileReaderException, IOException, ParseException, AfterSaleReportDaoException, FailureDaoException, ElementChangedDaoException{
-		try {
-			@SuppressWarnings("unused")
-			ExpedSAVForm _exped = new ExpedSAVForm(this.selectedAfterSaleCom);
-		} catch (ExpedSAVException e) {
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_WARN, "", e
-							.getMessage()));
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public void Enregistrer() {
+		ExpedSAVForm _exped = new ExpedSAVForm(this.selectedAfterSaleCom);
 		this.refresh();
 	}
 }

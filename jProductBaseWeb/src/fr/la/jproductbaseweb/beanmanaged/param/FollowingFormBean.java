@@ -31,7 +31,7 @@ public class FollowingFormBean implements Serializable {
     private List<FollowingFormModel> listFollowingForm;
     private FollowingFormModel selectedFollowingForm = new FollowingFormModel();
     private FollowingFormModel newFollowingForm = new FollowingFormModel(1);
-    private ServiceInterface moduleGlobal = new ServiceInterface();
+    private ServiceInterface moduleGlobal = ServiceInterface.getInstance();
 
     public FollowingFormBean() throws SQLException {
         this.refresh();

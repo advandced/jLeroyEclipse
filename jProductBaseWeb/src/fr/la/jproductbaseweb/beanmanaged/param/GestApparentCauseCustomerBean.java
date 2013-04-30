@@ -33,15 +33,8 @@ public class GestApparentCauseCustomerBean implements Serializable {
     private ApparentCauseCustomer selectedApparentCustomerCause;
 
     public GestApparentCauseCustomerBean() {
-        this.module = new ServiceInterface();
-        try {
-            this.apparentCauseCustomerList = this.module
-                    .getApparentCausesCustomer();
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
+        this.module = ServiceInterface.getInstance();
+        this.apparentCauseCustomerList = this.module.getApparentCausesCustomer();
     }
 
     private Dialog getDialogToButton(CommandButton commandButton) {

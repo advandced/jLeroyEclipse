@@ -1,11 +1,6 @@
 package fr.la.jproductbase.dao;
 
-import fr.la.configfilereader.ConfigFileReaderException;
-import fr.la.jproductbase.metier.AfterSaleReport;
-import fr.la.jproductbase.metier.ApparentCause;
-import fr.la.jproductbase.metier.Failure;
-import fr.la.jproductbase.metier.Product;
-import java.io.IOException;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,28 +8,34 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import javax.naming.NamingException;
 
-public class AfterSaleReportDaoImpl implements AfterSaleReportDao {
-	private static String exceptionMsg = "Intervention SAV inconnu dans la base de données.";
+import fr.la.jproductbase.metier.AfterSaleReport;
+import fr.la.jproductbase.metier.ApparentCause;
+import fr.la.jproductbase.metier.Product;
 
-	private ConnectionProduct cnxProduct;
-	private ConnectionOperator cnxOperator;
+public class AfterSaleReportDaoImpl extends GenericDao implements AfterSaleReportDao {
 
-	public AfterSaleReportDaoImpl(ConnectionProduct cnxProduct,
-			ConnectionOperator cnxOperator) {
+	ConnectionProduct cnxProduct;
+
+	ProductDao _productDao;
+	ApparentCauseDao _apparentCauseDao;
+
+	public AfterSaleReportDaoImpl(ConnectionProduct cnxProduct, ProductDao productDao, ApparentCauseDao apparentCauseDao) {
 		this.cnxProduct = cnxProduct;
-		this.cnxOperator = cnxOperator;
+		this._productDao = productDao;
+		this._apparentCauseDao = apparentCauseDao;
 	}
 
 	@Override
-	public List<AfterSaleReport> listAfterSaleReport() throws SQLException {
+	public List<AfterSaleReport> listAfterSaleReport() {
 		List<AfterSaleReport> _afterSaleReports = new ArrayList<AfterSaleReport>();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			c = cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 					"SELECT * FROM afterSaleReport");
 			_rs = _stmt.executeQuery();
 
@@ -42,29 +43,27 @@ public class AfterSaleReportDaoImpl implements AfterSaleReportDao {
 				AfterSaleReport _afterSaleReport = this.getAfterSaleReport(_rs);
 				_afterSaleReports.add(_afterSaleReport);
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _afterSaleReports;
 	}
 
 	@Override
-	public List<AfterSaleReport> listAfterSaleReport(Product product)
-			throws SQLException {
+	public List<AfterSaleReport> listAfterSaleReport(Product product) {
 		List<AfterSaleReport> _afterSaleReports = new ArrayList<AfterSaleReport>();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			c = cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 					"SELECT * FROM afterSaleReport" + " WHERE (idProduct=?) "
 							+ "ORDER BY arrivalDate");
 			_stmt.setInt(1, product.getIdProduct());
@@ -74,16 +73,12 @@ public class AfterSaleReportDaoImpl implements AfterSaleReportDao {
 				AfterSaleReport _afterSaleReport = this.getAfterSaleReport(_rs);
 				_afterSaleReports.add(_afterSaleReport);
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _afterSaleReports;
@@ -91,14 +86,15 @@ public class AfterSaleReportDaoImpl implements AfterSaleReportDao {
 
 
 	@Override
-	public List<AfterSaleReport> listAfterSaleReport(int idproduct)
-			throws SQLException {
+	public List<AfterSaleReport> listAfterSaleReport(int idproduct) {
 		List<AfterSaleReport> _afterSaleReports = new ArrayList<AfterSaleReport>();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			c = cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 					"SELECT * FROM afterSaleReport WHERE idProduct=?;");
 			_stmt.setInt(1,idproduct);
 			_rs = _stmt.executeQuery();
@@ -107,24 +103,20 @@ public class AfterSaleReportDaoImpl implements AfterSaleReportDao {
 				AfterSaleReport _afterSaleReport = this.getAfterSaleReport(_rs);
 				_afterSaleReports.add(_afterSaleReport);
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 		return _afterSaleReports;
 	}
 
 	@Override
-	public List<AfterSaleReport> listAfterSaleReport(Date fromDate, Date toDate)
-			throws SQLException {
+	public List<AfterSaleReport> listAfterSaleReport(Date fromDate, Date toDate) {
 		List<AfterSaleReport> _afterSaleReports = new ArrayList<AfterSaleReport>();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
@@ -132,7 +124,8 @@ public class AfterSaleReportDaoImpl implements AfterSaleReportDao {
 		java.sql.Date _toDate = new java.sql.Date(fromDate.getTime());
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			c = cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 					"SELECT * FROM afterSaleReport"
 							+ " WHERE (arrivalDate BETWEEN ? AND ?)");
 			_stmt.setDate(1, _fromDate);
@@ -143,16 +136,12 @@ public class AfterSaleReportDaoImpl implements AfterSaleReportDao {
 				AfterSaleReport _afterSaleReport = this.getAfterSaleReport(_rs);
 				_afterSaleReports.add(_afterSaleReport);
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _afterSaleReports;
@@ -166,11 +155,11 @@ public class AfterSaleReportDaoImpl implements AfterSaleReportDao {
 			int visualControl, String asker, String intervenant,
 			String InterventionSheetLink, String comment,
 			ApparentCause apparentCause, String majorIndexIn,
-			String majorIndexOut, Product product) throws SQLException,
-			AfterSaleReportDaoException {
+			String majorIndexOut, Product product)  {
 
 		// System.out.println("produit" + product.getIdProduct());
 		AfterSaleReport _afterSaleReport = null;
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
@@ -204,9 +193,8 @@ public class AfterSaleReportDaoImpl implements AfterSaleReportDao {
 		}
 
 		try {
-			_stmt = this.cnxProduct
-					.getCnx()
-					.prepareStatement(
+			c = cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 							"INSERT INTO afterSaleReport (state, arrivalDate, "
 									+ "ecsNumber, ncNature, firstAnalyseDate, "
 									+ "materialInfoDate, reparationDate, qualityControlDate, "
@@ -236,7 +224,7 @@ public class AfterSaleReportDaoImpl implements AfterSaleReportDao {
 			_stmt.setInt(19, product.getIdProduct());
 			_stmt.executeUpdate();
 
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			_stmt = c.prepareStatement(
 					"SELECT * FROM afterSaleReport" + " WHERE (idProduct=?)"
 							+ " AND (arrivalDate=?)");
 			_stmt.setInt(1, product.getIdProduct());
@@ -246,26 +234,21 @@ public class AfterSaleReportDaoImpl implements AfterSaleReportDao {
 			if (_rs.next()) {
 				_afterSaleReport = this.getAfterSaleReport(_rs);
 			} else {
-				throw new AfterSaleReportDaoException(exceptionMsg);
+				throw new IllegalStateException();
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _afterSaleReport;
 	}
 
 	@Override
-	public AfterSaleReport updateAfterSaleReport(AfterSaleReport afterSaleReport)
-			throws SQLException, AfterSaleReportDaoException {
+	public AfterSaleReport updateAfterSaleReport(AfterSaleReport afterSaleReport) {
 		return this.updateAfterSaleReport(afterSaleReport,
 				afterSaleReport.getArrivalDate(),
 				afterSaleReport.getEcsNumber(), afterSaleReport.getNcNature(),
@@ -294,8 +277,8 @@ public class AfterSaleReportDaoImpl implements AfterSaleReportDao {
 			int visualControl, String asker, String intervenant,
 			String interventionSheetLink, String comment,
 			ApparentCause apparentCause, String majoriIndexIn,
-			String majorIndexOut, Product product) throws SQLException,
-			AfterSaleReportDaoException {
+			String majorIndexOut, Product product) {
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
@@ -343,9 +326,8 @@ public class AfterSaleReportDaoImpl implements AfterSaleReportDao {
 		}
 
 		try {
-			_stmt = this.cnxProduct
-					.getCnx()
-					.prepareStatement(
+			c = cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 							"UPDATE afterSaleReport "
 									+ "SET arrivalDate = ?, "
 									+ "ecsNumber = ?, ncNature = ?, firstAnalyseDate = ?, "
@@ -377,7 +359,7 @@ public class AfterSaleReportDaoImpl implements AfterSaleReportDao {
 			_stmt.executeUpdate();
 
 			// Update object
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			_stmt = c.prepareStatement(
 					"SELECT * FROM afterSaleReport" + " WHERE (idProduct=?)"
 							+ " AND (arrivalDate=?)");
 			_stmt.setInt(1, product.getIdProduct());
@@ -387,31 +369,28 @@ public class AfterSaleReportDaoImpl implements AfterSaleReportDao {
 			if (_rs.next()) {
 				_afterSaleReport = this.getAfterSaleReport(_rs);
 			} else {
-				throw new AfterSaleReportDaoException(exceptionMsg);
+				throw new IllegalStateException();
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 		return _afterSaleReport;
 	}
 
 	@Override
-	public AfterSaleReport getAfterSaleReport(int idAfterSaleReport)
-			throws SQLException {
+	public AfterSaleReport getAfterSaleReport(int idAfterSaleReport) {
 		AfterSaleReport _afterSaleReport = null;
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			c = cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 					"SELECT * FROM afterSaleReport"
 							+ " WHERE (idAfterSaleReport=?)");
 			_stmt.setInt(1, idAfterSaleReport);
@@ -421,16 +400,12 @@ public class AfterSaleReportDaoImpl implements AfterSaleReportDao {
 			} else {
 				_afterSaleReport = null;
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _afterSaleReport;
@@ -440,15 +415,15 @@ public class AfterSaleReportDaoImpl implements AfterSaleReportDao {
 	 * Mise a jour du quality control date en fonction de l'id
 	 */
 
-	public void updateAfterSaleReportQualityControl(
-			AfterSaleReport afterSaleReport) throws SQLException,
-			AfterSaleReportDaoException {
+	public void updateAfterSaleReportQualityControl(AfterSaleReport afterSaleReport)  {
+		Connection c = null;
 		ResultSet _rs = null;
 		PreparedStatement _stmt = null;
 		java.sql.Date _qualityControlDate = new java.sql.Date(afterSaleReport
 				.getQualityControlDate().getTime());
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			c = cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 					"UPDATE afterSaleReport " + "SET qualityControlDate = ? "
 							+ "WHERE (idAfterSaleReport = ?)");
 
@@ -456,7 +431,7 @@ public class AfterSaleReportDaoImpl implements AfterSaleReportDao {
 			_stmt.setInt(2, afterSaleReport.getIdAfterSaleReport());
 			_stmt.executeUpdate();
 
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			_stmt = c.prepareStatement(
 					"SELECT * " + "FROM afterSaleReport "
 							+ "WHERE (idAfterSaleReport = ?);");
 
@@ -466,25 +441,26 @@ public class AfterSaleReportDaoImpl implements AfterSaleReportDao {
 			if (_rs.next()) {
 
 			} else {
-				throw new AfterSaleReportDaoException(exceptionMsg);
+				throw new IllegalStateException();
 			}
-		} catch (NamingException e) {
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 	}
 
-	public List<AfterSaleReport> SelectAfterSaleReportValidControl()
-			throws SQLException, AfterSaleReportDaoException {
+	public List<AfterSaleReport> SelectAfterSaleReportValidControl() {
 		List<AfterSaleReport> _afterSaleReports = new ArrayList<AfterSaleReport>();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			c = cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 					"SELECT * " + "FROM afterSaleReport "
 							+ "WHERE reparationDate IS NOT NULL "
 							+ "AND qualityControlDate IS NULL "
@@ -496,31 +472,26 @@ public class AfterSaleReportDaoImpl implements AfterSaleReportDao {
 				AfterSaleReport _afterSaleReport = this.getAfterSaleReport(_rs);
 				_afterSaleReports.add(_afterSaleReport);
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _afterSaleReports;
 	}
 
-	public List<AfterSaleReport> SelectAfterSaleReportExpedSAV()
-			throws SQLException, AfterSaleReportDaoException {
+	public List<AfterSaleReport> SelectAfterSaleReportExpedSAV() {
 		List<AfterSaleReport> _afterSaleReports = new ArrayList<AfterSaleReport>();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct
-					.getCnx()
-					.prepareStatement(
+			c = cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 							"SELECT * "
 									+ "FROM afterSaleReport "
 									+ "WHERE reparationDate IS NOT NULL and qualityControlDate IS NOT NULL and expeditionDate IS NULL");
@@ -531,29 +502,26 @@ public class AfterSaleReportDaoImpl implements AfterSaleReportDao {
 				AfterSaleReport _afterSaleReport = this.getAfterSaleReport(_rs);
 				_afterSaleReports.add(_afterSaleReport);
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _afterSaleReports;
 	}
 
-	public void updateAfterSaleReportExpedSAV(AfterSaleReport afterSaleReport)
-			throws SQLException, AfterSaleReportDaoException {
+	public void updateAfterSaleReportExpedSAV(AfterSaleReport afterSaleReport) {
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 		java.sql.Date _qualityControlDate = new java.sql.Date(afterSaleReport
 				.getQualityControlDate().getTime());
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			c = cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 					"UPDATE afterSaleReport " + "SET expeditionDate = ? "
 							+ "WHERE (idAfterSaleReport = ?)");
 
@@ -561,7 +529,7 @@ public class AfterSaleReportDaoImpl implements AfterSaleReportDao {
 			_stmt.setInt(2, afterSaleReport.getIdAfterSaleReport());
 			_stmt.executeUpdate();
 
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			_stmt = c.prepareStatement(
 					"SELECT * " + "FROM afterSaleReport "
 							+ "WHERE (idAfterSaleReport = ?);");
 
@@ -571,22 +539,20 @@ public class AfterSaleReportDaoImpl implements AfterSaleReportDao {
 			if (_rs.next()) {
 
 			} else {
-				throw new AfterSaleReportDaoException(exceptionMsg);
+				throw new IllegalStateException();
 			}
-
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 	}
 
-	public List<AfterSaleReport> ListDevisRepa() throws SQLException,
-			ConfigFileReaderException, IOException {
+	public List<AfterSaleReport> ListDevisRepa() {
 		List<AfterSaleReport> _afterSaleReport = new ArrayList<AfterSaleReport>();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
@@ -595,8 +561,8 @@ public class AfterSaleReportDaoImpl implements AfterSaleReportDao {
 			String rqt = "SELECT *"
 					+ " FROM afterSaleReport AS R LEFT JOIN afterSaleCom AS C ON R.idAfterSaleReport = C.idAfterSaleReport"
 					+ " WHERE R.reparationDate IS NOT NULL AND R.qualityControlDate IS NOT NULL AND R.expeditionDate IS NULL AND C.quotationNumber IS NULL";
-
-			_stmt = this.cnxProduct.getCnx().prepareStatement(rqt);
+			c = cnxProduct.getCnx();
+			_stmt = c.prepareStatement(rqt);
 			_rs = _stmt.executeQuery();
 
 			while (_rs.next()) {
@@ -604,31 +570,22 @@ public class AfterSaleReportDaoImpl implements AfterSaleReportDao {
 						.getAfterSaleReport(_rs);
 				_afterSaleReport.add(_afterSaleReporttmp);
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 		return _afterSaleReport;
 	}
 
-	private AfterSaleReport getAfterSaleReport(ResultSet rs)
-			throws SQLException {
+	private AfterSaleReport getAfterSaleReport(ResultSet rs) throws SQLException {
 		// Retreive product
-		ProductDao _productDao = new ProductDaoImpl(this.cnxProduct);
 		Product _product = _productDao.getProduct(rs.getInt("idProduct"));
 
 		// Retreive product
-		ApparentCauseDao _apparentCauseDao = new ApparentCauseDaoImpl(
-				this.cnxProduct);
-		ApparentCause _apparentCause = _apparentCauseDao.getApparentCause(rs
-				.getInt("idApparentCause"));
+		ApparentCause _apparentCause = _apparentCauseDao.getApparentCause(rs.getInt("idApparentCause"));
 
 		// FailureReport
 		int _idAfterSaleReport = rs.getInt("idAfterSaleReport");
@@ -662,10 +619,9 @@ public class AfterSaleReportDaoImpl implements AfterSaleReportDao {
 		_afterSaleReport.setMajorIndexOut(_majorIndexOut);
 
 		// Retreive failures
-		FailureDao _failureDao = new FailureDaoImpl(this.cnxProduct,
-				this.cnxOperator);
-		List<Failure> _failures = _failureDao.getFailures(_afterSaleReport);
-		_afterSaleReport.setFailures(_failures);
+		//FailureDao _failureDao = new FailureDaoImpl(this.cnxProduct, this.cnxOperator);
+		//List<Failure> _failures = _failureDao.getFailures(_afterSaleReport);
+		//_afterSaleReport.setFailures(_failures);
 
 		return _afterSaleReport;
 	}

@@ -35,7 +35,7 @@ public abstract class GestFormSearchAbstract<T> {
 
     public GestFormSearchAbstract() {
 
-        this.moduleGlobale = new ServiceInterface();
+        this.moduleGlobale = ServiceInterface.getInstance();
         this.context = FacesContext.getCurrentInstance();
         try {
             getFamiliesListProduct();

@@ -25,8 +25,7 @@ public interface FailureReportCommentDao {
 	 * 
 	 * @throws SQLException
 	 */
-	public FailureReportComment getFailureReportComment(
-			ProductionFailureReport failureReport) throws SQLException;
+	public FailureReportComment getFailureReportComment(ProductionFailureReport failureReport);
 
 	/**
 	 * Ajoute un commentaire de rapport de d&eacute;faut dans la base de
@@ -44,9 +43,7 @@ public interface FailureReportCommentDao {
 	 * @throws SQLException
 	 * @throws FailureReportCommentDaoException
 	 */
-	public FailureReportComment addFailureReportComment(
-			ProductionFailureReport failureReport, String comment, Date commentDate)
-			throws SQLException, FailureReportCommentDaoException;
+	public FailureReportComment addFailureReportComment(ProductionFailureReport failureReport, String comment, Date commentDate);
 
 	/**
 	 * Ajoute un commentaire &grave; un rapport de d&eacute;faut dans la base de
@@ -62,9 +59,7 @@ public interface FailureReportCommentDao {
 	 * @throws SQLException
 	 * @throws FailureReportCommentDaoException
 	 */
-	public FailureReportComment addFailureReportComment(
-			ProductionFailureReport failureReport, String comment) throws SQLException,
-			FailureReportCommentDaoException;
+	public FailureReportComment addFailureReportComment(ProductionFailureReport failureReport, String comment);
 
 	/**
 	 * Met &agrave; jour le commentaire d'un rapport de d&eacute;faut dans la
@@ -78,8 +73,7 @@ public interface FailureReportCommentDao {
 	 * @throws SQLException
 	 * @throws FailureReportCommentDaoException 
 	 */
-	public void updateFailureReportComment(ProductionFailureReport failureReport,
-			String comment) throws SQLException, FailureReportCommentDaoException;
+	public void updateFailureReportComment(ProductionFailureReport failureReport, String comment);
 
 	/**
 	 * Supprimme le commentaire d'un rapport de d&eacute;fauts dans la base de
@@ -91,6 +85,5 @@ public interface FailureReportCommentDao {
 	 * 
 	 * @throws SQLException
 	 */
-	public void removeFailureReportComment(ProductionFailureReport failureReport)
-			throws SQLException;
+	public void removeFailureReportComment(ProductionFailureReport failureReport);
 }

@@ -105,15 +105,18 @@ public class PreTesterReportDaoXml {
 	/*
 	 * Enregistrement du fichier.
 	 */
-	private static void save(String fichier) throws FileNotFoundException,
-			IOException {
+	private static void save(String fichier) {
 		XMLOutputter _output = new XMLOutputter(Format.getPrettyFormat());
-		FileOutputStream _fileOutputStream = new FileOutputStream(
-				fichier);
-		_output.output(PreTesterReportDaoXml.document, _fileOutputStream);
-		
-		_fileOutputStream.flush();
-		_fileOutputStream.close();
+		try {
+			FileOutputStream _fileOutputStream = new FileOutputStream(fichier);
+			_output.output(PreTesterReportDaoXml.document, _fileOutputStream);
+			
+			_fileOutputStream.flush();
+			_fileOutputStream.close();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+
 	}
 
 	/**
@@ -128,11 +131,12 @@ public class PreTesterReportDaoXml {
 	 * @throws JDOMException
 	 * @throws IOException
 	 */
-	public void writePreTesterReportResult(String result,
-			Boolean resultConfirmation, StringBuffer customerComment)
-			throws JDOMException, IOException {
-		PreTesterReportDaoXml.readxml(this.xmlFileName);
-
+	public void writePreTesterReportResult(String result, Boolean resultConfirmation, StringBuffer customerComment) {
+		try {
+			PreTesterReportDaoXml.readxml(this.xmlFileName);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 		// Add new "resultat"
 		Element _resultElt = new Element("resultat");
 		PreTesterReportDaoXml.racine.addContent(_resultElt);

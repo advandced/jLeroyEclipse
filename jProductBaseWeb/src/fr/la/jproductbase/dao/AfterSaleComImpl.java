@@ -1,6 +1,6 @@
 package fr.la.jproductbase.dao;
 
-import java.io.IOException;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,79 +9,62 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.naming.NamingException;
-
-import fr.la.configfilereader.ConfigFileReaderException;
 import fr.la.jproductbase.metier.AfterSaleCom;
 import fr.la.jproductbase.metier.AfterSaleReport;
-import fr.la.jproductbase.service.ServiceInterface;
-//import fr.la.jproductbase.metier.ApparentCause;
-//import fr.la.jproductbase.metier.Product;
 
-public class AfterSaleComImpl implements AfterSaleComDao {
-	private static String exceptionMsg = "AfterSaleCom inconnu dans la base de données.";
 
-	private ConnectionProduct cnxProduct;
-	private ConnectionOperator cnxOperator;
+public class AfterSaleComImpl extends GenericDao implements AfterSaleComDao {
 
-	public AfterSaleComImpl(ConnectionProduct cnxProduct,
-			ConnectionOperator cnxOperator) {
+	ConnectionProduct cnxProduct;
+
+	AfterSaleReportDao _afterSaleReportDao;
+
+	public AfterSaleComImpl(ConnectionProduct cnxProduct, AfterSaleReportDao afterSaleReportDao) {
 		this.cnxProduct = cnxProduct;
-		this.cnxOperator = cnxOperator;
+		this._afterSaleReportDao = afterSaleReportDao;
 	}
 
-	public List<AfterSaleCom> listAfterSaleCom() throws SQLException,
-			ConfigFileReaderException, IOException {
+	public List<AfterSaleCom> listAfterSaleCom() {
 		List<AfterSaleCom> _afterSaleCom = new ArrayList<AfterSaleCom>();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
-					"SELECT * FROM afterSaleCom ORDER BY quotationNumber");
+			c = cnxProduct.getCnx();
+			_stmt = c.prepareStatement("SELECT * FROM afterSaleCom ORDER BY quotationNumber");
 			_rs = _stmt.executeQuery();
 
 			while (_rs.next()) {
 				AfterSaleCom _afterSaleComRS = this.getAfterSaleCom(_rs);
 				_afterSaleCom.add(_afterSaleComRS);
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 		return _afterSaleCom;
 	}
 
-	public void addDevisPrea(AfterSaleCom aftersalecom) throws SQLException,
-			AfterSaleComDaoException {
+	public void addDevisPrea(AfterSaleCom aftersalecom) {
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 		try {
-			_stmt = this.cnxProduct
-					.getCnx()
-					.prepareStatement(
-							"SELECT idAfterSaleCom FROM afterSaleCom WHERE idAfterSaleCom = ?;");
+			c = cnxProduct.getCnx();
+			_stmt = c.prepareStatement("SELECT idAfterSaleCom FROM afterSaleCom WHERE idAfterSaleCom = ?");
 			_stmt.setInt(1, aftersalecom.getIdAfterSaleCom());
 			_rs = _stmt.executeQuery();
 			_rs.last();
 			if (_rs.getRow() == 0) {
 				try {
-					java.sql.Date _quotationdate = new java.sql.Date(
-							aftersalecom.getQuotationDate().getTime());
-
-					_stmt = this.cnxProduct
-							.getCnx()
-							.prepareStatement(
-									"INSERT INTO afterSaleCom (quotationNumber,quotationDate,"
-											+ "SAVPrice,quotationComment,idAfterSaleReport)"
-											+ " VALUES (?, ?, ?, ?, ?);");
+					java.sql.Date _quotationdate = new java.sql.Date(aftersalecom.getQuotationDate().getTime());
+					_stmt = c.prepareStatement("INSERT INTO afterSaleCom (quotationNumber,quotationDate,"
+																		+ "SAVPrice,quotationComment,idAfterSaleReport)"
+																		+ " VALUES (?, ?, ?, ?, ?)");
 
 					_stmt.setString(1, aftersalecom.getQuotationNumber());
 					_stmt.setDate(2, _quotationdate);
@@ -92,39 +75,34 @@ public class AfterSaleComImpl implements AfterSaleComDao {
 
 					_stmt.executeUpdate();
 
-					_stmt = this.cnxProduct.getCnx().prepareStatement(
+					_stmt = c.prepareStatement(
 							"SELECT * FROM afterSaleCom "
 									+ "WHERE (quotationNumber = ?) "
 									+ "AND (quotationDate = ?) "
 									+ "AND (SAVPrice = ? ) "
 									+ "AND (quotationComment = ?) "
-									+ "AND (idAfterSaleReport = ?);");
+									+ "AND (idAfterSaleReport = ?)");
 
 					_stmt.setString(1, aftersalecom.getQuotationNumber());
 					_stmt.setDate(2, _quotationdate);
 					_stmt.setFloat(3, aftersalecom.getSavPrice());
 					_stmt.setString(4, aftersalecom.getQuotationComment());
-					_stmt.setInt(5, aftersalecom.getAfterSaleReport()
-							.getIdAfterSaleReport());
+					_stmt.setInt(5, aftersalecom.getAfterSaleReport().getIdAfterSaleReport());
 
 					_rs = _stmt.executeQuery();
 					if (_rs.next()) {
 
 					} else {
-						throw new AfterSaleComDaoException(exceptionMsg);
+						throw new IllegalStateException();
 					}
 				} finally {
-					if (null != _stmt) {
-						_stmt.close();
-					}
+					close(_stmt);
 				}
 			}
 			if (_rs.getRow() == 1) {
 				try {
-					java.sql.Date _quotationdate = new java.sql.Date(
-							aftersalecom.getQuotationDate().getTime());
-
-					_stmt = this.cnxProduct.getCnx().prepareStatement(
+					java.sql.Date _quotationdate = new java.sql.Date(aftersalecom.getQuotationDate().getTime());
+					_stmt = c.prepareStatement(
 							"UPDATE afterSaleCom "
 									+ "SET quotationNumber = ?, "
 									+ "quotationDate = ?, " + "SAVPrice = ?, "
@@ -142,7 +120,7 @@ public class AfterSaleComImpl implements AfterSaleComDao {
 
 					_stmt.executeUpdate();
 
-					_stmt = this.cnxProduct.getCnx().prepareStatement(
+					_stmt = c.prepareStatement(
 							"SELECT * FROM afterSaleCom "
 									+ "WHERE (idAfterSaleCom = ?);");
 
@@ -152,33 +130,28 @@ public class AfterSaleComImpl implements AfterSaleComDao {
 					if (_rs.next()) {
 
 					} else {
-						throw new AfterSaleComDaoException(exceptionMsg);
+						throw new IllegalStateException();
 					}
 				} finally {
-					if (null != _stmt) {
-						_stmt.close();
-					}
+					close(_stmt);
+					close(c);
 				}
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _stmt) {
-				_stmt.close();
-			}
-			if (null != _rs) {
-				_rs.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 	}
 
 	/*
 	 * Renvoi les AfterSalecCom avec un SAVOrderNumber NULL
 	 */
-	public List<AfterSaleCom> rechercheNumCmd(String rechercher)
-			throws SQLException, ConfigFileReaderException, IOException {
+	public List<AfterSaleCom> rechercheNumCmd(String rechercher) {
 		List<AfterSaleCom> _afterSaleCom = new ArrayList<AfterSaleCom>();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
@@ -187,24 +160,21 @@ public class AfterSaleComImpl implements AfterSaleComDao {
 			String rqt = "SELECT *"
 					+ " FROM aftersalecom"
 					+ " WHERE SAVOrderNumber IS NULL AND SAVOrderDate IS NULL AND quotationNumber LIKE '%"
-					+ rechercher + "%';";
-			_stmt = this.cnxProduct.getCnx().prepareStatement(rqt);
+					+ rechercher + "%'";
+			c = cnxProduct.getCnx();
+			_stmt = c.prepareStatement(rqt);
 			_rs = _stmt.executeQuery();
 
 			while (_rs.next()) {
 				AfterSaleCom _afterSaleComRS = this.getAfterSaleCom(_rs);
 				_afterSaleCom.add(_afterSaleComRS);
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 		return _afterSaleCom;
 	}
@@ -212,8 +182,8 @@ public class AfterSaleComImpl implements AfterSaleComDao {
 	/*
 	 * 
 	 */
-	public void addCmd(AfterSaleCom aftersalecom) throws SQLException,
-			AfterSaleComDaoException {
+	public void addCmd(AfterSaleCom aftersalecom) {
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
@@ -221,8 +191,8 @@ public class AfterSaleComImpl implements AfterSaleComDao {
 
 			java.sql.Date _savorderdate = new java.sql.Date(aftersalecom
 					.getSavOrderDate().getTime());
-
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			c = cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 					"UPDATE aftersalecom "
 							+ "SET SAVOrderNumber = ?, SAVOrderDate = ? "
 							+ "WHERE idafterSaleCom = ?;");
@@ -233,7 +203,7 @@ public class AfterSaleComImpl implements AfterSaleComDao {
 
 			_stmt.executeUpdate();
 
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			_stmt = c.prepareStatement(
 					"SELECT * FROM afterSaleCom "
 							+ "WHERE (idafterSaleCom = ?);");
 
@@ -243,24 +213,21 @@ public class AfterSaleComImpl implements AfterSaleComDao {
 			if (_rs.next()) {
 
 			} else {
-				throw new AfterSaleComDaoException(exceptionMsg);
+				throw new IllegalStateException();
 			}
-		} catch (NamingException e) {
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 	}
 
-	public AfterSaleCom getAfterSaleCom(String idaftersalecom)
-			throws SQLException, ConfigFileReaderException, IOException {
+	public AfterSaleCom getAfterSaleCom(String idaftersalecom) {
 
 		AfterSaleCom _afterSaleCom = new AfterSaleCom();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
@@ -268,29 +235,27 @@ public class AfterSaleComImpl implements AfterSaleComDao {
 
 			String rqt = "SELECT *" + " FROM aftersalecom"
 					+ " WHERE idafterSaleCom LIKE '%" + idaftersalecom + "%';";
-			_stmt = this.cnxProduct.getCnx().prepareStatement(rqt);
+			c = cnxProduct.getCnx();
+			_stmt = c.prepareStatement(rqt);
 			_rs = _stmt.executeQuery();
 
 			while (_rs.next()) {
 				_afterSaleCom = this.getAfterSaleCom(_rs);
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 		return _afterSaleCom;
 	}
 
-	public void updateCmd(AfterSaleCom _aftersalecom) throws SQLException,
-			AfterSaleComDaoException {
+	public void updateCmd(AfterSaleCom _aftersalecom) {
+		Connection c = null;
 		PreparedStatement _stmt = null;
+		ResultSet _rs = null;
 		try {
 
 			String rqt = "UPDATE aftersalecom SET ";
@@ -362,39 +327,36 @@ public class AfterSaleComImpl implements AfterSaleComDao {
 
 			rqt += " WHERE  idAfterSaleCom = "
 					+ _aftersalecom.getIdAfterSaleCom() + ";";
-
-			_stmt = this.cnxProduct.getCnx().prepareStatement(rqt);
+			c = cnxProduct.getCnx();
+			_stmt = c.prepareStatement(rqt);
 
 			_stmt.executeUpdate();
 
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			_stmt = c.prepareStatement(
 					"SELECT * FROM afterSaleCom "
 							+ "WHERE (idAfterSaleCom = ?);");
 
 			_stmt.setInt(1, _aftersalecom.getIdAfterSaleCom());
-
-			ResultSet _rs = null;
 
 			_rs = _stmt.executeQuery();
 
 			if (_rs.next()) {
 
 			} else {
-				throw new AfterSaleComDaoException(exceptionMsg);
+				throw new IllegalStateException();
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 	}
 
-	public List<AfterSaleCom> ListDevisPrea() throws SQLException,
-			ConfigFileReaderException, IOException {
+	public List<AfterSaleCom> ListDevisPrea() {
 		List<AfterSaleCom> _afterSaleCom = new ArrayList<AfterSaleCom>();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
@@ -403,8 +365,8 @@ public class AfterSaleComImpl implements AfterSaleComDao {
 			String rqt = "SELECT R.idAfterSaleReport, C.*"
 					+ " FROM afterSaleReport AS R LEFT JOIN afterSaleCom AS C ON R.idAfterSaleReport = C.idAfterSaleReport"
 					+ " WHERE R.firstAnalyseDate IS NOT NULL AND R.reparationDate IS NULL AND C.quotationDate IS NULL;";
-
-			_stmt = this.cnxProduct.getCnx().prepareStatement(rqt);
+			c = cnxProduct.getCnx();
+			_stmt = c.prepareStatement(rqt);
 			_rs = _stmt.executeQuery();
 
 			while (_rs.next()) {
@@ -418,10 +380,7 @@ public class AfterSaleComImpl implements AfterSaleComDao {
 				int _savordernumber = _rs.getInt("SAVOrderNumber");
 				Date _savorderdate = _rs.getDate("SAVOrderDate");
 				String _ordercomment = _rs.getString("OrderComment");
-				AfterSaleReportDao _afterSaleReportDao = new AfterSaleReportDaoImpl(
-						this.cnxProduct, this.cnxOperator);
-				AfterSaleReport _AfterSaleReport = _afterSaleReportDao
-						.getAfterSaleReport(_rs.getInt("R.idAfterSaleReport"));
+				AfterSaleReport _AfterSaleReport = _afterSaleReportDao.getAfterSaleReport(_rs.getInt("R.idAfterSaleReport"));
 
 				AfterSaleCom _afterSaleComTmp = new AfterSaleCom(
 						_idAfterSaleCom, _quotationNumber, _quotationDate,
@@ -431,47 +390,37 @@ public class AfterSaleComImpl implements AfterSaleComDao {
 
 				_afterSaleCom.add(_afterSaleComTmp);
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 		return _afterSaleCom;
 	}
 
-	public List<AfterSaleCom> getAfterSaleComExpedSAV() throws SQLException,
-			ConfigFileReaderException, IOException {
+	public List<AfterSaleCom> getAfterSaleComExpedSAV() {
 		List<AfterSaleCom> _afterSaleCom = new ArrayList<AfterSaleCom>();
 		List<AfterSaleReport> _afterSaleReport = new ArrayList<AfterSaleReport>();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 		try {
-			_stmt = this.cnxProduct
-					.getCnx()
-					.prepareStatement(
+			c = cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 							"SELECT idAfterSaleReport "
 									+ "FROM afterSaleReport "
 									+ "WHERE reparationDate IS NOT NULL and qualityControlDate "
 									+ "IS NOT NULL and expeditionDate IS NULL;");
 			_rs = _stmt.executeQuery();
-			ServiceInterface moduleGlobal = new ServiceInterface();
 			while (_rs.next()) {
-				AfterSaleReport __afterSaleReport = moduleGlobal
-						.getAfterSaleReport(_rs.getInt("idAfterSaleReport"));
+				AfterSaleReport __afterSaleReport = _afterSaleReportDao.getAfterSaleReport(_rs.getInt("idAfterSaleReport"));;
 				_afterSaleReport.add(__afterSaleReport);
 			}
-		} catch (NamingException e) {
-			e.printStackTrace();
-		}
-		try {
+
 			for (AfterSaleReport report : _afterSaleReport) {
-				_stmt = this.cnxProduct.getCnx().prepareStatement(
+				_stmt = c.prepareStatement(
 						"SELECT * " + "FROM afterSaleCom "
 								+ "WHERE idAfterSaleReport = "
 								+ report.getIdAfterSaleReport() + ";");
@@ -496,29 +445,26 @@ public class AfterSaleComImpl implements AfterSaleComDao {
 					_afterSaleCom.add(___afterSaleCom);
 				}
 			}
-
-		} catch (NamingException e) {
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _afterSaleCom;
 	}
 
-	public List<AfterSaleCom> getLazyRecapCom(int limit, int maxperpage)
-			throws SQLException {
+	public List<AfterSaleCom> getLazyRecapCom(int limit, int maxperpage) {
 		List<AfterSaleCom> _aftersalecom = new ArrayList<AfterSaleCom>();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			c = cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 					"SELECT * FROM aftersalecom LIMIT ?, ?;");
 			_stmt.setInt(1, limit);
 			_stmt.setInt(2, maxperpage);
@@ -528,53 +474,50 @@ public class AfterSaleComImpl implements AfterSaleComDao {
 				AfterSaleCom _aftersalecomtmp = this.getAfterSaleCom(_rs);
 				_aftersalecom.add(_aftersalecomtmp);
 			}
-		} catch (Exception e) {
-
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 		return _aftersalecom;
 	}
 
-	public int countRecapCom() throws SQLException {
+	public int countRecapCom() {
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 		int count = 0;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			c = cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 					"SELECT count(*) FROM aftersalecom;");
 			_rs = _stmt.executeQuery();
 			if (_rs.next()) {
 				count = _rs.getInt(1);
 			}
-		} catch (Exception e) {
-
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 		return count;
 	}
 
-	public List<AfterSaleCom> getRepairDatetoDate(Date debut, Date fin)
-			throws SQLException, ConfigFileReaderException, IOException {
+	public List<AfterSaleCom> getRepairDatetoDate(Date debut, Date fin) {
 		List<AfterSaleCom> _afterSaleCom = new ArrayList<AfterSaleCom>();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 	    java.sql.Date _debut = new java.sql.Date(debut.getTime());
 	    java.sql.Date _fin = new java.sql.Date(fin.getTime());
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			c = cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 					"SELECT * FROM aftersalecom WHERE SAVOrderDate BETWEEN ? AND ?;");
 			_stmt.setDate(1, _debut);
 			_stmt.setDate(2, _fin);
@@ -584,43 +527,39 @@ public class AfterSaleComImpl implements AfterSaleComDao {
 				AfterSaleCom _afterSaleComRS = this.getAfterSaleCom(_rs);
 				_afterSaleCom.add(_afterSaleComRS);
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 		return _afterSaleCom;
 	}
 
-	private AfterSaleCom getAfterSaleCom(ResultSet rs) throws SQLException,
-			ConfigFileReaderException, IOException {
-
-		AfterSaleReportDao _afterSaleReportDao = new AfterSaleReportDaoImpl(
-				this.cnxProduct, this.cnxOperator);
-		AfterSaleReport _AfterSaleReport = _afterSaleReportDao
-				.getAfterSaleReport(rs.getInt("idAfterSaleReport"));
-
-		int _idAfterSaleCom = rs.getInt("idAfterSaleCom");
-		Timestamp _timestamp = rs.getTimestamp("Timestamp");
-		int _state = rs.getInt("State");
-		String _quotationNumber = rs.getString("quotationNumber");
-		Date _quotationDate = rs.getDate("quotationDate");
-		Float _savprice = rs.getFloat("SAVPrice");
-		String _quotationcomment = rs.getString("quotationComment");
-		int _savordernumber = rs.getInt("SAVOrderNumber");
-		Date _savorderdate = rs.getDate("SAVOrderDate");
-		String _ordercomment = rs.getString("OrderComment");
-
-		AfterSaleCom _afterSaleCom = new AfterSaleCom(_idAfterSaleCom,
-				_quotationNumber, _quotationDate, _savprice, _quotationcomment,
-				_savordernumber, _savorderdate, _ordercomment, _timestamp,
-				_state, _AfterSaleReport);
+	private AfterSaleCom getAfterSaleCom(ResultSet rs) {
+		AfterSaleCom _afterSaleCom = null;
+		try {
+			AfterSaleReport _AfterSaleReport = _afterSaleReportDao.getAfterSaleReport(rs.getInt("idAfterSaleReport"));
+	
+			int _idAfterSaleCom = rs.getInt("idAfterSaleCom");
+			Timestamp _timestamp = rs.getTimestamp("Timestamp");
+			int _state = rs.getInt("State");
+			String _quotationNumber = rs.getString("quotationNumber");
+			Date _quotationDate = rs.getDate("quotationDate");
+			Float _savprice = rs.getFloat("SAVPrice");
+			String _quotationcomment = rs.getString("quotationComment");
+			int _savordernumber = rs.getInt("SAVOrderNumber");
+			Date _savorderdate = rs.getDate("SAVOrderDate");
+			String _ordercomment = rs.getString("OrderComment");
+			
+			_afterSaleCom = new AfterSaleCom(_idAfterSaleCom,
+					_quotationNumber, _quotationDate, _savprice, _quotationcomment,
+					_savordernumber, _savorderdate, _ordercomment, _timestamp,
+					_state, _AfterSaleReport);
+		} catch (SQLException e) {
+			handleDAOException(e);
+		}
 
 		return _afterSaleCom;
 	}

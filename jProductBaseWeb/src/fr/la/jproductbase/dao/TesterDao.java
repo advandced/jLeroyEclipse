@@ -22,7 +22,7 @@ public interface TesterDao {
 	 * 
 	 * @throws SQLException
 	 */
-	public Tester getTester(int idTester) throws SQLException;
+	public Tester getTester(int idTester);
 
 	/**
 	 * Recherche un teteur de la base de donn&eacute;es.
@@ -34,7 +34,7 @@ public interface TesterDao {
 	 * 
 	 * @throws SQLException
 	 */
-	public Tester getTester(String name) throws SQLException;
+	public Tester getTester(String name);
 
 	/**
 	 * Recherche les teteurs actif de la base de donn&eacute;es.
@@ -43,7 +43,7 @@ public interface TesterDao {
 	 * 
 	 * @throws SQLException
 	 */
-	public List<Tester> getActiveTesters() throws SQLException;
+	public List<Tester> getActiveTesters();
 	
 	/**
 	 * Recherche tous les teteurs de la base de donn&eacute;es.
@@ -52,7 +52,7 @@ public interface TesterDao {
 	 * 
 	 * @throws SQLException
 	 */
-	public List<Tester> getTesters() throws SQLException;
+	public List<Tester> getTesters();
 
 	/**
 	 * Ajoute un testeur &agrave; la base de donn&eacute;es.
@@ -65,7 +65,7 @@ public interface TesterDao {
 	 * @throws SQLException 
 	 * @throws TesterDaoException 
 	 */
-	public Tester addTester(String name) throws SQLException, TesterDaoException;
+	public Tester addTester(String name);
 	
 	/**
 	 * Ajoute un testeur &agrave; la base de donn&eacute;es.
@@ -80,8 +80,7 @@ public interface TesterDao {
 	 * @throws SQLException 
 	 * @throws TesterDaoException 
 	 */
-	public Tester addTester(String name, int state) throws SQLException,
-			TesterDaoException;
+	public Tester addTester(String name, int state);
 	
 	/**
 	 * Met &agrave; jour un testeur dans la base de donn&eacute;s.
@@ -92,5 +91,5 @@ public interface TesterDao {
 	 * @throws SQLException
 	 * @throws TesterDaoException
 	 */
-	public void updateTester(Tester tester) throws SQLException, TesterDaoException;
+	public void updateTester(Tester tester);
 }

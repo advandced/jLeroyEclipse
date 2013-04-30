@@ -1,5 +1,6 @@
 package fr.la.jproductbase.dao;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -7,30 +8,28 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.naming.NamingException;
-
 import fr.la.jproductbase.metier.Defect;
 import fr.la.jproductbase.metier.TesterReport;
 
-public class DefectDaoImpl implements DefectDao {
-	private static String exceptionMsg = "Défaut inconnu dans la base de données.";
+public class DefectDaoImpl extends GenericDao implements DefectDao {
 
-	private ConnectionTester cnxTester;
+	ConnectionTester cnxTester;
 
 	public DefectDaoImpl(ConnectionTester cnxTester) {
 		this.cnxTester = cnxTester;
 	}
 
 	@Override
-	public List<Defect> getDefects(TesterReport testerReport)
-			throws SQLException {
+	public List<Defect> getDefects(TesterReport testerReport) {
 		List<Defect> _defects = new ArrayList<Defect>();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
 			int _idTesterReport = testerReport.getIdTesterReport();
-			_stmt = this.cnxTester.getCnx().prepareStatement(
+			c = this.cnxTester.getCnx();
+			_stmt = c.prepareStatement(
 					"SELECT * FROM defect " + "WHERE (idTesterReport=?)");
 			_stmt.setInt(1, _idTesterReport);
 			_rs = _stmt.executeQuery();
@@ -42,34 +41,29 @@ public class DefectDaoImpl implements DefectDao {
 				// Update failureReport object
 				testerReport.addDefect(_defect);
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _defects;
 	}
 
 	@Override
-	public Defect addDefect(Defect defect, TesterReport testerReport)
-			throws SQLException, DefectDaoException {
+	public Defect addDefect(Defect defect, TesterReport testerReport) {
 		Defect _defect = null;
 		if (null != defect) {
+			Connection c = null;
 			PreparedStatement _stmt = null;
 			ResultSet _rs = null;
 
 			int _idTesterReport = testerReport.getIdTesterReport();
 			try {
-				_stmt = this.cnxTester
-						.getCnx()
-						.prepareStatement(
+				c = this.cnxTester.getCnx();
+				_stmt = c.prepareStatement(
 								"INSERT INTO defect (state, sequence, testName, function, value, idTesterReport)"
 										+ " VALUES (?, ?, ?, ?, ?, ?)");
 				_stmt.setInt(1, defect.getState());
@@ -81,7 +75,7 @@ public class DefectDaoImpl implements DefectDao {
 				_stmt.executeUpdate();
 
 				// Retrieve testerReport data
-				_stmt = this.cnxTester.getCnx().prepareStatement(
+				_stmt = c.prepareStatement(
 						"SELECT * FROM defect" + " WHERE (idTesterReport=?)"
 								+ "	AND (sequence=?)" + " AND (testName=?)"
 								+ " AND (function=?)");
@@ -97,19 +91,16 @@ public class DefectDaoImpl implements DefectDao {
 					// Update testerReport
 					testerReport.addDefect(_defect);
 				} else {
-					throw new DefectDaoException(exceptionMsg);
+					throw new IllegalStateException();
 				}
-			} catch (NamingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			} catch (SQLException e) {
+				handleDAOException(e);
 			} finally {
-				if (null != _rs) {
-					_rs.close();
-				}
-				if (null != _stmt) {
-					_stmt.close();
-				}
+				close(_rs);
+				close(_stmt);
+				close(c);
 			}
+			
 		} else {
 			// No testerReport
 		}

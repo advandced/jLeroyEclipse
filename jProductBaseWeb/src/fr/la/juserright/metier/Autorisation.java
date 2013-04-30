@@ -1,7 +1,6 @@
 package fr.la.juserright.metier;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 
 public class Autorisation implements Serializable {
 
@@ -51,21 +50,18 @@ public class Autorisation implements Serializable {
 
 	}
 
-	public Autorisation(Ressource ressource, Role role)
-			throws SQLException {
+	public Autorisation(Ressource ressource, Role role) {
 		this.ressource = ressource;
 		this.role = role;
 	}
 
-	public Autorisation(Permission permission, Ressource ressource, Role role)
-			throws SQLException {
+	public Autorisation(Permission permission, Ressource ressource, Role role) {
 		this.permission = permission;
 		this.ressource = ressource;
 		this.role = role;
 	}
 
-	public Autorisation(int idautorisation, Permission permission,
-			Ressource ressource, Role role) throws SQLException {
+	public Autorisation(int idautorisation, Permission permission, Ressource ressource, Role role)  {
 		this.idautorisation = idautorisation;
 		this.permission = permission;
 		this.ressource = ressource;

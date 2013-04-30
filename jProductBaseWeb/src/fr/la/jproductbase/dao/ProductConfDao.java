@@ -27,7 +27,7 @@ public interface ProductConfDao {
      *
      * @throws SQLException
      */
-    public ProductConf getProductConf(int idProductConf) throws SQLException;
+    public ProductConf getProductConf(int idProductConf);
 
     /**
      * Recherche une configuration produit de la base de donn&eacute;es.
@@ -40,8 +40,7 @@ public interface ProductConfDao {
      *
      * @throws SQLException
      */
-    public ProductConf getProductConf(String reference, String majorIndex,
-            String minorIndex) throws SQLException;
+    public ProductConf getProductConf(String reference, String majorIndex, String minorIndex);
 
     /**
      * Recherche la derni&eagrave;re configuration produit active de la base de
@@ -55,8 +54,7 @@ public interface ProductConfDao {
      *
      * @throws SQLException
      */
-    public ProductConf getLastActiveProductConf(String reference,
-            String majorIndex, String minorIndex) throws SQLException;
+    public ProductConf getLastActiveProductConf(String reference, String majorIndex, String minorIndex);
 
     /**
      * Recherche les configurations produit de la base de donn&eacute;es.
@@ -65,7 +63,7 @@ public interface ProductConfDao {
      *
      * @throws SQLException
      */
-    public List<ProductConf> getProductConfs() throws SQLException;
+    public List<ProductConf> getProductConfs();
 
     /**
      * Recherche les configurations produit de la base de donn&eacute;es par
@@ -77,7 +75,7 @@ public interface ProductConfDao {
      *
      * @throws SQLException
      */
-    public List<ProductConf> getProductConfs(int type) throws SQLException;
+    public List<ProductConf> getProductConfs(int type);
 
     /**
      * Recherche les configurations produit en fonction d'une
@@ -89,8 +87,7 @@ public interface ProductConfDao {
      *
      * @throws SQLException
      */
-    public List<ProductConf> getProductConfs(String reference)
-            throws SQLException;
+    public List<ProductConf> getProductConfs(String reference);
 
     /**
      * Recherche les configurations produit actives en fonction d'un type de
@@ -102,8 +99,7 @@ public interface ProductConfDao {
      *
      * @throws SQLException
      */
-    public List<ProductConf> getActiveProductConfs(ProductType productType)
-            throws SQLException;
+    public List<ProductConf> getActiveProductConfs(ProductType productType);
 
     /**
      * Recherche les configurations produit actives de la base de
@@ -113,7 +109,7 @@ public interface ProductConfDao {
      *
      * @throws SQLException
      */
-    public List<ProductConf> getActiveProductConfs() throws SQLException;
+    public List<ProductConf> getActiveProductConfs();
 
     /**
      * Ajouter une configuration produit dans la base de donn&eacute;s.
@@ -133,8 +129,7 @@ public interface ProductConfDao {
      */
     public ProductConf addProductConf(String reference, String majorIndex,
             String minorIndex, String designation, int state,
-            ProductFamily productFamily, ProductSupply productSupply)
-            throws SQLException, ProductConfDaoException;
+            ProductFamily productFamily, ProductSupply productSupply);
 
     /**
      * Met &agrave; jour une configuration produit dans la base de
@@ -154,8 +149,7 @@ public interface ProductConfDao {
      */
     public void updateProductConf(ProductConf productConf, String reference,
             String majorIndex, String minorIndex, String designation,
-            int state, ProductFamily productFamily, ProductSupply productSupply)
-            throws SQLException, ProductConfDaoException;
+            int state, ProductFamily productFamily, ProductSupply productSupply);
 
     /**
      * Recherche les composants d'une de configuration produit de la base de
@@ -167,8 +161,7 @@ public interface ProductConfDao {
      *
      * @throws SQLException
      */
-    public List<ProductConf> getProductConfComponents(ProductConf productConf)
-            throws SQLException;
+    public List<ProductConf> getProductConfComponents(ProductConf productConf);
 
     /**
      * Recherche la version active d'une configuration produit de la base de
@@ -180,8 +173,7 @@ public interface ProductConfDao {
      *
      * @throws SQLException
      */
-    public List<ProductConf> getActiveProductConfs(String reference)
-            throws SQLException;
+    public List<ProductConf> getActiveProductConfs(String reference);
 
     /**
      * Supprimer une carte d'une config produit de la base de donn&eacute;es.
@@ -191,8 +183,7 @@ public interface ProductConfDao {
      *
      * @throws SQLException
      */
-    public void removeProductConfComponent(ProductConf productConf,
-            ProductConf component) throws SQLException;
+    public void removeProductConfComponent(ProductConf productConf, ProductConf component);
 
     /**
      * Ajouter une carte &agrave; une config produit de la base de
@@ -204,8 +195,7 @@ public interface ProductConfDao {
      * @throws SQLException
      * @throws ProductConfDaoException
      */
-    public void addProductConfComponent(ProductConf productConf,
-            ProductConf component) throws SQLException, ProductConfDaoException;
+    public void addProductConfComponent(ProductConf productConf, ProductConf component);
 
     /**
      * Ajouter une configuration produit dans la base de donn&eacute;s.
@@ -229,8 +219,7 @@ public interface ProductConfDao {
     public ProductConf addProductConf(String reference, String majorIndex,
             String minorIndex, ProductConfModel productConfModel, boolean identifiable,
             int state, ProductFamily productFamily,
-            ProductSupply productSupply, FollowingFormModel followingForm)
-            throws SQLException, ProductConfDaoException;
+            ProductSupply productSupply, FollowingFormModel followingForm);
 
     /**
      * Met &agrave; jour une configuration produit dans la base de
@@ -254,10 +243,9 @@ public interface ProductConfDao {
     public void updateProductConf(ProductConf productConf, String reference,
             String majorIndex, String minorIndex, ProductConfModel productConfModel,
             Boolean identifiable, int state, ProductFamily productFamily,
-            ProductSupply productSupply, FollowingFormModel followingFormModel)
-            throws SQLException, ProductConfDaoException;
+            ProductSupply productSupply, FollowingFormModel followingFormModel);
 
-    public List<ProductConf> getProductConfLazy(Map<String, String> filters, int limit, int maxperpage) throws SQLException;
+    public List<ProductConf> getProductConfLazy(Map<String, String> filters, int limit, int maxperpage);
 
-    public int countProductConf(Map<String, String> filters) throws SQLException;
+    public int countProductConf(Map<String, String> filters);
 }

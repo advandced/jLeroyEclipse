@@ -13,13 +13,11 @@ import javax.naming.NamingException;
 public class NumCommandeForm implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private ServiceInterface moduleGlobal = new ServiceInterface();
+    private ServiceInterface moduleGlobal = ServiceInterface.getInstance();
     private String search;
     private List<AfterSaleCom> listAfterSaleCom;
 
-    public NumCommandeForm(List<AfterSaleCom> listAfterSaleCom)
-            throws NumCommandeException, SQLException,
-            ConfigFileReaderException, IOException, NamingException {
+    public NumCommandeForm(List<AfterSaleCom> listAfterSaleCom) throws NumCommandeException, SQLException, ConfigFileReaderException, IOException, NamingException {
         int cpterror = 0;
         try {
             this.listAfterSaleCom = listAfterSaleCom;
@@ -49,13 +47,11 @@ public class NumCommandeForm implements Serializable {
     public NumCommandeForm(String search) throws NumCommandeException {
 
         this.search = search;
-        try {
-            if (this.search.length() == 0) {
-                throw new NumCommandeException();
-            }
-        } catch (Exception e) {
-            throw new NumCommandeException("Champ recherche vide.");
+
+        if (this.search.length() == 0) {
+        	throw new NumCommandeException("Champ recherche vide.");
         }
+
         try {
             Integer.parseInt(this.search);
         } catch (Exception e) {

@@ -43,7 +43,6 @@ public class ParametrageBean implements Serializable {
     }
 
     public void setChangePageAction(ActionEvent changePageAction) {
-        System.out.println(changePageAction.getSource());
         this.changePageAction = changePageAction;
     }
 

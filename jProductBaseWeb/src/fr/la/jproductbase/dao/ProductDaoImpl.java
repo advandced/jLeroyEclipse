@@ -1,72 +1,70 @@
 package fr.la.jproductbase.dao;
 
-import java.io.IOException;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-import javax.naming.NamingException;
-
-import fr.la.configfilereader.ConfigFileReaderException;
 import fr.la.jproductbase.metier.Product;
 import fr.la.jproductbase.metier.ProductConf;
 import fr.la.jproductbase.metier.ProductConfModel;
 import fr.la.jproductbase.metier.ProductType;
-import java.util.Map;
 
-public class ProductDaoImpl implements ProductDao {
+public class ProductDaoImpl extends GenericDao implements ProductDao {
 
-	private static String exceptionMsg = "Produit inconnu dans la base de donnÃ©es.";
-	private ConnectionProduct cnxProduct;
+	ConnectionProduct cnxProduct;
+	ConnectionInfoSchema cnxInfoSchema;
 
-	public ProductDaoImpl(ConnectionProduct cnxProduct) {
+	ProductConfDao _productConfDao;
+	SoftwareDao _softwareDao;
+	
+	public ProductDaoImpl(ConnectionProduct cnxProduct, ConnectionInfoSchema cnxInfoSchema, ProductConfDao productConfDao, SoftwareDao softwareDao) {
 		this.cnxProduct = cnxProduct;
+		this.cnxInfoSchema = cnxInfoSchema;
+		
+		_productConfDao = productConfDao;
+		_softwareDao = softwareDao;
 	}
 
 	@Override
-	public Product getProduct(int idProduct) throws SQLException {
+	public Product getProduct(int idProduct) {
 		Product _product = null;
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 					"SELECT * FROM product WHERE idProduct=?");
 			_stmt.setInt(1, idProduct);
 			_rs = _stmt.executeQuery();
 
 			if (_rs.next()) {
 				_product = this.getProduct(_rs);
-			} else {
-				_product = null;
-			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			} 
+			
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _product;
 	}
 
 	@Override
-	public Product getProduct(ProductConf productConf, String serialNumber,
-			String datecode) throws SQLException {
+	public Product getProduct(ProductConf productConf, String serialNumber,	String datecode)  {
 		Product _product = null;
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
-
-		System.out.println(" get Product " + productConf + " " + serialNumber
-				+ " " + datecode);
 
 		int idConf = 0;
 		if (null != productConf) {
@@ -74,7 +72,8 @@ public class ProductDaoImpl implements ProductDao {
 		}
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 					"SELECT * FROM product" + " WHERE (idProductConf=?)"
 							+ " AND (serialNumber=?)" + " AND (datecode=?)");
 			_stmt.setInt(1, idConf);
@@ -83,36 +82,29 @@ public class ProductDaoImpl implements ProductDao {
 			_rs = _stmt.executeQuery();
 			if (_rs.next()) {
 				_product = this.getProduct(_rs);
-			} else {
-				_product = null;
-			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			} 
+			
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
-		System.out.println("produit  " + _product);
 		return _product;
 	}
 
 	@Override
-	public Product getProduct(String productConfReference, String serialNumber,
-			String datecode) throws SQLException {
+	public Product getProduct(String productConfReference, String serialNumber,	String datecode) {
 		Product _product = null;
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct
-					.getCnx()
-					.prepareStatement(
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 							"SELECT * FROM product "
 									+ "INNER JOIN productConf ON (product.idProductConf = productConf.idProductConf) "
 									+ "WHERE (productConf.reference=?) AND (product.serialNumber=?) AND (product.datecode=?)");
@@ -122,32 +114,29 @@ public class ProductDaoImpl implements ProductDao {
 			_rs = _stmt.executeQuery();
 			if (_rs.next()) {
 				_product = this.getProduct(_rs);
-			} else {
-				_product = null;
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _product;
 	}
 
 	@Override
-	public Product getMainProduct(Product carte) throws SQLException {
+	public Product getMainProduct(Product carte) {
 		Product _product = null;
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 					"SELECT p.* FROM product p, product c, product_product pp"
 							+ " WHERE (c.idProduct=?)"
 							+ " AND (p.idProduct = pp.idProduct)"
@@ -156,65 +145,56 @@ public class ProductDaoImpl implements ProductDao {
 			_rs = _stmt.executeQuery();
 			if (_rs.next()) {
 				_product = this.getProduct(_rs);
-			} else {
-				_product = null;
-			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			}		
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _product;
 	}
 
 	@Override
-	public List<Product> getProducts() throws SQLException {
+	public List<Product> getProducts() {
 		List<Product> _products = new ArrayList<Product>();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
-					"SELECT * FROM product");
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement("SELECT * FROM product");
 			_rs = _stmt.executeQuery();
 
 			while (_rs.next()) {
 				Product _product = this.getProduct(_rs);
 				_products.add(_product);
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _products;
 	}
 
 	@Override
-	public List<Product> getProducts(ProductType productType)
-			throws SQLException {
+	public List<Product> getProducts(ProductType productType) {
 		List<Product> _products = new ArrayList<Product>();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct
-					.getCnx()
-					.prepareStatement(
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 							"SELECT * FROM product, productConf, productFamily, productType"
 									+ " WHERE (product.idProductConf=productConf.idProductConf)"
 									+ " AND (productConf.idProductFamily=productFamily.idProductFamily)"
@@ -227,32 +207,27 @@ public class ProductDaoImpl implements ProductDao {
 				Product _product = this.getProduct(_rs);
 				_products.add(_product);
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _products;
 	}
 
 	@Override
-	public List<Product> getProducts(ProductConfModel productConfModel)
-			throws SQLException {
+	public List<Product> getProducts(ProductConfModel productConfModel) {
 		List<Product> _products = new ArrayList<Product>();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct
-					.getCnx()
-					.prepareStatement(
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 							"SELECT * FROM product, productConf, productConfModel"
 									+ " WHERE (product.idProductConf=productConf.idProductConf)"
 									+ " AND (productConf.idProductConfModel=productConfModel.idProductConfModel)"
@@ -264,32 +239,27 @@ public class ProductDaoImpl implements ProductDao {
 				Product _product = this.getProduct(_rs);
 				_products.add(_product);
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _products;
 	}
 
 	@Override
-	public List<Product> getProducts(ProductConf productConf)
-			throws SQLException {
+	public List<Product> getProducts(ProductConf productConf) {
 		List<Product> _products = new ArrayList<Product>();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct
-					.getCnx()
-					.prepareStatement(
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 							"SELECT * FROM product, productConf"
 									+ " WHERE (product.idProductConf=productConf.idProductConf)"
 									+ " AND (productConf.idProductConf=?)");
@@ -300,25 +270,21 @@ public class ProductDaoImpl implements ProductDao {
 				Product _product = this.getProduct(_rs);
 				_products.add(_product);
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _products;
 	}
 
 	@Override
-	public List<Product> getProductsEnables(int idproduct, String reference)
-			throws SQLException {
+	public List<Product> getProductsEnables(int idproduct, String reference) {
 		List<Product> _products = new ArrayList<Product>();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
@@ -338,7 +304,8 @@ public class ProductDaoImpl implements ProductDao {
 		}
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(_requete);
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(_requete);
 			_stmt.setInt(1, idproduct);
 			if (null != reference && !reference.equals("")) {
 				_stmt.setInt(2, idproduct);
@@ -349,25 +316,22 @@ public class ProductDaoImpl implements ProductDao {
 				Product _product = this.getProduct(_rs);
 				_products.add(_product);
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _products;
 	}
 
 	@Override
-	public List<Product> getProductsRecordables(String modele)
-			throws SQLException {
+	public List<Product> getProductsRecordables(String modele) {
 		List<Product> _products = new ArrayList<Product>();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
@@ -399,33 +363,30 @@ public class ProductDaoImpl implements ProductDao {
 		 */
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(_requete);
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(_requete);
 			_rs = _stmt.executeQuery();
 
 			while (_rs.next()) {
 				Product _product = this.getProduct(_rs);
 				_products.add(_product);
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _products;
 	}
 
 	@Override
-	public List<Product> getProductsSearch(int startingAt, int maxPerPage,
-			Map<String, String> filters, int type) throws SQLException {
-		System.out.println("FILTRE : " + filters.toString());
+	public List<Product> getProductsSearch(int startingAt, int maxPerPage,	Map<String, String> filters, int type) {
+		
 		List<Product> _products = new ArrayList<Product>();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
@@ -473,10 +434,10 @@ public class ProductDaoImpl implements ProductDao {
 		if (type != 0) {
 			rqt += "AND pf.idProductType = '" + type + "' ";
 		}
-		System.out.println("REQUETE " + rqt);
+		
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
-					rqt + " LIMIT ?, ?;");
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(rqt + " LIMIT ?, ?;");
 			_stmt.setInt(1, startingAt);
 			_stmt.setInt(2, maxPerPage);
 			_rs = _stmt.executeQuery();
@@ -485,22 +446,19 @@ public class ProductDaoImpl implements ProductDao {
 				Product _product = this.getProduct(_rs);
 				_products.add(_product);
 			}
-		} catch (NamingException e) {
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 		return _products;
 	}
 
 	@Override
-	public int countProducts(Map<String, String> filters, int type)
-			throws SQLException {
-
+	public int countProducts(Map<String, String> filters, int type) {
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 		int count = 0;
@@ -549,36 +507,33 @@ public class ProductDaoImpl implements ProductDao {
 			rqt += "AND pf.idProductType = '" + type + "' ";
 		}
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(rqt + ";");
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(rqt + ";");
 			_rs = _stmt.executeQuery();
 
 			while (_rs.next()) {
 				count = _rs.getInt(1);
 			}
-		} catch (NamingException | SQLException e) {
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 		return count;
 	}
 
 	@Override
-	public List<Product> getProducts(String serialNumber, String datecode)
-			throws SQLException {
+	public List<Product> getProducts(String serialNumber, String datecode) {
 		List<Product> _products = new ArrayList<Product>();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct
-					.getCnx()
-					.prepareStatement(
-							"SELECT * FROM product WHERE (serialNumber=?) AND (datecode=?)");
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement("SELECT * FROM product WHERE (serialNumber=?) AND (datecode=?)");
 			_stmt.setString(1, serialNumber);
 			_stmt.setString(2, datecode);
 			_rs = _stmt.executeQuery();
@@ -587,33 +542,29 @@ public class ProductDaoImpl implements ProductDao {
 				Product _product = this.getProduct(_rs);
 				_products.add(_product);
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _products;
 	}
 
 	@Override
-	public boolean isNeedDispensation(Product product) throws SQLException {
+	public boolean isNeedDispensation(Product product) {
 		boolean _isNeedDispensation = false;
 
 		if (null != product) {
+			Connection c = null;
 			PreparedStatement _stmt = null;
 			ResultSet _rs = null;
 
 			try {
-				_stmt = this.cnxProduct
-						.getCnx()
-						.prepareStatement(
+				c = this.cnxProduct.getCnx();
+				_stmt = c.prepareStatement(
 								"SELECT * FROM productBase.product AS PR"
 										+ " WHERE (0=(SELECT count(idTesterReport)"
 										+ " FROM testerBase.testerReport AS TR, testerBase.testType AS TT"
@@ -636,16 +587,12 @@ public class ProductDaoImpl implements ProductDao {
 				} else {
 					_isNeedDispensation = false;
 				}
-			} catch (NamingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			} catch (SQLException e) {
+				handleDAOException(e);
 			} finally {
-				if (null != _rs) {
-					_rs.close();
-				}
-				if (null != _stmt) {
-					_stmt.close();
-				}
+				close(_rs);
+				close(_stmt);
+				close(c);
 			}
 		}
 
@@ -653,15 +600,15 @@ public class ProductDaoImpl implements ProductDao {
 	}
 
 	@Override
-	public List<Product> getProductsDispensationNeeded() throws SQLException {
+	public List<Product> getProductsDispensationNeeded() {
 		List<Product> _products = new ArrayList<Product>();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct
-					.getCnx()
-					.prepareStatement(
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 							"SELECT * FROM productBase.product AS PR"
 									+ " WHERE (0=(SELECT count(idTesterReport)"
 									+ " FROM testerBase.testerReport AS TR, testerBase.testType AS TT"
@@ -689,88 +636,76 @@ public class ProductDaoImpl implements ProductDao {
 				Product _product = this.getProduct(_rs);
 				_products.add(_product);
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _products;
 	}
 
 	@Override
-	public Product addProduct(ProductConf productConf, String serialNumber,
-			String datecode, String macAddress, String providerCode)
-			throws SQLException, ProductDaoException {
+	public Product addProduct(ProductConf productConf, String serialNumber,	String datecode, String macAddress, String providerCode) {
 		Product _product = null;
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
-		if (null != productConf) {
-			try {
-				_stmt = this.cnxProduct
-						.getCnx()
-						.prepareStatement(
-								"INSERT INTO product (state, serialNumber, datecode, macAddress, providerCode, idProductConf)"
-										+ " VALUES (?, ?, ?, ?, ?, ?)");
-				_stmt.setInt(1, 1);
-				_stmt.setString(2, serialNumber);
-				_stmt.setString(3, datecode);
-				_stmt.setString(4, macAddress);
-				_stmt.setString(5, providerCode);
-				_stmt.setInt(6, productConf.getIdProductConf());
-				_stmt.executeUpdate();
+		if (productConf == null) 
+			throw new IllegalArgumentException();
+		
+		try {
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
+							"INSERT INTO product (state, serialNumber, datecode, macAddress, providerCode, idProductConf)"
+									+ " VALUES (?, ?, ?, ?, ?, ?)");
+			_stmt.setInt(1, 1);
+			_stmt.setString(2, serialNumber);
+			_stmt.setString(3, datecode);
+			_stmt.setString(4, macAddress);
+			_stmt.setString(5, providerCode);
+			_stmt.setInt(6, productConf.getIdProductConf());
+			_stmt.executeUpdate();
 
-				// Retrieve product data
-				_stmt = this.cnxProduct.getCnx()
-						.prepareStatement(
-								"SELECT * FROM product"
-										+ " WHERE (idProductConf=?)"
-										+ " AND (serialNumber=?)"
-										+ " AND (datecode=?)");
-				_stmt.setInt(1, productConf.getIdProductConf());
-				_stmt.setString(2, serialNumber);
-				_stmt.setString(3, datecode);
+			// Retrieve product data
+			_stmt = c.prepareStatement(
+							"SELECT * FROM product"
+									+ " WHERE (idProductConf=?)"
+									+ " AND (serialNumber=?)"
+									+ " AND (datecode=?)");
+			_stmt.setInt(1, productConf.getIdProductConf());
+			_stmt.setString(2, serialNumber);
+			_stmt.setString(3, datecode);
 
-				_rs = _stmt.executeQuery();
-				if (_rs.next()) {
-					_product = this.getProduct(_rs);
-				} else {
-					throw new ProductDaoException(exceptionMsg);
-				}
-			} catch (NamingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} finally {
-				if (null != _rs) {
-					_rs.close();
-				}
-				if (null != _stmt) {
-					_stmt.close();
-				}
+			_rs = _stmt.executeQuery();
+			if (_rs.next()) {
+				_product = this.getProduct(_rs);
+			} else {
+				throw new IllegalStateException();
 			}
-		} else {
-			throw new ProductDaoException("Configuration produit inconnue.");
+		} catch (SQLException e) {
+			handleDAOException(e);
+		} finally {
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
+
 
 		return _product;
 	}
 
 	@Override
-	public void updateProduct(Product product) throws SQLException,
-			ProductDaoException {
+	public void updateProduct(Product product) {
+		Connection c = null;
 		PreparedStatement _stmt = null;
-
+		ResultSet _rs = null;
 		try {
-			_stmt = this.cnxProduct
-					.getCnx()
-					.prepareStatement(
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 							"UPDATE product "
 									+ "SET serialNumber=?, datecode=?, idProductConf=?, providerCode=?"
 									+ " WHERE (idProduct=?)");
@@ -781,31 +716,30 @@ public class ProductDaoImpl implements ProductDao {
 			_stmt.setInt(5, product.getIdProduct());
 			_stmt.executeUpdate();
 
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			_stmt = c.prepareStatement(
 					"SELECT * FROM product" + " WHERE (idProduct=?)");
 			_stmt.setInt(1, product.getIdProduct());
 
-			ResultSet _rs = _stmt.executeQuery();
+			_rs = _stmt.executeQuery();
 			if (_rs.next()) {
 				this.getProduct(_rs);
 			} else {
-				throw new ProductDaoException(exceptionMsg);
+				throw new IllegalStateException();
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 	}
 
 	@Override
 	public void updateProduct(Product product, ProductConf productConf,
 			String serialNumber, String dateCode, String macAddress,
-			String providerCode, int state) throws SQLException,
-			ProductDaoException {
+			String providerCode, int state) {
 
 		int _idProductConf = 0;
 		if (null != productConf) {
@@ -813,14 +747,13 @@ public class ProductDaoImpl implements ProductDao {
 		} else {
 			_idProductConf = 0;
 		}
-
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct
-					.getCnx()
-					.prepareStatement(
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 							"UPDATE product "
 									+ "SET serialNumber=?, datecode=?, macAddress=?, providerCode=?, state=?, idProductConf=?"
 									+ " WHERE (idProduct=?)");
@@ -834,7 +767,7 @@ public class ProductDaoImpl implements ProductDao {
 			_stmt.executeUpdate();
 
 			// Update object
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			_stmt = c.prepareStatement(
 					"SELECT * FROM product" + " WHERE (idProduct=?)");
 			_stmt.setInt(1, product.getIdProduct());
 
@@ -842,30 +775,27 @@ public class ProductDaoImpl implements ProductDao {
 			if (_rs.next()) {
 				this.getProduct(_rs);
 			} else {
-				throw new ProductDaoException(exceptionMsg);
+				throw new IllegalStateException();
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 	}
 
 	@Override
-	public void updateProduct(Product product, String macAddress)
-			throws SQLException, ProductDaoException {
-
+	public void updateProduct(Product product, String macAddress) {
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 					"UPDATE product " + "SET macAddress=?"
 							+ " WHERE (idProduct=?)");
 			_stmt.setString(1, macAddress);
@@ -873,7 +803,7 @@ public class ProductDaoImpl implements ProductDao {
 			_stmt.executeUpdate();
 
 			// Update object
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			_stmt = c.prepareStatement(
 					"SELECT * FROM product" + " WHERE (idProduct=?)");
 			_stmt.setInt(1, product.getIdProduct());
 
@@ -881,74 +811,65 @@ public class ProductDaoImpl implements ProductDao {
 			if (_rs.next()) {
 				this.getProduct(_rs);
 			} else {
-				throw new ProductDaoException(exceptionMsg);
+				throw new IllegalStateException();
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 	}
 
 	@Override
-	public List<Product> getProductComponents(Product product)
-			throws SQLException {
+	public List<Product> getProductComponents(Product product) {
 		List<Product> _productComponents = new ArrayList<Product>();
 
-		if (null != product) {
-			PreparedStatement _stmt = null;
-			ResultSet _rs = null;
+		if (product == null) 
+			throw new IllegalArgumentException();
 
-			try {
-				_stmt = this.cnxProduct
-						.getCnx()
-						.prepareStatement(
-								"SELECT * FROM product "
-										+ " WHERE (product.idProduct IN"
-										+ " (SELECT idProductComponent FROM product_product"
-										+ " WHERE product_product.idProduct=?))");
-				_stmt.setInt(1, product.getIdProduct());
-				_rs = _stmt.executeQuery();
+		Connection c = null;
+		PreparedStatement _stmt = null;
+		ResultSet _rs = null;
 
-				while (_rs.next()) {
-					Product _productComponent = this.getProduct(_rs);
-					_productComponents.add(_productComponent);
-				}
-			} catch (NamingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} finally {
-				if (null != _rs) {
-					_rs.close();
-				}
-				if (null != _stmt) {
-					_stmt.close();
-				}
+		try {
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
+							"SELECT * FROM product "
+									+ " WHERE (product.idProduct IN"
+									+ " (SELECT idProductComponent FROM product_product"
+									+ " WHERE product_product.idProduct=?))");
+			_stmt.setInt(1, product.getIdProduct());
+			_rs = _stmt.executeQuery();
+
+			while (_rs.next()) {
+				Product _productComponent = this.getProduct(_rs);
+				_productComponents.add(_productComponent);
 			}
-		} else {
-			// Nothing to do
+		} catch (SQLException e) {
+			handleDAOException(e);
+		} finally {
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _productComponents;
 	}
 
 	@Override
-	public void addProductComponent(Product product, Product productComponent)
-			throws SQLException, ProductDaoException {
+	public void addProductComponent(Product product, Product productComponent) {
 		int _idProduct = product.getIdProduct();
 		int _idProductComponent = productComponent.getIdProduct();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
-		System.out.println("rajour d'une carte" + _idProduct + " / "
-				+ _idProductComponent);
+
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 					"INSERT INTO product_product (idProduct, idProductComponent)"
 							+ " VALUES (?, ?)");
 			_stmt.setInt(1, _idProduct);
@@ -956,7 +877,7 @@ public class ProductDaoImpl implements ProductDao {
 			_stmt.executeUpdate();
 
 			// Retrieve product_product data
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			_stmt = c.prepareStatement(
 					"SELECT * FROM product_product" + " WHERE (idProduct=?)"
 							+ " AND (idProductComponent=?)");
 			_stmt.setInt(1, _idProduct);
@@ -964,77 +885,55 @@ public class ProductDaoImpl implements ProductDao {
 
 			_rs = _stmt.executeQuery();
 			if (!_rs.next()) {
-				throw new ProductDaoException(exceptionMsg);
+				throw new IllegalStateException();
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 	}
 
 	@Override
-	public void removeProductComponent(Product product, Product productComponent)
-			throws SQLException {
-		if ((null != product) && (null != productComponent)) {
-			System.out.println("suppression" + product.getIdProduct() + " / "
-					+ productComponent.getIdProduct());
-			try {
-				System.out.println("get product components "
-						+ product.getProductComponents());
-			} catch (ConfigFileReaderException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			PreparedStatement _stmt = null;
-			try {
-				_stmt = this.cnxProduct.getCnx().prepareStatement(
+	public void removeProductComponent(Product product, Product productComponent) {
+		if (product == null || productComponent == null)
+				throw new IllegalArgumentException();
+		Connection c = null;
+		PreparedStatement _stmt = null;
+
+		try {
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 						"DELETE FROM product_product " + "WHERE ((idProduct=?)"
 								+ " AND (idProductComponent=?))");
-			} catch (NamingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
 			_stmt.setInt(1, product.getIdProduct());
 			_stmt.setInt(2, productComponent.getIdProduct());
 			_stmt.executeUpdate();
-
-			// Update product
-
 			product.removeProductComponent(productComponent);
-
-			_stmt.close();
-		} else {
-			// Nothing to do
+		} catch (SQLException e) {
+			handleDAOException(e);
+		} finally {
+			close(_stmt);
+			close(c);
 		}
 	}
 
 	@Override
-	public List<Product> getProductWithMother(int startingAt, int maxPerPage,
-			Map<String, String> filters) throws SQLException {
-
-		List<Product> _product = this.getProductsSearch(startingAt, maxPerPage,
-				filters, 1);
+	public List<Product> getProductWithMother(int startingAt, int maxPerPage, Map<String, String> filters) {
+		List<Product> _product = this.getProductsSearch(startingAt, maxPerPage,	filters, 1);
 		for (Product _p : _product) {
+			Connection c = null;
 			ResultSet _rs = null;
 			PreparedStatement _stmt = null;
 			try {
 				// String sql =
 				// "SELECT * FROM product WHERE idproduct = (SELECT idproduct FROM product_product WHERE idProductComponent = "
 				// + _p.getIdProduct() + ");";
-				String sql = "SELECT count(idproduct) as total FROM product_product WHERE idProductComponent = "
-						+ _p.getIdProduct() + ";";
-				_stmt = this.cnxProduct.getCnx().prepareStatement(sql);
+				String sql = "SELECT count(idproduct) as total FROM product_product WHERE idProductComponent = " + _p.getIdProduct() + ";";
+				c = this.cnxProduct.getCnx();
+				_stmt = c.prepareStatement(sql);
 				_rs = _stmt.executeQuery();
 				int i = 0;
 				while (_rs.next()) {
@@ -1043,29 +942,33 @@ public class ProductDaoImpl implements ProductDao {
 				if (i == 1) {
 					String sql2 = "SELECT * FROM product WHERE idproduct = (SELECT idproduct FROM product_product WHERE idProductComponent = "
 							+ _p.getIdProduct() + ");";
-					_stmt = this.cnxProduct.getCnx().prepareStatement(sql2);
+					_stmt = c.prepareStatement(sql2);
 					_rs = _stmt.executeQuery();
 					while (_rs.next()) {
 						_p.setMother(this.getProduct(_rs));
 					}
 				}
-			} catch (NamingException e) {
+			} catch (SQLException e) {
+				handleDAOException(e);
+			} finally {
+				close(_rs);
+				close(_stmt);
+				close(c);
 			}
 		}
 		return _product;
 	}
 
 	@Override
-	public Product getProductWithProductConfRef(String reference)
-			throws SQLException {
+	public Product getProductWithProductConfRef(String reference) {
 		Product product = null;
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct
-					.getCnx()
-					.prepareStatement(
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 							"select * from product where idproductconf = (select idproductconf from productconf where reference = ?);");
 			_stmt.setString(1, reference);
 			_rs = _stmt.executeQuery();
@@ -1073,16 +976,12 @@ public class ProductDaoImpl implements ProductDao {
 			if (_rs.next()) {
 				product = this.getProduct(_rs);
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 		return product;
 	}
@@ -1098,10 +997,8 @@ public class ProductDaoImpl implements ProductDao {
 	 */
 	private Product getProduct(ResultSet rs) throws SQLException {
 		// Retreive productConf
-		ProductConfDao _productConfDao = new ProductConfDaoImpl(this.cnxProduct);
 		int _idProductConf = rs.getInt("idProductConf");
-		ProductConf _productConf = _productConfDao
-				.getProductConf(_idProductConf);
+		ProductConf _productConf = _productConfDao.getProductConf(_idProductConf);
 
 		int _idProduct = rs.getInt("idProduct");
 		Timestamp _timestamp = rs.getTimestamp("timestamp");
@@ -1115,7 +1012,6 @@ public class ProductDaoImpl implements ProductDao {
 				_productConf);
 
 		// Retreive softwares
-		SoftwareDao _softwareDao = new SoftwareDaoImpl(this.cnxProduct);
 		_softwareDao.getSoftwares(_product);
 
 		return _product;
@@ -1124,11 +1020,10 @@ public class ProductDaoImpl implements ProductDao {
 	/* 20-04-12 : RMO : CrÃ©ation de la mÃ©thode */
 	@Override
 	public Product setProductFEDDtoLAI(int idProductFEDD, ProductConf config,
-			String serialNumber, String datecode) throws SQLException,
-			ProductDaoException, ConfigFileReaderException, IOException {
-		System.out.println("id" + idProductFEDD + " " + config + " "
-				+ serialNumber + " " + datecode);
+			String serialNumber, String datecode)  {
+
 		Product _product = null;
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 		String ordreInsertion = "";
@@ -1149,7 +1044,8 @@ public class ProductDaoImpl implements ProductDao {
 					+ "WHERE p1.idProduct = pp.idProduct AND pp.idProductComponent = p2.idProduct "
 					+ "AND p1.idProduct = ? "
 					+ "AND p2.idProduct NOT IN (1, 2, 3)";
-			_stmt = this.cnxProduct.getCnx().prepareStatement(ordreInsertion);
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(ordreInsertion);
 			_stmt.setInt(1, idProductFEDD);
 			_stmt.setInt(2, idProductFEDD);
 			_stmt.executeUpdate();
@@ -1157,10 +1053,6 @@ public class ProductDaoImpl implements ProductDao {
 			int idProductLAI = this.getProduct(config, serialNumber, datecode)
 					.getIdProduct();
 
-			System.out.println("prod : SN/ " + serialNumber + " -- DC/ "
-					+ datecode + " -- CONF/ " + config.getIdProductConf());
-			System.out.println("ID FEDD ::: " + idProductFEDD + " <<==>> "
-					+ idProductLAI + " ::: ID LAI");
 
 			/* 2 +++++++++++++++++++++++++++++++++++++++++++++ */
 			/* Partie insertion dans la table product_product */
@@ -1180,7 +1072,7 @@ public class ProductDaoImpl implements ProductDao {
 					+ "AND p2.idProductConf = p4.idProductConf "
 					+ "AND p3.idProduct = pp.idProduct "
 					+ "AND pp.idProductComponent = p4.idProduct";
-			_stmt = this.cnxProduct.getCnx().prepareStatement(ordreInsertion);
+			_stmt = c.prepareStatement(ordreInsertion);
 			_stmt.setInt(1, idProductFEDD);
 			_stmt.executeUpdate();
 
@@ -1191,7 +1083,7 @@ public class ProductDaoImpl implements ProductDao {
 					+ "(idProduct, idSoftware) " + "SELECT ?, ps.idSoftware "
 					+ "FROM `FEDDproductBase`.`product_software` ps "
 					+ "WHERE ps.idProduct = ?";
-			_stmt = this.cnxProduct.getCnx().prepareStatement(ordreInsertion);
+			_stmt = c.prepareStatement(ordreInsertion);
 			_stmt.setInt(1, idProductLAI);
 			_stmt.setInt(2, idProductFEDD);
 			_stmt.executeUpdate();
@@ -1208,7 +1100,7 @@ public class ProductDaoImpl implements ProductDao {
 					+ "SELECT pc.timestamp, pc.comment, ? "
 					+ "FROM `FEDDproductBase`.`productComment` pc "
 					+ "WHERE pc.idproduct = ? ";
-			_stmt = this.cnxProduct.getCnx().prepareStatement(ordreInsertion);
+			_stmt = c.prepareStatement(ordreInsertion);
 			_stmt.setInt(1, idProductLAI);
 			_stmt.setInt(2, idProductFEDD);
 			_stmt.executeUpdate();
@@ -1223,7 +1115,7 @@ public class ProductDaoImpl implements ProductDao {
 					+ "AND tr. idProduct = ? AND tfedd.name NOT IN "
 					+ "(SELECT tlai.name FROM `testerBase`.`tester` tlai) "
 					+ "GROUP BY tfedd.name";
-			_stmt = this.cnxProduct.getCnx().prepareStatement(ordreInsertion);
+			_stmt = c.prepareStatement(ordreInsertion);
 			_stmt.setInt(1, idProductFEDD);
 			_stmt.executeUpdate();
 
@@ -1246,28 +1138,22 @@ public class ProductDaoImpl implements ProductDao {
 			 */
 			
 			String modifTempTable = "";
-			if (this.ColumnAlreadyExist("testerBase", "testerReport",
-					"idTesterReportFEDD")) {
+			if (this.ColumnAlreadyExist("testerBase", "testerReport", "idTesterReportFEDD")) {
 				modifTempTable = "ALTER TABLE `testerBase`.`testerReport` ADD COLUMN idTesterReportFEDD int(10)";
-				_stmt = this.cnxProduct.getCnx().prepareStatement(
-						modifTempTable);
+				_stmt = c.prepareStatement(modifTempTable);
 				_stmt.executeUpdate();
 			}
-			if (this.ColumnAlreadyExist("productBase", "ProductionFailureReport",
-					"idProductionFailureReportFEDD")) {
+			if (this.ColumnAlreadyExist("productBase", "ProductionFailureReport", "idProductionFailureReportFEDD")) {
 				modifTempTable = "ALTER TABLE `productBase`.`ProductionFailureReport` ADD COLUMN idProductionFailureReportFEDD int(10)";
-				_stmt = this.cnxProduct.getCnx().prepareStatement(
-						modifTempTable);
+				_stmt = c.prepareStatement(modifTempTable);
 				_stmt.executeUpdate();
 			}
-			if (this.ColumnAlreadyExist("productBase", "failure",
-					"idFailureFEDD")) {
+			if (this.ColumnAlreadyExist("productBase", "failure", "idFailureFEDD")) {
 				modifTempTable = "ALTER TABLE `productBase`.`failure` ADD COLUMN idFailureFEDD int(10)";
-				_stmt = this.cnxProduct.getCnx().prepareStatement(
-						modifTempTable);
+				_stmt = c.prepareStatement(modifTempTable);
 				_stmt.executeUpdate();
 			}
-			System.out.println("idproductLai : " + idProductLAI + " idProductFEDD " + idProductFEDD + "");
+
 			ordreSelect = "SELECT tr.timestamp, tr.state, tr.date, tr.testVersion, tr.result, tr.consoUmini, tr.consoUnomi, "
 					+ "tr.consoUmaxi, tr.idTestType, tlai.idTester, tr.operatorCode, ?, tr.idTesterReportNext, tr.idTesterReport "
 					+ "FROM `FEDDtesterBase`.`testerReport` tr, `FEDDtesterBase`.`tester` tfedd, `testerBase`.`tester` tlai "
@@ -1282,16 +1168,14 @@ public class ProductDaoImpl implements ProductDao {
 					+ "consoUmaxi, idTestType, idTester, operatorCode, idProduct, idTesterReportNext, idTesterReportFEDD) "
 					+ ordreSelect;
 
-			_stmt = this.cnxProduct.getCnx().prepareStatement(ordreInsertion);
+			_stmt = c.prepareStatement(ordreInsertion);
 			_stmt.setInt(1, idProductLAI);
 			_stmt.setInt(2, idProductFEDD);
 			_stmt.setInt(3, idProductLAI);
 			_stmt.setInt(4, idProductFEDD);
 			_stmt.executeUpdate();
 
-			_stmt = this.cnxProduct
-					.getCnx()
-					.prepareStatement(
+			_stmt = c.prepareStatement(
 							"SELECT tr1.idTesterReport, tr2.idTesterReport "
 									+ "FROM `testerBase`.`testerReport` tr1, `testerBase`.`testerReport` tr2 "
 									+ "WHERE tr1.idTesterReportNext = tr2.idTesterReportFEDD "
@@ -1309,7 +1193,7 @@ public class ProductDaoImpl implements ProductDao {
 
 				String ordreUpdate = "UPDATE `testerBase`.`testerReport` SET idTesterReportNext = ? "
 						+ "WHERE idTesterReport = ?";
-				_stmt = this.cnxProduct.getCnx().prepareStatement(ordreUpdate);
+				_stmt = c.prepareStatement(ordreUpdate);
 				_stmt.setInt(1, recordNext);
 				_stmt.setInt(2, record);
 				_stmt.executeUpdate();
@@ -1331,7 +1215,7 @@ public class ProductDaoImpl implements ProductDao {
 					+ "FROM `testerBase`.`testerReport` tr, `FEDDtesterBase`.`defect` dFEDD "
 					+ "WHERE tr.idproduct = ? "
 					+ "AND tr.idTesterReportFEDD = dFEDD.idTesterReport ";
-			_stmt = this.cnxProduct.getCnx().prepareStatement(ordreInsertion);
+			_stmt = c.prepareStatement(ordreInsertion);
 			_stmt.setInt(1, idProductLAI);
 			_stmt.executeUpdate();
 
@@ -1347,7 +1231,7 @@ public class ProductDaoImpl implements ProductDao {
 					+ "frFEDD.failureCode, ?, trLAI.idTesterReport, frFEDD.idProductionFailureReport "
 					+ "FROM `FEDDproductBase`.`productionFailureReport` frFEDD, `testerBase`.`testerReport` trLAI "
 					+ "WHERE frFEDD.idTesterReport = trLAI.idTesterReportFEDD ";
-			_stmt = this.cnxProduct.getCnx().prepareStatement(ordreInsertion);
+			_stmt = c.prepareStatement(ordreInsertion);
 			_stmt.setInt(1, idProductLAI);
 			// _stmt.setInt(2, idProductFEDD);
 			_stmt.executeUpdate();
@@ -1367,7 +1251,7 @@ public class ProductDaoImpl implements ProductDao {
 					+ "FROM `productBase`.`productionFailureReport` fr, `FEDDproductBase`.`customerComment` cc "
 					+ "WHERE fr.idproduct = ? "
 					+ "AND fr.idProductionFailureReportFEDD = cc.idProductionFailureReport ";
-			_stmt = this.cnxProduct.getCnx().prepareStatement(ordreInsertion);
+			_stmt = c.prepareStatement(ordreInsertion);
 			_stmt.setInt(1, idProductLAI);
 			_stmt.executeUpdate();
 
@@ -1386,7 +1270,7 @@ public class ProductDaoImpl implements ProductDao {
 					+ "FROM `productBase`.`productionFailureReport` fr, `FEDDproductBase`.`failureReportComment` frc "
 					+ "WHERE fr.idproduct = ? "
 					+ "AND fr.idProductionFailureReportFEDD = frc.idProductionFailureReport ";
-			_stmt = this.cnxProduct.getCnx().prepareStatement(ordreInsertion);
+			_stmt = c.prepareStatement(ordreInsertion);
 			_stmt.setInt(1, idProductLAI);
 			_stmt.executeUpdate();
 
@@ -1407,7 +1291,7 @@ public class ProductDaoImpl implements ProductDao {
 					+ "AND f. idProduct = ? AND (ofedd.code, ofedd.firstName, ofedd.lastName) NOT IN "
 					+ "(SELECT olai.code, olai.firstName, olai.lastName FROM `operatorBase`.`operator` olai) "
 					+ "GROUP BY ofedd.code, ofedd.firstName, ofedd.lastName";
-			_stmt = this.cnxProduct.getCnx().prepareStatement(ordreInsertion);
+			_stmt = c.prepareStatement(ordreInsertion);
 			_stmt.setInt(1, idProductFEDD);
 			_stmt.executeUpdate();
 
@@ -1433,7 +1317,7 @@ public class ProductDaoImpl implements ProductDao {
 					+ "AND fFEDD.idProduct = ? "
 					+ "AND fr.idproduct = ? "
 					+ "AND fr.idProductionFailureReportFEDD = fFEDD.idProductionFailureReport ";
-			_stmt = this.cnxProduct.getCnx().prepareStatement(ordreInsertion);
+			_stmt = c.prepareStatement(ordreInsertion);
 			_stmt.setInt(1, idProductLAI);
 			_stmt.setInt(2, idProductFEDD);
 			_stmt.setInt(3, idProductLAI);
@@ -1454,7 +1338,7 @@ public class ProductDaoImpl implements ProductDao {
 					+ "FROM `productBase`.`failure` f, `FEDDproductBase`.`elementChanged` ec "
 					+ "WHERE f.idproduct = ? "
 					+ "AND f.idFailureFEDD = ec.idFailure ";
-			_stmt = this.cnxProduct.getCnx().prepareStatement(ordreInsertion);
+			_stmt = c.prepareStatement(ordreInsertion);
 			_stmt.setInt(1, idProductLAI);
 			_stmt.executeUpdate();
 
@@ -1469,20 +1353,20 @@ public class ProductDaoImpl implements ProductDao {
 					+ idProductLAI + " "
 					+ "FROM `FEDDproductBase`.`productDocument` pd "
 					+ "WHERE pd.idproduct = ? ";
-			_stmt = this.cnxProduct.getCnx().prepareStatement(ordreInsertion);
+			_stmt = c.prepareStatement(ordreInsertion);
 			_stmt.setInt(1, idProductFEDD);
 			_stmt.executeUpdate();
 
 			/* /////////////////////////////////////////////////////////////// */
 
 			modifTempTable = "ALTER TABLE `productBase`.`failure` DROP COLUMN idFailureFEDD";
-			_stmt = this.cnxProduct.getCnx().prepareStatement(modifTempTable);
+			_stmt = c.prepareStatement(modifTempTable);
 			_stmt.executeUpdate();
 			modifTempTable = "ALTER TABLE `productBase`.`productionFailureReport` DROP COLUMN idProductionFailureReportFEDD";
-			_stmt = this.cnxProduct.getCnx().prepareStatement(modifTempTable);
+			_stmt = c.prepareStatement(modifTempTable);
 			_stmt.executeUpdate();
 			modifTempTable = "ALTER TABLE `testerBase`.`testerReport` DROP COLUMN idTesterReportFEDD";
-			_stmt = this.cnxProduct.getCnx().prepareStatement(modifTempTable);
+			_stmt = c.prepareStatement(modifTempTable);
 			_stmt.executeUpdate();
 
 			/*
@@ -1493,43 +1377,36 @@ public class ProductDaoImpl implements ProductDao {
 			 */
 
 			// Retrieve product data
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
-					"SELECT * FROM product" + " WHERE (idProduct=?)");
+			_stmt = c.prepareStatement("SELECT * FROM product" + " WHERE (idProduct=?)");
 			_stmt.setInt(1, idProductLAI);
 
 			_rs = _stmt.executeQuery();
 			if (_rs.next()) {
 				_product = this.getProduct(_rs);
 			} else {
-				throw new ProductDaoException(exceptionMsg);
+				throw new IllegalStateException();
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _product;
 	}
 
-	private Boolean ColumnAlreadyExist(String db, String table, String column)
-			throws ConfigFileReaderException, IOException, SQLException {
-		ConnectionInfoSchema cnxInfoSchema = new ConnectionInfoSchema();
+	private Boolean ColumnAlreadyExist(String db, String table, String column) {
 		Boolean retour = false;
 		String result = "";
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = cnxInfoSchema
-					.getCnx()
-					.prepareStatement(
+			c = cnxInfoSchema.getCnx();
+			_stmt = c.prepareStatement(
 							"SELECT COLUMN_NAME FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ? AND COLUMN_NAME = ?;");
 			_stmt.setString(1, db);
 			_stmt.setString(2, table);
@@ -1542,11 +1419,14 @@ public class ProductDaoImpl implements ProductDao {
 			if (result == column) {
 				retour = true;
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
+		} finally {
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
-		System.out.println("Column : " + column + " Retour : " + retour + " Result : " + result);
+
 		return retour;
 	}
 }

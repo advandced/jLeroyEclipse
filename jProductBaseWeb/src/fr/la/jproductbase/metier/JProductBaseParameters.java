@@ -1,18 +1,19 @@
 package fr.la.jproductbase.metier;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.net.URL;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.io.Serializable;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import fr.la.configfilereader.ConfigFileReader;
 import fr.la.configfilereader.ConfigFileReaderException;
-import java.io.Serializable;
 
 /*
  * Source : http://christophej.developpez.com/tutoriel/java/singleton/multithread/
@@ -89,8 +90,7 @@ public class JProductBaseParameters implements Serializable {
 	// rapports XML et reconstruction de l'archive "standard").
 	private String importDynTesterDataDirectory;
 
-	private JProductBaseParameters() throws ConfigFileReaderException,
-			IOException {
+	private JProductBaseParameters() {
 
 		// this.configFileReader = new ConfigFileReader(false,
 		// "jProductBase.conf");
@@ -110,16 +110,19 @@ public class JProductBaseParameters implements Serializable {
 		}
 		// if the root is reached without finding the WEB-INF directory
 		// WEB-INF will equal null
-		if (f == null) {
-			this.configFileReader = new ConfigFileReader(false,
-					"jProductBase.conf");
-		} else {
-			_webInf = f.getPath().replace("%20", " ");
-			this.configFileReader = new ConfigFileReader(false, _webInf
-					+ File.separator // + "classes" + File.separator
-					+ "jProductBase.conf");
+		try {
+			if (f == null) {
+					this.configFileReader = new ConfigFileReader(false, "jProductBase.conf");
+			} else {
+				_webInf = f.getPath().replace("%20", " ");
+				this.configFileReader = new ConfigFileReader(false, _webInf
+						+ File.separator // + "classes" + File.separator
+						+ "jProductBase.conf");
+			}
+		} catch (Exception e) {
+			throw new RuntimeException(e);
 		}
-
+			
 		// Read parameters
 		// Version
 		this.version = configFileReader.getParamValue("version");
@@ -138,13 +141,19 @@ public class JProductBaseParameters implements Serializable {
 		}
 		if (true == this.log) {
 			File _logFile = new File("jProductBase.log");
-			OutputStream _consoleOutput = new FileOutputStream(_logFile);
-			PrintStream _consoleStream = new PrintStream(_consoleOutput);
-			System.setOut(_consoleStream);
+			OutputStream _consoleOutput;
+			try {
+				_consoleOutput = new FileOutputStream(_logFile);
 
-			// Redirection des erreur dans le même flux afin de respecter
-			// l'ordre d'apparition des messages.
-			System.setErr(_consoleStream);
+				PrintStream _consoleStream = new PrintStream(_consoleOutput);
+				System.setOut(_consoleStream);
+
+				// Redirection des erreur dans le même flux afin de respecter
+				// l'ordre d'apparition des messages.
+				System.setErr(_consoleStream);
+			} catch (FileNotFoundException e) {
+				throw new RuntimeException(e);
+			}
 		} else {
 			// Sortie standard et d'erreur classiques
 		}
@@ -245,8 +254,7 @@ public class JProductBaseParameters implements Serializable {
 				.getParamValue("importDynTesterDataDirectory");
 	}
 
-	public static synchronized JProductBaseParameters getInstance()
-			throws ConfigFileReaderException, IOException {
+	public static synchronized JProductBaseParameters getInstance() {
 		if (null == JProductBaseParameters.instance) {
 			JProductBaseParameters.instance = new JProductBaseParameters();
 		}

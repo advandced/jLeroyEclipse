@@ -26,8 +26,7 @@ public interface ProductDocumentTypeDao {
 	 * @throws SQLException
 	 * @throws ProductDocumentTypeDaoException
 	 */
-	public ProductDocumentType addProductDocumentType(int state, String name)
-			throws SQLException, ProductDocumentTypeDaoException;
+	public ProductDocumentType addProductDocumentType(int state, String name);
 	
 	/**
 	 * Mise à jour d'un type de document dans la base de donn&eacute;es.
@@ -40,8 +39,7 @@ public interface ProductDocumentTypeDao {
 	 * @throws SQLException
 	 * @throws ProductDocumentTypeDaoException
 	 */
-	public ProductDocumentType updateProductDocumentType(ProductDocumentType productDocumentType)
-			throws SQLException, ProductDocumentTypeDaoException;
+	public ProductDocumentType updateProductDocumentType(ProductDocumentType productDocumentType);
 	
 	/**
 	 * Recherche un type de document de la base de donn&eacute;es.
@@ -53,8 +51,7 @@ public interface ProductDocumentTypeDao {
 	 * 
 	 * @throws SQLException
 	 */
-	public ProductDocumentType getProductDocumentType(int idProductDocumentType)
-			throws SQLException;
+	public ProductDocumentType getProductDocumentType(int idProductDocumentType);
 	
 	/**
 	 * Recherche un type de document de la base de donn&eacute;es.
@@ -66,8 +63,7 @@ public interface ProductDocumentTypeDao {
 	 * 
 	 * @throws SQLException
 	 */
-	public ProductDocumentType getProductDocumentType(String name)
-			throws SQLException;
+	public ProductDocumentType getProductDocumentType(String name);
 		
 	/**
 	 * Recherche les types de document d'un produit de la base de donn&eacute;es.
@@ -88,8 +84,7 @@ public interface ProductDocumentTypeDao {
 	 * 
 	 * @throws SQLException
 	 */
-	public List<ProductDocumentType> getProductDocumentTypes()
-			throws SQLException;
+	public List<ProductDocumentType> getProductDocumentTypes();
 
 
 
@@ -101,6 +96,6 @@ public interface ProductDocumentTypeDao {
 	 * 
 	 * @throws SQLException
 	 */
-	public List<ProductDocumentType> getActiveProductDocumentTypes() throws SQLException;
+	public List<ProductDocumentType> getActiveProductDocumentTypes();
 
 }

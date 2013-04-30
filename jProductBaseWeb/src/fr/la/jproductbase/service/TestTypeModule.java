@@ -1,84 +1,41 @@
 package fr.la.jproductbase.service;
 
-import java.sql.SQLException;
 import java.util.List;
 
-import javax.naming.NamingException;
-
-import fr.la.jproductbase.dao.ConnectionTester;
 import fr.la.jproductbase.dao.TestTypeDao;
-import fr.la.jproductbase.dao.TestTypeDaoException;
-import fr.la.jproductbase.dao.TestTypeDaoImpl;
 import fr.la.jproductbase.metier.LabviewTestType;
 import fr.la.jproductbase.metier.TestType;
 
 public class TestTypeModule {
-	private ConnectionTester cnxTester;
 
-	public TestTypeModule(ConnectionTester cnxTester) {
-		this.cnxTester = cnxTester;
+	TestTypeDao _testTypeDao;
+	
+	public TestTypeModule(TestTypeDao testTypeDao) {
+		_testTypeDao = testTypeDao;
 	}
 
 	// 18-01-12 : RMO : Création de la méthode
-	protected TestType addTestType(String name, int state, boolean needTester)
-			throws SQLException, NamingException {
-		TestTypeDao _testTypeDao = new TestTypeDaoImpl(this.cnxTester);
-
-		TestType _testType = null;
-		try {
-			this.cnxTester.getCnx().setAutoCommit(false);
-			_testType = _testTypeDao.addTestType(name, state, needTester);
-			this.cnxTester.getCnx().commit();
-		} catch (TestTypeDaoException e) {
-			this.cnxTester.getCnx().rollback();
-			e.printStackTrace();
-		}
-
-		return _testType;
+	public TestType addTestType(String name, int state, boolean needTester) {
+		return _testTypeDao.addTestType(name, state, needTester);
 	}
 
-	protected TestType getTestType(int idTestType) throws SQLException {
-		TestTypeDao _testTypeDao = new TestTypeDaoImpl(this.cnxTester);
-
-		TestType _testType = _testTypeDao.getTestType(idTestType);
-
-		return _testType;
+	public TestType getTestType(int idTestType) {
+		return _testTypeDao.getTestType(idTestType);
 	}
 
-	protected TestType getTestType(String name) throws SQLException {
-		TestTypeDao _testTypeDao = new TestTypeDaoImpl(this.cnxTester);
-
-		TestType _testType = _testTypeDao.getTestType(name);
-
-		return _testType;
+	public TestType getTestType(String name) {
+		return _testTypeDao.getTestType(name);
 	}
 
-	protected List<TestType> getTestTypes() throws SQLException {
-		TestTypeDao _testTypeDao = new TestTypeDaoImpl(this.cnxTester);
-
-		List<TestType> _testTypes = _testTypeDao.getTestTypes();
-
-		return _testTypes;
+	public List<TestType> getTestTypes() {
+		return _testTypeDao.getTestTypes();
 	}
 
-	protected TestType retreiveTestType(LabviewTestType labviewTestType)
-			throws SQLException {
-		TestType _testType = this.getTestType(labviewTestType.getName());
-
-		return _testType;
+	public TestType retreiveTestType(LabviewTestType labviewTestType) {
+		return this.getTestType(labviewTestType.getName());
 	}
 
-	protected void updateTestType(TestType testType) throws SQLException,
-			NamingException {
-		TestTypeDao _testTypeDao = new TestTypeDaoImpl(this.cnxTester);
-
-		try {
-			this.cnxTester.getCnx().setAutoCommit(false);
-			_testTypeDao.updateTestType(testType);
-			this.cnxTester.getCnx().commit();
-		} catch (TestTypeDaoException e) {
-			this.cnxTester.getCnx().rollback();
-			e.printStackTrace();
-		}
+	public void updateTestType(TestType testType) {
+		_testTypeDao.updateTestType(testType);
 	}
 }

@@ -34,8 +34,6 @@ import org.primefaces.event.RowEditEvent;
 import org.primefaces.event.SelectEvent;
 
 import fr.la.configfilereader.ConfigFileReaderException;
-import fr.la.jproductbase.dao.ProductDaoException;
-import fr.la.jproductbase.dao.TesterReportDaoException;
 import fr.la.jproductbase.metier.CustomerComment;
 import fr.la.jproductbase.metier.ElementChanged;
 import fr.la.jproductbase.metier.Failure;
@@ -45,7 +43,6 @@ import fr.la.jproductbase.metier.Operator;
 import fr.la.jproductbase.metier.Product;
 import fr.la.jproductbase.metier.ProductConf;
 import fr.la.jproductbase.metier.ProductionFailureReport;
-import fr.la.jproductbase.service.FailureModuleException;
 import fr.la.jproductbaseweb.beanmanaged.exception.ApparentCauseException;
 import fr.la.jproductbaseweb.beanmanaged.exception.EntryDefaultRapportException;
 import fr.la.jproductbaseweb.beanmanaged.exception.GestRapportDefaultsException;
@@ -98,20 +95,8 @@ public class GestRapportDefaultsBean extends
 		_formatDate.format(this.dateEnd);
 		System.out.println("98" + this.dateEnd);
 
-		try {
-			this.productObjectList = this.moduleGlobale
-					.getUnclosedProductionFailureReports();
-			this.operatorList = this.moduleGlobale.getOperators();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ConfigFileReaderException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		this.productObjectList = this.moduleGlobale.getUnclosedProductionFailureReports();
+		this.operatorList = this.moduleGlobale.getOperators();
 
 		this.selectedObject = new ProductionFailureReport();
 		Product _product = new Product();
@@ -175,31 +160,14 @@ public class GestRapportDefaultsBean extends
 	}
 
 	public void allDefauts() {
-		try {
-			this.productObjectList = this.moduleGlobale
-					.getProductionFailureReports(dateStart, dateEnd);
-			if (productObjectList.size() == 0) {
-				throw new GestRapportDefaultsException("Aucun resultat");
-			} else {
-				this.search = true;
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ConfigFileReaderException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (GestRapportDefaultsException e) {
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_WARN, "", e
-							.getMessage()));
+		this.productObjectList = this.moduleGlobale
+				.getProductionFailureReports(dateStart, dateEnd);
+		if (productObjectList.size() == 0) {
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "", "Aucun resultat"));
 			this.search = false;
+		} else {
+			this.search = true;
 		}
-
 	}
 
 	public void editCardRow(RowEditEvent evt) {
@@ -337,28 +305,20 @@ public class GestRapportDefaultsBean extends
 							SelectOneMenu _html = (SelectOneMenu) _cellEditor
 									.getFacet("input");
 
-							try {
-								this.productCardSelected = this.moduleGlobale
-										.getProduct(Integer.parseInt(_html
-												.getValue().toString()));
+							this.productCardSelected = this.moduleGlobale
+									.getProduct(Integer.parseInt(_html
+											.getValue().toString()));
 
-								_failure.getProduct().setProductConf(
-										this.productCardSelected
-												.getProductConf());
+							_failure.getProduct().setProductConf(
+									this.productCardSelected
+											.getProductConf());
 
-								_failure.getProduct().setIdProduct(
-										Integer.parseInt(_html.getValue()
-												.toString()));
+							_failure.getProduct().setIdProduct(
+									Integer.parseInt(_html.getValue()
+											.toString()));
 
 								// _failure.setProduct(productCardSelected);
 
-							} catch (NumberFormatException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							} catch (SQLException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
 							this.listElementChangedToSave = new ArrayList<ElementChanged>();
 							// System.out.println(this.productCardSelected);
 							// System.out.println(_failure);
@@ -432,21 +392,11 @@ public class GestRapportDefaultsBean extends
 						if (_cellEditor.getFacet("input") instanceof SelectOneMenu) {
 							SelectOneMenu _html = (SelectOneMenu) _cellEditor
 									.getFacet("input");
-							try {
-								this.operatorSelected = this.moduleGlobale
-										.getOperator(Integer.parseInt(_html
-												.getValue().toString()));
+							this.operatorSelected = this.moduleGlobale
+									.getOperator(Integer.parseInt(_html
+											.getValue().toString()));
 
-								_failure.setOperator(operatorSelected);
-
-							} catch (NumberFormatException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							} catch (SQLException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-
+							_failure.setOperator(operatorSelected);
 						}
 					}
 				}
@@ -511,21 +461,7 @@ public class GestRapportDefaultsBean extends
 	}
 
 	public void defaultsnoclosed() {
-
-		try {
-			this.productObjectList = this.moduleGlobale
-					.getUnclosedProductionFailureReports();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ConfigFileReaderException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
+		this.productObjectList = this.moduleGlobale.getUnclosedProductionFailureReports();
 	}
 
 	public void delTopo() {
@@ -669,85 +605,46 @@ public class GestRapportDefaultsBean extends
 			}
 			cptFailure++;
 		}
-		try {
-			System.out.println("656 valeur de failure code"
-					+ this.selectedObject.getFailureCode());
-			@SuppressWarnings("unused")
-			EntryDefaultRapportForm _entryDefautlForm = new EntryDefaultRapportForm(
-					this.selectedObject.getFailureReportComment().getComment(),
-					this.selectedObject.getRegistrationDate(),
-					this.selectedObject.getTesterReport().getOperatorCode(),
-					this.selectedObject.getFailureCode());
 
-			if (this.selectedObject.getCustomerComment() == null) {
+		EntryDefaultRapportForm _entryDefautlForm = new EntryDefaultRapportForm(
+				this.selectedObject.getFailureReportComment().getComment(),
+				this.selectedObject.getRegistrationDate(),
+				this.selectedObject.getTesterReport().getOperatorCode(),
+				this.selectedObject.getFailureCode());
 
-				CustomerComment _customerComment = new CustomerComment("");
-				this.selectedObject.setCustomerComment(_customerComment);
+		if (this.selectedObject.getCustomerComment() == null) {
 
-			}
-			this.moduleGlobale
-					.setFailureReport(this.selectedObject, this.selectedObject
-							.getRegistrationDate(), this.selectedObject
-							.getProduct().getProductConf().getReference(),
-							this.selectedObject.getProduct().getProductConf()
-									.getMajorIndex(), this.selectedObject
-									.getProduct().getProductConf()
-									.getMinorIndex(), this.selectedObject
-									.getProduct().getSerialNumber(),
-							this.selectedObject.getProduct().getDatecode(),
-							this.selectedObject.getTesterReport().getTestType()
-									.getName(), this.selectedObject
-									.getTesterReport().getTester().getName(),
-							this.selectedObject.getTesterReport()
-									.getOperatorCode(), this.selectedObject
-									.getCustomerComment().getComment(),
-							this.selectedObject.getFailureCode(),
-							this.selectedObject.getFailureReportComment()
-									.getComment(), this.selectedObject
-									.getFailures());
+			CustomerComment _customerComment = new CustomerComment("");
+			this.selectedObject.setCustomerComment(_customerComment);
 
-			this.productObjectList = this.moduleGlobale
-					.getUnclosedProductionFailureReports();
-			this.newListFailure.clear();
-			FacesContext context = FacesContext.getCurrentInstance();
-			context.addMessage(null, new FacesMessage("Modification Reussie"));
-			hideDialog(_dialog);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ConfigFileReaderException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JProductBaseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ProductDaoException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (FailureModuleException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (TesterReportDaoException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ApparentCauseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			FacesContext context = FacesContext.getCurrentInstance();
-			context.addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_WARN,
-							"Erreur Formulaire", e.toString()));
 		}
+		this.moduleGlobale
+				.setFailureReport(this.selectedObject, this.selectedObject
+						.getRegistrationDate(), this.selectedObject
+						.getProduct().getProductConf().getReference(),
+						this.selectedObject.getProduct().getProductConf()
+								.getMajorIndex(), this.selectedObject
+								.getProduct().getProductConf()
+								.getMinorIndex(), this.selectedObject
+								.getProduct().getSerialNumber(),
+						this.selectedObject.getProduct().getDatecode(),
+						this.selectedObject.getTesterReport().getTestType()
+								.getName(), this.selectedObject
+								.getTesterReport().getTester().getName(),
+						this.selectedObject.getTesterReport()
+								.getOperatorCode(), this.selectedObject
+								.getCustomerComment().getComment(),
+						this.selectedObject.getFailureCode(),
+						this.selectedObject.getFailureReportComment()
+								.getComment(), this.selectedObject
+								.getFailures());
 
+		this.productObjectList = this.moduleGlobale
+				.getUnclosedProductionFailureReports();
+		this.newListFailure.clear();
+		FacesContext context = FacesContext.getCurrentInstance();
+		context.addMessage(null, new FacesMessage("Modification Reussie"));
+		hideDialog(_dialog);
 	}
 
 	public void closeProduct() {
@@ -783,99 +680,37 @@ public class GestRapportDefaultsBean extends
 			}
 			cptFailure++;
 		}
-		try {
-			System.out.println("765 update: " + selectedObject);
-			// close productionFailureReport
-			this.selectedObject.setState(2);
+		// close productionFailureReport
+		this.selectedObject.setState(2);
 
-			System.out.println("1 " + this.selectedObject);
-			System.out
-					.println("2 " + this.selectedObject.getRegistrationDate());
-			System.out.println("3 "
-					+ this.selectedObject.getProduct().getProductConf()
-							.getReference());
-			System.out.println("4 "
-					+ this.selectedObject.getProduct().getProductConf()
-							.getMajorIndex());
-			System.out.println("5 "
-					+ this.selectedObject.getProduct().getProductConf()
-							.getMinorIndex());
-			System.out.println("6 "
-					+ this.selectedObject.getProduct().getSerialNumber());
-			System.out.println("7 "
-					+ this.selectedObject.getProduct().getDatecode());
-			System.out.println("8 "
-					+ this.selectedObject.getTesterReport().getTestType()
-							.getName());
-			System.out.println("9 "
-					+ this.selectedObject.getTesterReport().getTester()
-							.getName());
-			System.out.println("10 "
-					+ this.selectedObject.getTesterReport().getOperatorCode());
-			System.out.println("11 "
-					+ this.selectedObject.getCustomerComment().getComment());
-			System.out.println("12 " + this.selectedObject.getFailureCode());
-			System.out.println("13 "
-					+ this.selectedObject.getFailureReportComment()
-							.getComment());
-			System.out.println("14 " + this.selectedObject.getFailures());
+		this.moduleGlobale
+				.setFailureReport(this.selectedObject, this.selectedObject
+						.getRegistrationDate(), this.selectedObject
+						.getProduct().getProductConf().getReference(),
+						this.selectedObject.getProduct().getProductConf()
+								.getMajorIndex(), this.selectedObject
+								.getProduct().getProductConf()
+								.getMinorIndex(), this.selectedObject
+								.getProduct().getSerialNumber(),
+						this.selectedObject.getProduct().getDatecode(),
+						this.selectedObject.getTesterReport().getTestType()
+								.getName(), this.selectedObject
+								.getTesterReport().getTester().getName(),
+						this.selectedObject.getTesterReport()
+								.getOperatorCode(), this.selectedObject
+								.getCustomerComment().getComment(),
+						this.selectedObject.getFailureCode(),
+						this.selectedObject.getFailureReportComment()
+								.getComment(), this.selectedObject
+								.getFailures());
 
-			this.moduleGlobale
-					.setFailureReport(this.selectedObject, this.selectedObject
-							.getRegistrationDate(), this.selectedObject
-							.getProduct().getProductConf().getReference(),
-							this.selectedObject.getProduct().getProductConf()
-									.getMajorIndex(), this.selectedObject
-									.getProduct().getProductConf()
-									.getMinorIndex(), this.selectedObject
-									.getProduct().getSerialNumber(),
-							this.selectedObject.getProduct().getDatecode(),
-							this.selectedObject.getTesterReport().getTestType()
-									.getName(), this.selectedObject
-									.getTesterReport().getTester().getName(),
-							this.selectedObject.getTesterReport()
-									.getOperatorCode(), this.selectedObject
-									.getCustomerComment().getComment(),
-							this.selectedObject.getFailureCode(),
-							this.selectedObject.getFailureReportComment()
-									.getComment(), this.selectedObject
-									.getFailures());
+		this.productObjectList = this.moduleGlobale
+				.getUnclosedProductionFailureReports();
 
-			this.productObjectList = this.moduleGlobale
-					.getUnclosedProductionFailureReports();
+		this.newListFailure.clear();
 
-			this.newListFailure.clear();
-
-			RequestContext context = RequestContext.getCurrentInstance();
-			context.execute("dialProd.hide()");
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ConfigFileReaderException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JProductBaseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ProductDaoException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (FailureModuleException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (TesterReportDaoException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		RequestContext context = RequestContext.getCurrentInstance();
+		context.execute("dialProd.hide()");
 	}
 
 	public List<Failure> getListFailure() {

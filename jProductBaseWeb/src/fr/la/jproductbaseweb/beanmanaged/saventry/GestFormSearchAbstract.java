@@ -37,16 +37,8 @@ public abstract  class GestFormSearchAbstract<T> {
 	protected Dialog dialog;
 	
 	public GestFormSearchAbstract(){
-		
-		this.moduleGlobale = new ServiceInterface();
-		try {
-			getFamiliesListProduct();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
+		this.moduleGlobale = ServiceInterface.getInstance();
+		getFamiliesListProduct();
 	}
 			
 	protected Dialog getDialogToButton(CommandButton commandButton) {
@@ -88,7 +80,7 @@ public abstract  class GestFormSearchAbstract<T> {
 	
 	
 	
-	public abstract void getFamiliesListProduct() throws SQLException;
+	public abstract void getFamiliesListProduct();
 	public abstract void searchProduct();
 	public abstract void modifyProduct(ActionEvent event);
 

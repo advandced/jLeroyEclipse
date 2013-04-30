@@ -1,16 +1,16 @@
 package fr.la.juserright.dao;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.naming.NamingException;
-
+import fr.la.jproductbase.dao.GenericDao;
 import fr.la.juserright.metier.User;
 
-public class UserDAO implements ModelDAO<User> {
+public class UserDAO extends GenericDao implements ModelDAO<User> {
 
 	private ConnectionUserRight cnxUserRight;
 
@@ -18,10 +18,12 @@ public class UserDAO implements ModelDAO<User> {
 		this.cnxUserRight = cnxUserRight;
 	}
 
-	public void create(User _object) throws SQLException {
+	public void create(User _object) {
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		try {
-			_stmt = this.cnxUserRight.getCnx().prepareStatement(
+			c = this.cnxUserRight.getCnx();
+			_stmt = c.prepareStatement(
 					"INSERT INTO user (actif, login, password, admin, nom, prenom, email) "
 							+ "VALUES (" + _object.getActif() + ", '"
 							+ _object.getLogin() + "', '"
@@ -30,72 +32,70 @@ public class UserDAO implements ModelDAO<User> {
 							+ "', '" + _object.getPrenom() + "', '"
 							+ _object.getEmail() + "');");
 			_stmt.executeUpdate();
-		} catch (NamingException e) {
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_stmt);
+			close(c);
 		}
 	}
 
-	public User read(User _object) throws SQLException {
+	public User read(User _object) {
 		User _user = new User();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxUserRight.getCnx().prepareStatement(
+			c = this.cnxUserRight.getCnx();
+			_stmt = c.prepareStatement(
 					"SELECT * FROM user WHERE login LIKE ?;");
 			_stmt.setString(1, _object.getLogin());
 			_rs = _stmt.executeQuery();
 			if (_rs.next()) {
 				_user = this.getUser(_rs);
 			}
-		} catch (NamingException e) {
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 		return _user;
 	}
 
-	public List<User> readAll() throws SQLException {
+	public List<User> readAll() {
 		List<User> _user = new ArrayList<User>();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxUserRight.getCnx().prepareStatement(
-					"SELECT * FROM user");
+			c = this.cnxUserRight.getCnx();
+			_stmt = c.prepareStatement("SELECT * FROM user");
 			_rs = _stmt.executeQuery();
 			while (_rs.next()) {
 				User _usertmp = this.getUser(_rs);
 				_user.add(_usertmp);
 			}
-		} catch (NamingException e) {
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 		return _user;
 	}
 
-	public void update(User _object) throws SQLException {
+	public void update(User _object) {
+		Connection c = null;
 		PreparedStatement _stmt = null;
 
 		try {
-			_stmt = this.cnxUserRight.getCnx().prepareStatement(
+			c = this.cnxUserRight.getCnx();
+			_stmt = c.prepareStatement(
 					"UPDATE user " + "SET login = '" + _object.getLogin()
 							+ "', " + "actif = " + _object.getActif() + ", "
 							+ "admin = " + _object.getAdmin() + ", "
@@ -105,40 +105,39 @@ public class UserDAO implements ModelDAO<User> {
 							+ "WHERE iduser = " + _object.getIduser() + ";");
 			_stmt.executeUpdate();
 
-		} catch (NamingException e) {
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_stmt);
+			close(c);
 		}
 	}
 
-	public void delete(User _object) throws SQLException {
+	public void delete(User _object) {
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		try {
-			_stmt = this.cnxUserRight.getCnx().prepareStatement(
-					"DELETE FROM user " + "WHERE iduser = "
-							+ _object.getIduser() + ";");
+			c = this.cnxUserRight.getCnx();
+			_stmt = c.prepareStatement("DELETE FROM user " + "WHERE iduser = "+ _object.getIduser() + ";");
 			_stmt.executeUpdate();
 
-		} catch (NamingException e) {
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_stmt);
+			close(c);
 		}
 	}
 
-	public User getUser(int idUser) throws SQLException {
+	public User getUser(int idUser) {
 		User _user = null;
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxUserRight.getCnx().prepareStatement(
-					"SELECT * FROM user" + " WHERE iduser = ?;");
+			c = this.cnxUserRight.getCnx();
+			_stmt = c.prepareStatement("SELECT * FROM user" + " WHERE iduser = ?;");
 			_stmt.setInt(1, idUser);
 			_rs = _stmt.executeQuery();
 			if (_rs.next()) {
@@ -146,28 +145,25 @@ public class UserDAO implements ModelDAO<User> {
 			} else {
 				_user = null;
 			}
-		} catch (NamingException e) {
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 		return _user;
 	}
 
-	public User login(User user) throws SQLException {
+	public User login(User user) {
 		User _user = null;
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxUserRight.getCnx().prepareStatement(
-					"SELECT * FROM user"
-							+ " WHERE login = ? AND password = ? LIMIT 1;");
+			c = this.cnxUserRight.getCnx();
+			_stmt = c.prepareStatement("SELECT * FROM user WHERE login = ? AND password = ? LIMIT 1;");
 			_stmt.setString(1, user.getLogin());
 			_stmt.setString(2, user.getPassword());
 			_rs = _stmt.executeQuery();
@@ -176,27 +172,25 @@ public class UserDAO implements ModelDAO<User> {
 			} else {
 				_user = null;
 			}
-		} catch (NamingException e) {
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
-			this.cnxUserRight.closeCnx();
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 		return _user;
 	}
 
-	public User getUser(String login) throws SQLException {
+	public User getUser(String login) {
 		User _user = null;
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxUserRight.getCnx().prepareStatement(
+			c = this.cnxUserRight.getCnx();
+			_stmt = c.prepareStatement(
 					"SELECT * FROM user" + " WHERE login = ?;");
 			_stmt.setString(1, login);
 			_rs = _stmt.executeQuery();
@@ -205,15 +199,12 @@ public class UserDAO implements ModelDAO<User> {
 			} else {
 				_user = null;
 			}
-		} catch (NamingException e) {
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 		if (null != _user) {
 			return _user;
@@ -222,13 +213,15 @@ public class UserDAO implements ModelDAO<User> {
 		}
 	}
 
-	public List<User> getUserAddRole(int idrole) throws SQLException {
+	public List<User> getUserAddRole(int idrole) {
 		List<User> _user = new ArrayList<User>();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxUserRight.getCnx().prepareStatement(
+			c = this.cnxUserRight.getCnx();
+			_stmt = c.prepareStatement(
 					"SELECT * FROM user WHERE iduser NOT IN (SELECT iduser "
 							+ "FROM userrole WHERE idrole = ?);");
 			_stmt.setInt(1, idrole);
@@ -237,26 +230,25 @@ public class UserDAO implements ModelDAO<User> {
 				User _usertmp = this.getUser(_rs);
 				_user.add(_usertmp);
 			}
-		} catch (NamingException e) {
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 		return _user;
 	}
 
-	public List<User> getUserForARole(int idrole) throws SQLException {
+	public List<User> getUserForARole(int idrole) {
 		List<User> _user = new ArrayList<User>();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxUserRight.getCnx().prepareStatement(
+			c = this.cnxUserRight.getCnx();
+			_stmt = c.prepareStatement(
 					"SELECT * FROM user WHERE iduser IN (SELECT iduser "
 							+ "FROM userrole WHERE idrole = ?);");
 			_stmt.setInt(1, idrole);
@@ -265,28 +257,24 @@ public class UserDAO implements ModelDAO<User> {
 				User _usertmp = this.getUser(_rs);
 				_user.add(_usertmp);
 			}
-		} catch (NamingException e) {
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 		return _user;
 	}
 
-	public User updateUserIfLoginNotExist(User _object) throws SQLException {
+	public User updateUserIfLoginNotExist(User _object) {
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 		User _user = new User();
 		try {
-			_stmt = this.cnxUserRight
-					.getCnx()
-					.prepareStatement(
-							"SELECT * FROM user WHERE login LIKE ? AND iduser NOT LIKE ?;");
+			c = this.cnxUserRight.getCnx();
+			_stmt = c.prepareStatement("SELECT * FROM user WHERE login LIKE ? AND iduser NOT LIKE ?;");
 			_stmt.setString(1, _object.getLogin());
 			_stmt.setInt(2, _object.getIduser());
 			_rs = _stmt.executeQuery();
@@ -295,34 +283,32 @@ public class UserDAO implements ModelDAO<User> {
 			} else {
 				_user = null;
 			}
-		} catch (NamingException e) {
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 		return _user;
 	}
 
-	public void updateUserPassword(User _object) throws SQLException {
+	public void updateUserPassword(User _object) {
+		Connection c = null;
 		PreparedStatement _stmt = null;
 
 		try {
-			_stmt = this.cnxUserRight.getCnx().prepareStatement(
+			c = this.cnxUserRight.getCnx();
+			_stmt = c.prepareStatement(
 					"UPDATE user SET password = '" + _object.getPassword()
 							+ "' WHERE iduser = " + _object.getIduser() + ";");
 			_stmt.executeUpdate();
 
-		} catch (NamingException e) {
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_stmt);
+			close(c);
 		}
 	}
 

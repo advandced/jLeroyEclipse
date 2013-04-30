@@ -21,7 +21,7 @@ import fr.la.juserright.service.ServiceUserRight;
 @ManagedBean(name="loginBean")
 @SessionScoped
 public class LoginBean {
-	private ServiceUserRight moduleGlobal = new ServiceUserRight();
+	private ServiceUserRight moduleGlobal = ServiceUserRight.getInstance();
 	private String login;
 	private String password;
 	private String redirectFrom;
@@ -104,21 +104,11 @@ public class LoginBean {
 			setUserconnected(true);
 			
 			if (userlogin != null && isUserconnected()) {
-			
-					try {
-						if (permList.isEmpty()) {
-						permList = moduleGlobal.getAutorisationByLogin(login);
-						} 
-						
-						
-					} catch (SQLException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-
+				if (permList.isEmpty()) {
+					permList = moduleGlobal.getAutorisationByLogin(login);
+				} 
 			}
-			FacesContext.getCurrentInstance().getExternalContext()
-					.redirect("/jProductBaseWeb/panel.jsf");
+			FacesContext.getCurrentInstance().getExternalContext().redirect("/jProductBaseWeb/panel.jsf");
 			return true;
 		} else {
 			FacesMessage message = new FacesMessage("Identifiants incorrects !");

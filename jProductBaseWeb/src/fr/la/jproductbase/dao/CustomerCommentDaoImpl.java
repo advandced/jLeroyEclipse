@@ -1,33 +1,32 @@
 package fr.la.jproductbase.dao;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 
-import javax.naming.NamingException;
-
 import fr.la.jproductbase.metier.CustomerComment;
 import fr.la.jproductbase.metier.ProductionFailureReport;
 
-public class CustomerCommentDaoImpl implements CustomerCommentDao {
-	private static String exceptionMsg = "Commentaire client inconnu dans la base de données.";
+public class CustomerCommentDaoImpl extends GenericDao implements CustomerCommentDao {
 
-	private ConnectionProduct cnxProduct;
+	ConnectionProduct cnxProduct;
 
 	public CustomerCommentDaoImpl(ConnectionProduct cnxProduct) {
 		this.cnxProduct = cnxProduct;
 	}
 
 	@Override
-	public CustomerComment getCustomerComment(ProductionFailureReport productionFailureReport)
-			throws SQLException {
+	public CustomerComment getCustomerComment(ProductionFailureReport productionFailureReport) {
 		CustomerComment _customerComment = null;
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 					"SELECT * FROM customerComment WHERE idProductionFailureReport=?");
 			_stmt.setInt(1, productionFailureReport.getIdProductionFailureReport());
 			_rs = _stmt.executeQuery();
@@ -40,30 +39,28 @@ public class CustomerCommentDaoImpl implements CustomerCommentDao {
 
 			// Update failureReport object
 			productionFailureReport.setCustomerComment(_customerComment);
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _customerComment;
 	}
 
 	@Override
-	public CustomerComment addCustomerComment(ProductionFailureReport productionFailureReport,
-			String comment) throws SQLException, CustomerCommentDaoException {
+	public CustomerComment addCustomerComment(ProductionFailureReport productionFailureReport, String comment) {
 		CustomerComment _customerComment = null;
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 					"INSERT INTO customerComment (comment, idProductionFailureReport)"
 							+ " VALUES (?, ?)");
 			_stmt.setString(1, comment);
@@ -71,7 +68,8 @@ public class CustomerCommentDaoImpl implements CustomerCommentDao {
 			_stmt.executeUpdate();
 
 			// Retrieve failureReportComment data
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 					"SELECT * FROM customerComment"
 							+ " WHERE (idProductionFailureReport=?)");
 			_stmt.setInt(1, productionFailureReport.getIdProductionFailureReport());
@@ -80,55 +78,52 @@ public class CustomerCommentDaoImpl implements CustomerCommentDao {
 			if (_rs.next()) {
 				_customerComment = this.getCustomerComment(_rs);
 			} else {
-				throw new CustomerCommentDaoException(exceptionMsg);
+				throw new IllegalStateException();
 			}
 
 			// Update failureReport object
 			productionFailureReport.setCustomerComment(_customerComment);
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _customerComment;
 	}
 
 	@Override
-	public void updateCustomerComment(ProductionFailureReport productionFailureReport,
-			String customerComment) throws SQLException {
+	public void updateCustomerComment(ProductionFailureReport productionFailureReport,String customerComment) {
+		Connection c = null;
 		PreparedStatement _stmt = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 					"UPDATE customerComment " + "SET comment=? "
 							+ "WHERE (idProductionFailureReport=?)");
 			_stmt.setString(1, customerComment);
 			_stmt.setInt(2, productionFailureReport.getIdProductionFailureReport());
 			_stmt.executeUpdate();
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_stmt);
+			close(c);
 		}
 	}
 
 	@Override
-	public void removeCustomerComment(ProductionFailureReport productionFailureReport)
-			throws SQLException {
+	public void removeCustomerComment(ProductionFailureReport productionFailureReport) {
+		Connection c = null;
 		PreparedStatement _stmt = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 					"DELETE FROM customerComment"
 							+ " WHERE (idProductionFailureReport=?)");
 			_stmt.setInt(1, productionFailureReport.getIdProductionFailureReport());
@@ -136,13 +131,12 @@ public class CustomerCommentDaoImpl implements CustomerCommentDao {
 
 			// Update failureReport object
 			productionFailureReport.setCustomerComment(null);
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_stmt);
+			close(c);
 		}
 	}
 
@@ -156,8 +150,7 @@ public class CustomerCommentDaoImpl implements CustomerCommentDao {
 	 * 
 	 * @throws SQLException
 	 */
-	private CustomerComment getCustomerComment(ResultSet rs)
-			throws SQLException {
+	private CustomerComment getCustomerComment(ResultSet rs) throws SQLException {
 		int _idCustomerComment = rs.getInt("idCustomerComment");
 		Timestamp _timestamp = rs.getTimestamp("timestamp");
 		String _comment = rs.getString("comment");

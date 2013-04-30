@@ -19,8 +19,7 @@ public interface ApparentCauseCustomerDao {
 	 * 
 	 * @throws SQLException
 	 */
-	public List<ApparentCauseCustomer> getApparentCausesCustomer()
-			throws SQLException;
+	public List<ApparentCauseCustomer> getApparentCausesCustomer();
 
 	/**
 	 * Recherche une cause probable client de la base de donn&eacute;es &agrave;
@@ -33,8 +32,7 @@ public interface ApparentCauseCustomerDao {
 	 * 
 	 * @throws SQLException
 	 */
-	public ApparentCauseCustomer getApparentCauseCustomer(
-			int idApparentCauseCustomer) throws SQLException;
+	public ApparentCauseCustomer getApparentCauseCustomer(int idApparentCauseCustomer);
 
 	/**
 	 * Ajouter une cause probable client dans la base de donn&eacute;s.
@@ -47,9 +45,7 @@ public interface ApparentCauseCustomerDao {
 	 * @throws SQLException
 	 * @throws ApparentCauseDaoException
 	 */
-	public ApparentCauseCustomer addApparentCauseCustomer(
-			ApparentCauseCustomer apparentCauseCustomer) throws SQLException,
-			ApparentCauseDaoException;
+	public ApparentCauseCustomer addApparentCauseCustomer(ApparentCauseCustomer apparentCauseCustomer);
 
 	/**
 	 * Mettre &agrave; jour une cause probable client dans la base de
@@ -61,9 +57,7 @@ public interface ApparentCauseCustomerDao {
 	 * @throws SQLException
 	 * @throws ApparentCauseDaoException
 	 */
-	public void updateApparentCauseCustomer(
-			ApparentCauseCustomer apparentCauseCustomer) throws SQLException,
-			ApparentCauseDaoException;
+	public void updateApparentCauseCustomer(ApparentCauseCustomer apparentCauseCustomer);
 
 	/**
 	 * Supprimer une cause probable client d'un rapport de d&eacute;fauts de la
@@ -74,8 +68,7 @@ public interface ApparentCauseCustomerDao {
 	 * 
 	 * @throws SQLException
 	 */
-	public void removeApparentCauseCustomer(
-			ApparentCauseCustomer apparentCauseCustomer) throws SQLException;
+	public void removeApparentCauseCustomer(ApparentCauseCustomer apparentCauseCustomer);
 
 	/**
 	 * Recherche les causes probables client actives de la base de
@@ -85,6 +78,5 @@ public interface ApparentCauseCustomerDao {
 	 * 
 	 * @throws SQLException
 	 */
-	List<ApparentCauseCustomer> getActiveApparentCausesCustomer()
-			throws SQLException;
+	List<ApparentCauseCustomer> getActiveApparentCausesCustomer();
 }

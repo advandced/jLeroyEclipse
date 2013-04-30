@@ -48,19 +48,19 @@ public abstract class GestFormAbstract<T> {
 
     public GestFormAbstract() {
 
-        this.moduleGolbal = new ServiceInterface();
+        this.moduleGolbal = ServiceInterface.getInstance();
 
     }
 
     public void selectedModify() {
 
-        this.moduleGolbal = new ServiceInterface();
+        this.moduleGolbal = ServiceInterface.getInstance();
         this.action = "modify";
 
     }
 
     public void selectedCreate() {
-        this.moduleGolbal = new ServiceInterface();
+        this.moduleGolbal = ServiceInterface.getInstance();
         this.action = "create";
 
     }

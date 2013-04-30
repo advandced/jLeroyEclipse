@@ -21,14 +21,8 @@ public class ApparentCauseLAIConverter implements Converter {
 
 	public ApparentCauseLAIConverter() {
 		//System.out.println("get apparentCauseLAIrActive");
-		ServiceInterface _serviceInterface = new ServiceInterface();
-		try {
-			apparentCauseList = _serviceInterface.getApparentCauses();
-			//System.out.println("taille list apparent cause" + apparentCauseList.size());
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		ServiceInterface _serviceInterface = ServiceInterface.getInstance();
+		apparentCauseList = _serviceInterface.getApparentCauses();
 
 	}
 

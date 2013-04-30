@@ -10,7 +10,7 @@ import fr.la.juserright.service.ServiceUserRight;
 
 public class EditAutorisation {
 
-	private ServiceUserRight moduleGlobal = new ServiceUserRight();
+	private ServiceUserRight moduleGlobal = ServiceUserRight.getInstance();
 
 	private String Menu;
 

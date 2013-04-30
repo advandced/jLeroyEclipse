@@ -19,39 +19,27 @@ import java.util.logging.Logger;
 public class ProductConfModelForm implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private ServiceInterface moduleGlobal = new ServiceInterface();
+    private ServiceInterface moduleGlobal = ServiceInterface.getInstance();
     private ProductConfModel productConfModel;
 
     public ProductConfModelForm(ProductConfModel productConfModel) throws ProductConfModelFormException {
         this.productConfModel = productConfModel;
         String error = "";
-        try {
-            if (this.productConfModel.getDesignation().equals("") || this.productConfModel.getDesignation() == null) {
-                error = error + "Designation";
-            }
-            if (this.productConfModel.getReference().equals("") || this.productConfModel.getReference() == null) {
-                error = error + "Reference";
-            }
-            if (!error.equals("")) {
-                error = error + " manquant.";
-                throw new ProductConfModelFormException(error);
-            } else {
-                if (this.productConfModel.getIdProductConfModel() != 0) {
-                    try {
-                        moduleGlobal.updateProductConfModel(this.productConfModel);
-                    } catch (SQLException ex) {
-                        Logger.getLogger(ProductConfModelForm.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                } else {
-                    try {
-                        moduleGlobal.addProductConfModels(this.productConfModel);
-                    } catch (SQLException ex) {
-                        Logger.getLogger(ProductConfModelForm.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-            }
-        } catch (ProductConfModelFormException e) {
+        if (this.productConfModel.getDesignation().equals("") || this.productConfModel.getDesignation() == null) {
+            error = error + "Designation";
+        }
+        if (this.productConfModel.getReference().equals("") || this.productConfModel.getReference() == null) {
+            error = error + "Reference";
+        }
+        if (!error.equals("")) {
+            error = error + " manquant.";
             throw new ProductConfModelFormException(error);
+        } else {
+            if (this.productConfModel.getIdProductConfModel() != 0) {
+            	moduleGlobal.updateProductConfModel(this.productConfModel);
+            } else {
+                moduleGlobal.addProductConfModels(this.productConfModel);
+            }
         }
     }
 }

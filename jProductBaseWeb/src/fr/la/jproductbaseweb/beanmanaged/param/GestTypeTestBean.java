@@ -6,7 +6,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.naming.NamingException;
 
-import fr.la.jproductbase.dao.TestTypeDaoException;
 import fr.la.jproductbase.metier.TestType;
 import fr.la.jproductbaseweb.beanmanaged.exception.TestTypeException;
 import fr.la.jproductbaseweb.beanmanaged.modelForm.TestTypeForm;
@@ -23,13 +22,7 @@ public class GestTypeTestBean extends GestFormAbstract<TestType> implements Seri
 
     public GestTypeTestBean() {
         super();
-        try {
-            this.objectList = this.moduleGolbal.getTestTypes();
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
+        this.objectList = this.moduleGolbal.getTestTypes();
     }
 
     @Override
@@ -57,22 +50,8 @@ public class GestTypeTestBean extends GestFormAbstract<TestType> implements Seri
     @Override
     protected void create() throws TestTypeException {
         TestTypeForm _testTypeForm = new TestTypeForm(this.nameTypeTest, this.stateTypeTest, this.needTesterTypeTest);
-        try {
-            this.moduleGolbal.addTestType(_testTypeForm.getName(),
-                    _testTypeForm.getState(), _testTypeForm.isNeedTester());
-            this.objectList = this.moduleGolbal.getTestTypes();
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (TestTypeDaoException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (NamingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-
+        this.moduleGolbal.addTestType(_testTypeForm.getName(), _testTypeForm.getState(), _testTypeForm.isNeedTester());
+        this.objectList = this.moduleGolbal.getTestTypes();
     }
 
     @Override
@@ -83,22 +62,8 @@ public class GestTypeTestBean extends GestFormAbstract<TestType> implements Seri
         getSelectedObject().setState(_testTypeForm.getState());
         getSelectedObject().setNeedTester(_testTypeForm.isNeedTester());
 
-        try {
-            this.moduleGolbal.updateTestType(getSelectedObject());
-            this.objectList = this.moduleGolbal.getTestTypes();
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (TestTypeDaoException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (NamingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-
-
+        this.moduleGolbal.updateTestType(getSelectedObject());
+        this.objectList = this.moduleGolbal.getTestTypes();
     }
 
     public String getNameTypeTest() {

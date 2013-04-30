@@ -7,7 +7,7 @@ import fr.la.juserright.metier.Role;
 import fr.la.juserright.service.ServiceUserRight;
 
 public class EditRole {
-	private ServiceUserRight moduleGlobal = new ServiceUserRight();
+	private ServiceUserRight moduleGlobal = ServiceUserRight.getInstance();
 
 	private int id;
 	

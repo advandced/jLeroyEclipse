@@ -3,101 +3,55 @@ package fr.la.jproductbase.service;
 import java.sql.SQLException;
 import java.util.List;
 
-import javax.naming.NamingException;
-
-import fr.la.jproductbase.dao.ConnectionProduct;
-import fr.la.jproductbase.dao.ConnectionTester;
 import fr.la.jproductbase.dao.TesterDao;
-import fr.la.jproductbase.dao.TesterDaoException;
-import fr.la.jproductbase.dao.TesterDaoImpl;
 import fr.la.jproductbase.dao.TesterReportDao;
-import fr.la.jproductbase.dao.TesterReportDaoImpl;
 import fr.la.jproductbase.metier.Product;
 import fr.la.jproductbase.metier.TestType;
 import fr.la.jproductbase.metier.Tester;
 import fr.la.jproductbase.metier.TesterReport;
 
 public class TesterModule {
-	private ConnectionProduct cnxProduct;
-	private ConnectionTester cnxTester;
 
-	public TesterModule(ConnectionProduct cnxProduct, ConnectionTester cnxTester) {
-		this.cnxProduct = cnxProduct;
-		this.cnxTester = cnxTester;
+	TesterDao _testerDao;
+	TesterReportDao _testerReportDao;
+	
+	TestTypeModule _testTypeModule;
+	
+	public TesterModule(TesterDao testerDao, TesterReportDao testerReportDao, TestTypeModule testTypeModule) {
+		_testerDao = testerDao;
+		_testerReportDao = testerReportDao;
+		
+		_testTypeModule = testTypeModule;
 	}
 
-	protected Tester addTester(String name) throws SQLException,
-			NamingException {
-		TesterDao _testerDao = new TesterDaoImpl(this.cnxTester);
-
-		Tester _tester = null;
-		try {
-			this.cnxTester.getCnx().setAutoCommit(false);
-			_tester = _testerDao.addTester(name);
-			this.cnxTester.getCnx().commit();
-		} catch (TesterDaoException e) {
-			this.cnxTester.getCnx().rollback();
-			e.printStackTrace();
-		}
-
-		return _tester;
+	public Tester addTester(String name) {
+		return _testerDao.addTester(name);
 	}
 
 	// 18-01-12 : RMO : Création de la méthode
-	protected Tester addTester(String name, int state) throws SQLException,
-			NamingException {
-		TesterDao _testerDao = new TesterDaoImpl(this.cnxTester);
-
-		Tester _tester = null;
-		try {
-			this.cnxTester.getCnx().setAutoCommit(false);
-			_tester = _testerDao.addTester(name, state);
-			this.cnxTester.getCnx().commit();
-		} catch (TesterDaoException e) {
-			this.cnxTester.getCnx().rollback();
-			e.printStackTrace();
-		}
-
-		return _tester;
+	public Tester addTester(String name, int state) {
+		return _testerDao.addTester(name, state);
 	}
 
-	protected Tester getTester(String name) throws SQLException {
-		TesterDao _testerDao = new TesterDaoImpl(this.cnxTester);
-
+	public Tester getTester(String name) {
 		Tester _tester = null;
 		if (!name.trim().equals("")) {
 			_tester = _testerDao.getTester(name);
-		} else {
-			// No tester
 		}
-
 		return _tester;
 	}
 
-	protected Tester getTester(int idTester) throws SQLException {
-		TesterDao _testerDao = new TesterDaoImpl(this.cnxTester);
-
-		Tester _tester = null;
-		_tester = _testerDao.getTester(idTester);
-
-		return _tester;
+	public Tester getTester(int idTester) {
+		return _testerDao.getTester(idTester);
 	}
 
 	// 17-01-12 : RMO : Création de la méthode
-	protected List<Tester> getTesters() throws SQLException {
-		TesterDao _testerDao = new TesterDaoImpl(this.cnxTester);
-
-		List<Tester> _testers = _testerDao.getTesters();
-
-		return _testers;
+	public List<Tester> getTesters() {
+		return _testerDao.getTesters();
 	}
 
-	protected List<Tester> getActiveTesters() throws SQLException {
-		TesterDao _testerDao = new TesterDaoImpl(this.cnxTester);
-
-		List<Tester> _testers = _testerDao.getActiveTesters();
-
-		return _testers;
+	public List<Tester> getActiveTesters() {
+		return _testerDao.getActiveTesters();
 	}
 
 	/**
@@ -108,15 +62,8 @@ public class TesterModule {
 	 * 
 	 * @throws SQLException
 	 */
-	protected List<TesterReport> getTesterReportsFailedInflow()
-			throws SQLException {
-		TesterReportDao _testerReportDao = new TesterReportDaoImpl(
-				this.cnxProduct, this.cnxTester);
-
-		List<TesterReport> _testerReports = _testerReportDao
-				.getTesterReportsFailedInflow();
-
-		return _testerReports;
+	public List<TesterReport> getTesterReportsFailedInflow() {
+		return _testerReportDao.getTesterReportsFailedInflow();
 	}
 
 	/**
@@ -130,42 +77,24 @@ public class TesterModule {
 	 * 
 	 * @throws SQLException
 	 */
-	protected List<TesterReport> getTesterReportsFollowingForm(Product product)
-			throws SQLException {
-		TesterReportDao _testerReportDao = new TesterReportDaoImpl(
-				this.cnxProduct, this.cnxTester);
-
-		List<TesterReport> _testerReports = _testerReportDao
-				.getTesterReportsFollowingForm(product);
-
-		return _testerReports;
+	public List<TesterReport> getTesterReportsFollowingForm(Product product) {
+		return _testerReportDao.getTesterReportsFollowingForm(product);
 	}
 
 	// 18-01-12 : RMO : Création de la méthode
-	protected Tester setTester(Tester tester, String name, int state)
-			throws Exception {
+	public Tester setTester(Tester tester, String name, int state) {
 		Tester _tester = tester;
 
-		try {
-			this.cnxTester.getCnx().setAutoCommit(false);
-
-			if (null == _tester) {
-				// New tester
-				// Add
-				_tester = this.addTester(name, state);
-			} else {
-				// Existing tester
-				_tester.setState(state);
-				_tester.setName(name);
-				// Update
-				this.updateTester(_tester);
-			}
-
-			// Commit
-			this.cnxProduct.getCnx().commit();
-		} catch (SQLException e) {
-			this.cnxProduct.getCnx().rollback();
-			throw new Exception(e.getMessage());
+		if (null == _tester) {
+			// New tester
+			// Add
+			_tester = this.addTester(name, state);
+		} else {
+			// Existing tester
+			_tester.setState(state);
+			_tester.setName(name);
+			// Update
+			this.updateTester(_tester);
 		}
 
 		return _tester;
@@ -174,48 +103,25 @@ public class TesterModule {
 	/*
 	 * Mise a jour d'un tester dans la bdd
 	 */
-	protected void updateTester(Tester tester) throws SQLException,
-			NamingException {
-		TesterDao _testerDao = new TesterDaoImpl(this.cnxTester);
-
-		try {
-			this.cnxTester.getCnx().setAutoCommit(false);
-			_testerDao.updateTester(tester);
-			this.cnxTester.getCnx().commit();
-		} catch (TesterDaoException e) {
-			this.cnxTester.getCnx().rollback();
-			e.printStackTrace();
-		}
+	public void updateTester(Tester tester) {
+		_testerDao.updateTester(tester);
 	}
 
 	// 18-01-12 : RMO : Création de la méthode
-	protected TestType setTestType(TestType testType, String name, int state,
-			boolean needTester) throws Exception {
+	public TestType setTestType(TestType testType, String name, int state, boolean needTester) {
 		TestType _testType = testType;
 
-		try {
-			this.cnxTester.getCnx().setAutoCommit(false);
-
-			TestTypeModule _testTypeModule = new TestTypeModule(this.cnxTester);
-			if (null == _testType) {
-				// New testType
-				// Add
-				_testType = _testTypeModule
-						.addTestType(name, state, needTester);
-			} else {
-				// Existing testTyp
-				_testType.setState(state);
-				_testType.setName(name);
-				_testType.setNeedTester(needTester);
-				// Update
-				_testTypeModule.updateTestType(_testType);
-			}
-
-			// Commit
-			this.cnxProduct.getCnx().commit();
-		} catch (SQLException e) {
-			this.cnxProduct.getCnx().rollback();
-			throw new Exception(e.getMessage());
+		if (null == _testType) {
+			// New testType
+			// Add
+			_testType = _testTypeModule.addTestType(name, state, needTester);
+		} else {
+			// Existing testTyp
+			_testType.setState(state);
+			_testType.setName(name);
+			_testType.setNeedTester(needTester);
+			// Update
+			_testTypeModule.updateTestType(_testType);
 		}
 
 		return _testType;

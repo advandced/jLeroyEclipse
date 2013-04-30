@@ -23,7 +23,7 @@ import fr.la.juserright.verificationformulaire.EditRole;
 @SessionScoped
 public class roleBean {
 
-	private ServiceUserRight moduleGlobal = new ServiceUserRight();
+	private ServiceUserRight moduleGlobal = ServiceUserRight.getInstance();
 
 	private List<Role> listRole;
 

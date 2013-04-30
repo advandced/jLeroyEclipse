@@ -1,7 +1,6 @@
 package fr.la.juserright.metier;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,22 +38,22 @@ public class Role implements Serializable {
 		this.listUser = listUser;
 	}
 
-	public Role(int idrole, String name, List<User> listUser) throws SQLException {
+	public Role(int idrole, String name, List<User> listUser) {
 		this.setIdrole(idrole);
 		this.name = name;
 		this.listUser = listUser;
 	}
 
-	public Role(int idrole, String name) throws SQLException {
+	public Role(int idrole, String name) {
 		this.setIdrole(idrole);
 		this.name = name;
 	}
 
-	public Role(int idrole) throws SQLException {
+	public Role(int idrole) {
 		this.setIdrole(idrole);
 	}
 
-	public Role(String name) throws SQLException {
+	public Role(String name) {
 		this.name = name;
 	}
 

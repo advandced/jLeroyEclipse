@@ -11,7 +11,6 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
 import fr.la.configfilereader.ConfigFileReaderException;
-import fr.la.jproductbase.dao.AfterSaleReportDaoException;
 import fr.la.jproductbase.metier.AfterSaleCom;
 import fr.la.jproductbase.metier.AfterSaleReport;
 import fr.la.jproductbase.service.ServiceInterface;
@@ -22,7 +21,7 @@ import fr.la.jproductbaseweb.beanmanaged.modelForm.DevisPrealableForm;
 @SessionScoped
 public class DevisRepaBean {
 
-	private ServiceInterface moduleGlobal = new ServiceInterface();
+	private ServiceInterface moduleGlobal = ServiceInterface.getInstance();
 
 	private List<AfterSaleCom> listAfterSaleCom = new ArrayList<AfterSaleCom>();
 
@@ -36,8 +35,7 @@ public class DevisRepaBean {
 		this.listAfterSaleCom = listAfterSaleCom;
 	}
 
-	public DevisRepaBean() throws SQLException, ConfigFileReaderException,
-			IOException, AfterSaleReportDaoException {
+	public DevisRepaBean() {
 		this.refresh();
 	}
 
@@ -49,11 +47,9 @@ public class DevisRepaBean {
 		this.datafound = datafound;
 	}
 
-	public void refresh() throws SQLException, ConfigFileReaderException,
-			IOException, AfterSaleReportDaoException {
+	public void refresh() {
 		this.listAfterSaleCom = new ArrayList<AfterSaleCom>();
-		List<AfterSaleReport> _listAfterSaleReport = moduleGlobal
-				.getDevisRepa();
+		List<AfterSaleReport> _listAfterSaleReport = moduleGlobal.getDevisRepa();
 		for (AfterSaleReport a : _listAfterSaleReport) {
 			this.listAfterSaleCom.add(new AfterSaleCom(a));
 		}

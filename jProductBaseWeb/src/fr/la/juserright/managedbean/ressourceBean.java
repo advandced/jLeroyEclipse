@@ -22,7 +22,7 @@ import fr.la.juserright.verificationformulaire.EditRessource;
 @SessionScoped
 public class ressourceBean {
 
-	private ServiceUserRight moduleGlobal = new ServiceUserRight();
+	private ServiceUserRight moduleGlobal = ServiceUserRight.getInstance();
 
 	private List<Ressource> listRessource;
 

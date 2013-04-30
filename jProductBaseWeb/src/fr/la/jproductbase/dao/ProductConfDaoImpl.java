@@ -7,6 +7,8 @@ import fr.la.jproductbase.metier.ProductFamily;
 import fr.la.jproductbase.metier.ProductLine;
 import fr.la.jproductbase.metier.ProductSupply;
 import fr.la.jproductbase.metier.ProductType;
+
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,25 +16,46 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import javax.naming.NamingException;
 
-public class ProductConfDaoImpl implements ProductConfDao {
+public class ProductConfDaoImpl extends GenericDao implements ProductConfDao {
 
-	private static String exceptionMsg = "Configuration produit inconnue dans la base de données.";
-	private ConnectionProduct cnxProduct;
+	ConnectionProduct cnxProduct;
+	
+	ProductSupplyDao _productSupplyDao;
+	ProductFamilyDao _productFamilyDao;
+	FollowingFormModelDao _followingFormModelDao;
+	ProductLineDao _productLineDao;
+	ProductConfModelDao _productConfModelDao;
+	SoftwareDao _softwareDao;
 
-	public ProductConfDaoImpl(ConnectionProduct cnxProduct) {
+	public ProductConfDaoImpl(ConnectionProduct cnxProduct, 
+								ProductSupplyDao productSupplyDao,
+								ProductFamilyDao productFamilyDao,
+								FollowingFormModelDao followingFormModelDao, 
+								ProductLineDao productLineDao, 
+								ProductConfModelDao productConfModelDao, 
+								SoftwareDao softwareDao) {
 		this.cnxProduct = cnxProduct;
+		
+		_productSupplyDao = productSupplyDao;
+		_productFamilyDao = productFamilyDao;
+		_followingFormModelDao = followingFormModelDao;
+		_productLineDao = productLineDao;
+		_productConfModelDao = productConfModelDao;
+		_softwareDao = softwareDao;
+		
 	}
 
 	@Override
-	public ProductConf getProductConf(int idProductConf) throws SQLException {
+	public ProductConf getProductConf(int idProductConf) {
 		ProductConf _productConf = null;
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 					"SELECT * FROM productConf" + " WHERE (idProductConf=?)");
 			_stmt.setInt(1, idProductConf);
 			_rs = _stmt.executeQuery();
@@ -41,29 +64,26 @@ public class ProductConfDaoImpl implements ProductConfDao {
 			} else {
 				_productConf = null;
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 		return _productConf;
 	}
 
 	@Override
-	public ProductConf getProductConf(String reference, String majorIndex,
-			String minorIndex) throws SQLException {
+	public ProductConf getProductConf(String reference, String majorIndex, String minorIndex) {
 		ProductConf _productConf = null;
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 					"SELECT * FROM productConf" + " WHERE (reference=?)"
 							+ " AND (majorIndex=?)" + " AND (minorIndex=?)");
 			_stmt.setString(1, reference);
@@ -76,25 +96,21 @@ public class ProductConfDaoImpl implements ProductConfDao {
 			} else {
 				_productConf = null;
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _productConf;
 	}
 
 	@Override
-	public ProductConf getLastActiveProductConf(String reference,
-			String majorIndex, String minorIndex) throws SQLException {
+	public ProductConf getLastActiveProductConf(String reference, String majorIndex, String minorIndex) {
 		ProductConf _productConf = null;
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
@@ -121,8 +137,8 @@ public class ProductConfDaoImpl implements ProductConfDao {
 			} else {
 				// No major index
 			}
-
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 					"SELECT * FROM productConf" + " WHERE " + _queryString
 							+ " ORDER BY majorIndex DESC, minorIndex DESC");
 			_stmt.setString(1, reference);
@@ -139,31 +155,27 @@ public class ProductConfDaoImpl implements ProductConfDao {
 			} else {
 				_productConf = null;
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _productConf;
 	}
 
 	@Override
-	public List<ProductConf> getProductConfs() throws SQLException {
+	public List<ProductConf> getProductConfs() {
 		List<ProductConf> _productConfs = new ArrayList<ProductConf>();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct
-					.getCnx()
-					.prepareStatement(
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 							"SELECT * FROM productConf pc, productFamily pf "
 									+ "WHERE pc.idProductFamily = pf.idProductFamily "
 									+ "ORDER BY pf.idProductType DESC, pc.reference ASC, "
@@ -174,31 +186,27 @@ public class ProductConfDaoImpl implements ProductConfDao {
 				ProductConf _productConf = this.getProductConf(_rs);
 				_productConfs.add(_productConf);
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _productConfs;
 	}
 
 	@Override
-	public List<ProductConf> getProductConfs(int type) throws SQLException {
+	public List<ProductConf> getProductConfs(int type) {
 		List<ProductConf> _productConfs = new ArrayList<ProductConf>();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct
-					.getCnx()
-					.prepareStatement(
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 							"SELECT pc.* FROM productConf pc, productFamily pf "
 									+ "WHERE pc.idProductFamily = pf.idProductFamily AND (pf.idProductType=?) "
 									+ "ORDER BY pc.reference;");
@@ -209,30 +217,27 @@ public class ProductConfDaoImpl implements ProductConfDao {
 				ProductConf _productConf = this.getProductConf(_rs);
 				_productConfs.add(_productConf);
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _productConfs;
 	}
 
 	@Override
-	public List<ProductConf> getProductConfs(String reference)
-			throws SQLException {
+	public List<ProductConf> getProductConfs(String reference) {
 		List<ProductConf> _productConfs = new ArrayList<ProductConf>();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 					"SELECT * FROM productConf WHERE (reference=?)");
 			_stmt.setString(1, reference);
 			_rs = _stmt.executeQuery();
@@ -241,29 +246,27 @@ public class ProductConfDaoImpl implements ProductConfDao {
 				ProductConf _productConf = this.getProductConf(_rs);
 				_productConfs.add(_productConf);
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _productConfs;
 	}
 
 	@Override
-	public List<ProductConf> getActiveProductConfs() throws SQLException {
+	public List<ProductConf> getActiveProductConfs() {
 		List<ProductConf> _productConfs = new ArrayList<ProductConf>();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 					"SELECT * FROM productConf"
 							+ " WHERE (state=?) ORDER BY reference");
 			_stmt.setInt(1, 1);
@@ -273,34 +276,29 @@ public class ProductConfDaoImpl implements ProductConfDao {
 				ProductConf _productConf = this.getProductConf(_rs);
 				_productConfs.add(_productConf);
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _productConfs;
 	}
 
 	@Override
-	public List<ProductConf> getProductConfComponents(ProductConf productConf)
-			throws SQLException {
+	public List<ProductConf> getProductConfComponents(ProductConf productConf) {
 		List<ProductConf> _productConfComponents = new ArrayList<ProductConf>();
 
 		if (null != productConf) {
+			Connection c = null;
 			PreparedStatement _stmt = null;
 			ResultSet _rs = null;
 
 			try {
-				_stmt = this.cnxProduct
-						.getCnx()
-						.prepareStatement(
+				c = this.cnxProduct.getCnx();
+				_stmt = c.prepareStatement(
 								"SELECT * FROM productConf "
 										+ " WHERE (productConf.idProductConf IN"
 										+ " (SELECT idProductConfComponent FROM productConf_productConf"
@@ -313,16 +311,12 @@ public class ProductConfDaoImpl implements ProductConfDao {
 							.getProductConf(_rs);
 					_productConfComponents.add(_productConfComponent);
 				}
-			} catch (NamingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			} catch (SQLException e) {
+				handleDAOException(e);
 			} finally {
-				if (null != _rs) {
-					_rs.close();
-				}
-				if (null != _stmt) {
-					_stmt.close();
-				}
+				close(_rs);
+				close(_stmt);
+				close(c);
 			}
 		} else {
 			// Nothing to do
@@ -332,14 +326,15 @@ public class ProductConfDaoImpl implements ProductConfDao {
 	}
 
 	@Override
-	public List<ProductConf> getActiveProductConfs(String reference)
-			throws SQLException {
+	public List<ProductConf> getActiveProductConfs(String reference) {
 		List<ProductConf> _productConfs = new ArrayList<ProductConf>();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 					"SELECT * FROM productConf" + " WHERE (reference=?)"
 							+ " AND (state=1)");
 			_stmt.setString(1, reference);
@@ -349,32 +344,27 @@ public class ProductConfDaoImpl implements ProductConfDao {
 				ProductConf _productConf = this.getProductConf(_rs);
 				_productConfs.add(_productConf);
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _productConfs;
 	}
 
 	@Override
-	public List<ProductConf> getActiveProductConfs(ProductType productType)
-			throws SQLException {
+	public List<ProductConf> getActiveProductConfs(ProductType productType) {
 		List<ProductConf> _productConfs = new ArrayList<ProductConf>();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct
-					.getCnx()
-					.prepareStatement(
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 							"SELECT * FROM productConf, productFamily, productType"
 									+ " WHERE (productConf.idProductFamily = productFamily.idProductFamily)"
 									+ " AND (productFamily.idProductType = productType.idProductType)"
@@ -388,16 +378,12 @@ public class ProductConfDaoImpl implements ProductConfDao {
 				ProductConf _productConf = this.getProductConf(_rs);
 				_productConfs.add(_productConf);
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _productConfs;
@@ -406,9 +392,9 @@ public class ProductConfDaoImpl implements ProductConfDao {
 	@Override
 	public ProductConf addProductConf(String reference, String majorIndex,
 			String minorIndex, String designation, int state,
-			ProductFamily productFamily, ProductSupply productSupply)
-			throws SQLException, ProductConfDaoException {
+			ProductFamily productFamily, ProductSupply productSupply) {
 		ProductConf _productConf = null;
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 		int _idProductSupply = 0;
@@ -418,9 +404,8 @@ public class ProductConfDaoImpl implements ProductConfDao {
 			_idProductSupply = 0;
 		}
 		try {
-			_stmt = this.cnxProduct
-					.getCnx()
-					.prepareStatement(
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 							"INSERT INTO productConf (reference, majorIndex, minorIndex, designation, state, idProductFamily, idProductSupply)"
 									+ " VALUES (?, ?, ?, ?, ?, ?, ?)");
 			_stmt.setString(1, reference);
@@ -432,7 +417,7 @@ public class ProductConfDaoImpl implements ProductConfDao {
 			_stmt.setInt(7, _idProductSupply);
 			_stmt.executeUpdate();
 
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			_stmt = c.prepareStatement(
 					"SELECT * FROM productConf" + " WHERE (reference=?) "
 							+ "AND (majorIndex=?) AND (minorIndex=?) ");
 			_stmt.setString(1, reference);
@@ -443,18 +428,15 @@ public class ProductConfDaoImpl implements ProductConfDao {
 			if (_rs.next()) {
 				_productConf = this.getProductConf(_rs);
 			} else {
-				throw new ProductConfDaoException(exceptionMsg);
+				throw new IllegalStateException();
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _productConf;
@@ -463,21 +445,20 @@ public class ProductConfDaoImpl implements ProductConfDao {
 	@Override
 	public void updateProductConf(ProductConf productConf, String reference,
 			String majorIndex, String minorIndex, String designation,
-			int state, ProductFamily productFamily, ProductSupply productSupply)
-			throws SQLException, ProductConfDaoException {
+			int state, ProductFamily productFamily, ProductSupply productSupply) {
 		int _idProductSupply = 0;
 		if (null != productSupply) {
 			_idProductSupply = productSupply.getIdProductSupply();
 		} else {
 			_idProductSupply = 0;
 		}
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct
-					.getCnx()
-					.prepareStatement(
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 							"UPDATE productConf "
 									+ "SET reference=?, majorIndex=?, minorIndex=?, designation=?, state=?, idProductFamily=?, idProductSupply=?"
 									+ " WHERE (idProductConf=?)");
@@ -492,7 +473,7 @@ public class ProductConfDaoImpl implements ProductConfDao {
 			_stmt.executeUpdate();
 
 			// Update object
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			_stmt = c.prepareStatement(
 					"SELECT * FROM productConf" + " WHERE (idProductConf=?)");
 			_stmt.setInt(1, productConf.getIdProductConf());
 
@@ -500,18 +481,14 @@ public class ProductConfDaoImpl implements ProductConfDao {
 			if (_rs.next()) {
 				this.getProductConf(_rs);
 			} else {
-				throw new ProductConfDaoException(exceptionMsg);
+				throw new IllegalStateException();
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 	}
 
@@ -526,33 +503,19 @@ public class ProductConfDaoImpl implements ProductConfDao {
 	private ProductConf getProductConf(ResultSet rs) throws SQLException {
 		// Retreive productSupply
 		int _idProductSupply = rs.getInt("idProductSupply");
-		ProductSupplyDao _productSupplyDao = new ProductSupplyDaoImpl(
-				this.cnxProduct);
-		ProductSupply _productSupply = _productSupplyDao
-				.getProductSupply(_idProductSupply);
+		ProductSupply _productSupply = _productSupplyDao.getProductSupply(_idProductSupply);
 		// Retreive productFamily
 		int _idProductFamily = rs.getInt("idProductFamily");
-		ProductFamilyDao _productFamilyDao = new ProductFamilyDaoImpl(
-				this.cnxProduct);
-		ProductFamily _productFamily = _productFamilyDao
-				.getProductFamily(_idProductFamily);
+		ProductFamily _productFamily = _productFamilyDao.getProductFamily(_idProductFamily);
 		// Retreive followingFormModel
 		int _idFollowingFormModel = rs.getInt("idFollowingFormModel");
-		FollowingFormModelDao _followingFormModelDao = new FollowingFormModelDaoImpl(
-				this.cnxProduct);
-		FollowingFormModel _followingFormModel = _followingFormModelDao
-				.getFollowingFormModel(_idFollowingFormModel);
+		FollowingFormModel _followingFormModel = _followingFormModelDao.getFollowingFormModel(_idFollowingFormModel);
 		// Retreive productLine
 		int _idProductLine = rs.getInt("idProductLine");
-		ProductLineDao _productLineDao = new ProductLineDaoImpl(this.cnxProduct);
-		ProductLine _productLine = _productLineDao
-				.getProductLine(_idProductLine);
+		ProductLine _productLine = _productLineDao.getProductLine(_idProductLine);
 		// Retreive productConfModel
 		int _idProductConfModel = rs.getInt("idProductConfModel");
-		ProductConfModelDao _productConfModelDao = new ProductConfModelDaoImpl(
-				this.cnxProduct);
-		ProductConfModel _productConfModel = _productConfModelDao
-				.getProductConfModel(_idProductConfModel);
+		ProductConfModel _productConfModel = _productConfModelDao.getProductConfModel(_idProductConfModel);
 
 		int _idProductConf = rs.getInt("idProductConf");
 		Timestamp _timestamp = rs.getTimestamp("timestamp");
@@ -567,7 +530,6 @@ public class ProductConfDaoImpl implements ProductConfDao {
 				_productLine, _productConfModel);
 
 		// Retreive softwares
-		SoftwareDao _softwareDao = new SoftwareDaoImpl(this.cnxProduct);
 		_softwareDao.getSoftwares(_productConf);
 
 		return _productConf;
@@ -575,27 +537,31 @@ public class ProductConfDaoImpl implements ProductConfDao {
 
 	// 17-01-12 : RMO : Creation de la methode
 	@Override
-	public void removeProductConfComponent(ProductConf productConf,
-			ProductConf component) throws SQLException {
+	public void removeProductConfComponent(ProductConf productConf, ProductConf component) {
 		if ((null != productConf) && (null != component)) {
+			Connection c = null;
 			PreparedStatement _stmt = null;
 			try {
-				_stmt = this.cnxProduct.getCnx().prepareStatement(
-						"DELETE FROM productConf_productConf "
-								+ "WHERE ((idProductConf=?)"
-								+ " AND (idProductConfComponent=?))");
-			} catch (NamingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				c = this.cnxProduct.getCnx();
+				_stmt = c.prepareStatement(
+							"DELETE FROM productConf_productConf "
+									+ "WHERE ((idProductConf=?)"
+									+ " AND (idProductConfComponent=?))");
+	
+				_stmt.setInt(1, productConf.getIdProductConf());
+				_stmt.setInt(2, component.getIdProductConf());
+				_stmt.executeUpdate();
+	
+				// Update product
+				/* productConf.removeProductConfComponent(component); */
+	
+				_stmt.close();
+			} catch (SQLException e) {
+				handleDAOException(e);
+			} finally {
+				close(_stmt);
+				close(c);
 			}
-			_stmt.setInt(1, productConf.getIdProductConf());
-			_stmt.setInt(2, component.getIdProductConf());
-			_stmt.executeUpdate();
-
-			// Update product
-			/* productConf.removeProductConfComponent(component); */
-
-			_stmt.close();
 		} else {
 			// Nothing to do
 		}
@@ -604,16 +570,16 @@ public class ProductConfDaoImpl implements ProductConfDao {
 
 	// 10-01-12 : RMO : Creation de la methode
 	@Override
-	public void addProductConfComponent(ProductConf productConf,
-			ProductConf component) throws SQLException, ProductConfDaoException {
+	public void addProductConfComponent(ProductConf productConf, ProductConf component) {
 		int _idProductConf = productConf.getIdProductConf();
 		int _idComponent = component.getIdProductConf();
-
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 					"INSERT INTO productConf_productConf (idProductConf, idProductConfComponent)"
 							+ " VALUES (?, ?)");
 			_stmt.setInt(1, _idProductConf);
@@ -621,7 +587,7 @@ public class ProductConfDaoImpl implements ProductConfDao {
 			_stmt.executeUpdate();
 
 			// Retrieve productConf_product data
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			_stmt = c.prepareStatement(
 					"SELECT * FROM productConf_productConf"
 							+ " WHERE (idProductConf=?)"
 							+ " AND (idProductConfComponent=?)");
@@ -630,18 +596,14 @@ public class ProductConfDaoImpl implements ProductConfDao {
 
 			_rs = _stmt.executeQuery();
 			if (!_rs.next()) {
-				throw new ProductConfDaoException(exceptionMsg);
+				throw new IllegalStateException();
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 	}
 
@@ -649,9 +611,9 @@ public class ProductConfDaoImpl implements ProductConfDao {
 	public ProductConf addProductConf(String reference, String majorIndex,
 			String minorIndex, ProductConfModel productConfModel,
 			boolean identifiable, int state, ProductFamily productFamily,
-			ProductSupply productSupply, FollowingFormModel followingForm)
-			throws SQLException, ProductConfDaoException {
+			ProductSupply productSupply, FollowingFormModel followingForm) {
 		ProductConf _productConf = null;
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 		int _idProductConfModel = 0;
@@ -673,9 +635,8 @@ public class ProductConfDaoImpl implements ProductConfDao {
 			_idFollowingFormModel = 0;
 		}
 		try {
-			_stmt = this.cnxProduct
-					.getCnx()
-					.prepareStatement(
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 							"INSERT INTO productConf (reference, majorIndex, minorIndex, idProductConfModel, identifiable, state, idProductFamily, idProductSupply, idFollowingFormModel)"
 									+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
 			_stmt.setString(1, reference);
@@ -689,7 +650,7 @@ public class ProductConfDaoImpl implements ProductConfDao {
 			_stmt.setInt(9, _idFollowingFormModel);
 			_stmt.executeUpdate();
 
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			_stmt = c.prepareStatement(
 					"SELECT * FROM productConf" + " WHERE (reference=?) "
 							+ "AND (majorIndex=?) AND (minorIndex=?) ");
 			_stmt.setString(1, reference);
@@ -700,18 +661,14 @@ public class ProductConfDaoImpl implements ProductConfDao {
 			if (_rs.next()) {
 				_productConf = this.getProductConf(_rs);
 			} else {
-				throw new ProductConfDaoException(exceptionMsg);
+				throw new IllegalStateException();
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _productConf;
@@ -723,25 +680,13 @@ public class ProductConfDaoImpl implements ProductConfDao {
 			String majorIndex, String minorIndex,
 			ProductConfModel productConfModel, Boolean identifiable, int state,
 			ProductFamily productFamily, ProductSupply productSupply,
-			FollowingFormModel followingFormModel) throws SQLException,
-			ProductConfDaoException {
+			FollowingFormModel followingFormModel) {
 		int _idProductConfModel = 0;
 		if (null != productConfModel) {
 			_idProductConfModel = productConfModel.getIdProductConfModel();
 		} else {
 			_idProductConfModel = 0;
 		}
-		System.out.println("ProductConf: " + productConf.toString());
-		System.out.println("reference : " + reference);
-		System.out.println("majorIndex  : " + majorIndex);
-		System.out.println("minorIndex   : " + minorIndex);
-		System.out.println("ProductConfModel : " + productConfModel.toString());
-		System.out.println("identifiable : " + identifiable);
-		System.out.println("state : " + state);
-		System.out.println("ProductFamily : " + productFamily.toString());
-		System.out.println("ProductSupply : " + productSupply.toString());
-		System.out.println("FollowingFormModel : "
-				+ followingFormModel.toString());
 		int _idProductSupply = 0;
 		if (null != productSupply) {
 			_idProductSupply = productSupply.getIdProductSupply();
@@ -755,13 +700,13 @@ public class ProductConfDaoImpl implements ProductConfDao {
 		} else {
 			_idFollowingFormModel = 0;
 		}
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct
-					.getCnx()
-					.prepareStatement(
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 							"UPDATE productConf "
 									+ "SET reference=?, majorIndex=?, minorIndex=?, idProductConfModel=?, identifiable=?, state=?, idProductFamily=?, idProductSupply=?, idFollowingFormModel=?"
 									+ " WHERE (idProductConf=?)");
@@ -778,7 +723,7 @@ public class ProductConfDaoImpl implements ProductConfDao {
 			_stmt.executeUpdate();
 
 			// Update object
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			_stmt = c.prepareStatement(
 					"SELECT * FROM productConf" + " WHERE (idProductConf=?)");
 			_stmt.setInt(1, productConf.getIdProductConf());
 
@@ -786,25 +731,21 @@ public class ProductConfDaoImpl implements ProductConfDao {
 			if (_rs.next()) {
 				this.getProductConf(_rs);
 			} else {
-				throw new ProductConfDaoException(exceptionMsg);
+				throw new IllegalStateException();
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 	}
 
 	@Override
-	public List<ProductConf> getProductConfLazy(Map<String, String> filters,
-			int limit, int maxperpage) throws SQLException {
+	public List<ProductConf> getProductConfLazy(Map<String, String> filters, int limit, int maxperpage) {
 		List<ProductConf> _productConf = new ArrayList<ProductConf>();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
@@ -840,11 +781,10 @@ public class ProductConfDaoImpl implements ProductConfDao {
 		
 		String rqt = rqt1 + rqt2;
 		
-		System.out.println("REQUETE : " + rqt + "LIMIT " + limit + ","
-				+ maxperpage + ";");
 		int i = 0;
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 					rqt + "LIMIT ?, ?;");
 			_stmt.setInt(1, limit);
 			_stmt.setInt(2, maxperpage);
@@ -854,22 +794,19 @@ public class ProductConfDaoImpl implements ProductConfDao {
 				_productConf.add(_productConftmp);
 				i++;
 			}
-		} catch (Exception e) {
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
-		System.out.println("Taille productConf " + _productConf.size() + "ET i = " + i);
 		return _productConf;
 	}
 
 	@Override
-	public int countProductConf(Map<String, String> filters)
-			throws SQLException {
+	public int countProductConf(Map<String, String> filters) {
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 		int count = 0;
@@ -902,23 +839,20 @@ public class ProductConfDaoImpl implements ProductConfDao {
 		if (filters.containsKey("productSupply") == true) {
 			rqt += "AND ps.name LIKE '%" + filters.get("productSupply") + "%' ";
 		}
-		System.out.println("REQUETE : " + rqt);
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(rqt);
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(rqt);
 			_rs = _stmt.executeQuery();
 			if (_rs.next()) {
 				count = _rs.getInt(1);
 			}
-		} catch (Exception e) {
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
-		System.out.println("COUNT " + count);
 		return count;
 	}
 }

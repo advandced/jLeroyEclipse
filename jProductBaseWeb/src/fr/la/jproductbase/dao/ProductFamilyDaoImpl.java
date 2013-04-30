@@ -1,5 +1,6 @@
 package fr.la.jproductbase.dao;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -7,30 +8,31 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.naming.NamingException;
-
 import fr.la.jproductbase.metier.ProductFamily;
 import fr.la.jproductbase.metier.ProductType;
 
-public class ProductFamilyDaoImpl implements ProductFamilyDao {
-	private static String exceptionMsg = "Famille de produit inconnue dans la base de données.";
+public class ProductFamilyDaoImpl extends GenericDao implements ProductFamilyDao {
 
-	private ConnectionProduct cnxProduct;
+	ConnectionProduct cnxProduct;
+	
+	ProductTypeDao _productTypeDao;
 
-	public ProductFamilyDaoImpl(ConnectionProduct cnxProduct) {
+	public ProductFamilyDaoImpl(ConnectionProduct cnxProduct, ProductTypeDao productTypeDao) {
 		this.cnxProduct = cnxProduct;
+		
+		_productTypeDao = productTypeDao;
 	}
 
 	@Override
-	public ProductFamily getProductFamily(int idProductFamily)
-			throws SQLException {
+	public ProductFamily getProductFamily(int idProductFamily) {
 		ProductFamily _productFamily = null;
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
-					"SELECT * FROM productFamily WHERE idProductFamily=?");
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement("SELECT * FROM productFamily WHERE idProductFamily=?");
 			_stmt.setInt(1, idProductFamily);
 			_rs = _stmt.executeQuery();
 
@@ -39,30 +41,27 @@ public class ProductFamilyDaoImpl implements ProductFamilyDao {
 			} else {
 				_productFamily = null;
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _productFamily;
 	}
 
 	@Override
-	public ProductFamily getProductFamily(String name) throws SQLException {
+	public ProductFamily getProductFamily(String name) {
 		ProductFamily _productFamily = null;
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
-					"SELECT * FROM productFamily WHERE name=?");
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement("SELECT * FROM productFamily WHERE name=?");
 			_stmt.setString(1, name);
 			_rs = _stmt.executeQuery();
 
@@ -71,60 +70,54 @@ public class ProductFamilyDaoImpl implements ProductFamilyDao {
 			} else {
 				_productFamily = null;
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _productFamily;
 	}
 
 	@Override
-	public List<ProductFamily> getProductFamilies() throws SQLException {
+	public List<ProductFamily> getProductFamilies() {
 		List<ProductFamily> _productFamilies = new ArrayList<ProductFamily>();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
-					"SELECT * FROM productFamily");
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement("SELECT * FROM productFamily");
 			_rs = _stmt.executeQuery();
 
 			while (_rs.next()) {
 				ProductFamily _productFamily = this.getProductFamily(_rs);
 				_productFamilies.add(_productFamily);
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _productFamilies;
 	}
 
 	@Override
-	public List<ProductFamily> getProductFamilies(int type) throws SQLException {
+	public List<ProductFamily> getProductFamilies(int type) {
 		List<ProductFamily> _productFamilies = new ArrayList<ProductFamily>();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
-					"SELECT * FROM productFamily WHERE idProductType = ?");
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement("SELECT * FROM productFamily WHERE idProductType = ?");
 			_stmt.setInt(1, type);
 			_rs = _stmt.executeQuery();
 
@@ -132,30 +125,27 @@ public class ProductFamilyDaoImpl implements ProductFamilyDao {
 				ProductFamily _productFamily = this.getProductFamily(_rs);
 				_productFamilies.add(_productFamily);
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _productFamilies;
 	}
 
 	@Override
-	public List<ProductFamily> getActiveProductFamilies() throws SQLException {
+	public List<ProductFamily> getActiveProductFamilies()  {
 		List<ProductFamily> _productFamilies = new ArrayList<ProductFamily>();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
-					"SELECT * FROM productFamily " + " WHERE (state=?)");
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement("SELECT * FROM productFamily " + " WHERE (state=?)");
 			_stmt.setInt(1, 1);
 			_rs = _stmt.executeQuery();
 
@@ -163,16 +153,12 @@ public class ProductFamilyDaoImpl implements ProductFamilyDao {
 				ProductFamily _productFamily = this.getProductFamily(_rs);
 				_productFamilies.add(_productFamily);
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _productFamilies;
@@ -189,41 +175,31 @@ public class ProductFamilyDaoImpl implements ProductFamilyDao {
 	private ProductFamily getProductFamily(ResultSet rs) throws SQLException {
 		// Retreive productType
 		int _idProductType = rs.getInt("idProductType");
-		ProductTypeDao _productTypeDao = new ProductTypeDaoImpl(this.cnxProduct);
-		ProductType _productType = _productTypeDao
-				.getProductType(_idProductType);
+		ProductType _productType = _productTypeDao.getProductType(_idProductType);
 		int _idProductFamily = rs.getInt("idProductFamily");
 		Timestamp _timestamp = rs.getTimestamp("timestamp");
 		int _state = rs.getInt("state");
 		String _name = rs.getString("name");
-		ProductFamily _productFamily = new ProductFamily(_idProductFamily,
-				_timestamp, _state, _name, _productType);
-
-		return _productFamily;
+		return new ProductFamily(_idProductFamily, _timestamp, _state, _name, _productType);
 	}
 
 	@Override
-	public ProductFamily addProductFamily(String name, int state,
-			ProductType productType) throws SQLException,
-			ProductFamilyDaoException {
-
+	public ProductFamily addProductFamily(String name, int state, ProductType productType) {
 		ProductFamily _productFamily = null;
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
-					"INSERT INTO productFamily (name, state, idProductType)"
-							+ " VALUES (?, ?, ?)");
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement("INSERT INTO productFamily (name, state, idProductType) VALUES (?, ?, ?)");
 			_stmt.setString(1, name);
 			_stmt.setInt(2, state);
 			_stmt.setInt(3, productType.getIdProductType());
 			_stmt.executeUpdate();
 
 			// Retrieve productFamily data
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
-					"SELECT * FROM productFamily" + " WHERE (name=?)"
-							+ " 	AND (state=?) AND (idProductType=?)");
+			_stmt = c.prepareStatement("SELECT * FROM productFamily" + " WHERE (name=?)	AND (state=?) AND (idProductType=?)");
 			_stmt.setString(1, name);
 			_stmt.setInt(2, state);
 			_stmt.setInt(3, productType.getIdProductType());
@@ -232,31 +208,27 @@ public class ProductFamilyDaoImpl implements ProductFamilyDao {
 			if (_rs.next()) {
 				_productFamily = this.getProductFamily(_rs);
 			} else {
-				throw new ProductFamilyDaoException(exceptionMsg);
+				throw new IllegalStateException();
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _productFamily;
 	}
 
 	@Override
-	public void updateProductFamily(ProductFamily productFamilyToUpdate)
-			throws SQLException, ProductFamilyDaoException {
-
+	public void updateProductFamily(ProductFamily productFamilyToUpdate) {
+		Connection c = null;
 		PreparedStatement _stmt = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 					"UPDATE productFamily "
 							+ "SET name=?, state=?, idProductType=?"
 							+ " WHERE (idProductFamily=?)");
@@ -267,7 +239,7 @@ public class ProductFamilyDaoImpl implements ProductFamilyDao {
 			_stmt.setInt(4, productFamilyToUpdate.getIdProductFamily());
 			_stmt.executeUpdate();
 
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			_stmt = c.prepareStatement(
 					"SELECT * " + "FROM productFamily "
 							+ "WHERE (idProductFamily=?);");
 			_stmt.setInt(1, productFamilyToUpdate.getIdProductFamily());
@@ -276,38 +248,31 @@ public class ProductFamilyDaoImpl implements ProductFamilyDao {
 			if(_rs.next()) {
 				
 			} else {
-				throw new ProductFamilyDaoException(exceptionMsg);
+				throw new IllegalStateException();
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_stmt);
+			close(c);
 		}
 	}
 
 	@Override
-	public void deleteProductFamily(ProductFamily productFamilyToDelete)
-			throws SQLException {
-		// TODO Auto-generated method stub
+	public void deleteProductFamily(ProductFamily productFamilyToDelete) {
+		Connection c = null;
 		PreparedStatement _stmt = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx()
-					.prepareStatement(
-							"DELETE FROM productFamily "
-									+ " WHERE (idProductFamily=?)");
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement("DELETE FROM productFamily WHERE (idProductFamily=?)");
 			_stmt.setInt(1, productFamilyToDelete.getIdProductFamily());
 			_stmt.executeUpdate();
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_stmt);
+			close(c);
 		}
 	}
 }

@@ -1,5 +1,6 @@
 package fr.la.jproductbase.dao;
 
+import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,8 +9,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.naming.NamingException;
-
 import fr.la.jproductbase.metier.AfterSaleReport;
 import fr.la.jproductbase.metier.ElementChanged;
 import fr.la.jproductbase.metier.Failure;
@@ -17,27 +16,31 @@ import fr.la.jproductbase.metier.ProductionFailureReport;
 import fr.la.jproductbase.metier.Operator;
 import fr.la.jproductbase.metier.Product;
 
-public class FailureDaoImpl implements FailureDao {
-	private static String exceptionMsg = "Défaut inconnu dans la base de données.";
+public class FailureDaoImpl extends GenericDao implements FailureDao {
 
-	private ConnectionProduct cnxProduct;
-	private ConnectionOperator cnxOperator;
+	ConnectionProduct cnxProduct;
 
-	public FailureDaoImpl(ConnectionProduct cnxProduct,
-			ConnectionOperator cnxOperator) {
+	OperatorDao _operatorDao;
+	ProductDao _productDao;
+	ElementChangedDao _elementChangedDao;
+	
+	public FailureDaoImpl(ConnectionProduct cnxProduct, OperatorDao operatorDao, ProductDao productDao, ElementChangedDao elementChangedDao) {
 		this.cnxProduct = cnxProduct;
-		this.cnxOperator = cnxOperator;
+		_operatorDao = operatorDao;
+		_productDao = productDao;
+		_elementChangedDao = elementChangedDao;
 	}
 
 	@Override
-	public List<Failure> getFailures(ProductionFailureReport productionFailureReport)
-			throws SQLException {
+	public List<Failure> getFailures(ProductionFailureReport productionFailureReport) {
 		List<Failure> _failures = new ArrayList<Failure>();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 					"SELECT * FROM failure " + "WHERE (idProductionFailureReport=?)");
 			_stmt.setInt(1, productionFailureReport.getIdProductionFailureReport());
 			_rs = _stmt.executeQuery();
@@ -49,30 +52,27 @@ public class FailureDaoImpl implements FailureDao {
 				// Update failureReport object
 				productionFailureReport.addFailure(_failure);
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _failures;
 	}
 	
 	@Override
-	public List<Failure> getFailures(AfterSaleReport afterSaleReport)
-			throws SQLException {
+	public List<Failure> getFailures(AfterSaleReport afterSaleReport) {
 		List<Failure> _failures = new ArrayList<Failure>();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 					"SELECT * FROM failure " + "WHERE (idAfterSaleReport=?)");
 			_stmt.setInt(1, afterSaleReport.getIdAfterSaleReport());
 			_rs = _stmt.executeQuery();
@@ -81,30 +81,28 @@ public class FailureDaoImpl implements FailureDao {
 				Failure _failure = this.getFailure(_rs);
 				_failures.add(_failure);
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 		//afterSaleReport.setFailures(_failures);
 		return _failures;
 	}
 
 	@Override
-	public Failure getFailure(int idFailure) throws SQLException {
+	public Failure getFailure(int idFailure) {
 		Failure _failure = null;
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
-					"SELECT * FROM failure WHERE idFailure=?");
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement("SELECT * FROM failure WHERE idFailure=?");
 			_stmt.setInt(1, idFailure);
 			_rs = _stmt.executeQuery();
 
@@ -113,28 +111,24 @@ public class FailureDaoImpl implements FailureDao {
 			} else {
 				_failure = null;
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _failure;
 	}
 
 	@Override
-	public Failure addFailure(Failure failure, ProductionFailureReport productionFailureReport)
-			throws SQLException, FailureDaoException {
-		System.out.println("avant insertion "+failure.getProduct().getIdProduct());
+	public Failure addFailure(Failure failure, ProductionFailureReport productionFailureReport) {
 		Failure _failure = failure;
 		java.sql.Date _diagnosisDate = new java.sql.Date(failure
 				.getDiagnosisDate().getTime());
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 		if(failure.getNewFailureCardChanged()==null){
@@ -144,9 +138,8 @@ public class FailureDaoImpl implements FailureDao {
 		}
 		//System.out.println("avant insertion "+failure.getElementsChanged());
 		try {
-			_stmt = this.cnxProduct
-					.getCnx()
-					.prepareStatement(
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 							"INSERT INTO failure "
 									+ "(state, diagnosisDate,failureCause, cardFace, manufacturingTechnique, failureCode, dismantleCard, idOperator, idProduct, idProductionFailureReport,idFailureDismantleCard) "
 									+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)");
@@ -163,8 +156,7 @@ public class FailureDaoImpl implements FailureDao {
 			_stmt.setInt(11, failure.getNewFailureCardChanged().getIdFailure());
 			_stmt.executeUpdate();
 
-			_stmt = this.cnxProduct.getCnx()
-					.prepareStatement(
+			_stmt = c.prepareStatement(
 							"SELECT * FROM failure "
 									+ "WHERE (diagnosisDate=?) "
 									+ " AND (failureCode=?) "
@@ -181,35 +173,30 @@ public class FailureDaoImpl implements FailureDao {
 			if (_rs.next()) {
 				_failure = this.getFailure(_rs);
 			} else {
-				throw new FailureDaoException(exceptionMsg);
+				throw new IllegalStateException();
 			}
 		//	System.out.println("apres insertion "+failure.getElementsChanged());
 			_failure.setElementsChanged(failure.getElementsChanged());
 			// Update failureReport object
 			productionFailureReport.addFailure(_failure);
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			System.out.println("erreur" +e);
-			e.printStackTrace();
+
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
-		System.out.println("valuer failure après insertion" + _failure);
 		return _failure;
 	}
 	
 	@Override
-	public Failure addFailure(Failure failure, AfterSaleReport afterSaleReport)
-			throws SQLException, FailureDaoException {
+	public Failure addFailure(Failure failure, AfterSaleReport afterSaleReport) {
 		Failure _failure = failure;
 		java.sql.Date _diagnosisDate = new java.sql.Date(failure
 				.getDiagnosisDate().getTime());
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 		
@@ -224,9 +211,8 @@ public class FailureDaoImpl implements FailureDao {
 		}
 
 		try {
-			_stmt = this.cnxProduct
-					.getCnx()
-					.prepareStatement(
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 							"INSERT INTO failure "
 									+ "(state, diagnosisDate, failureCause, cardFace, imputationCode, failureCode, dismantleCard, idOperator, idProduct,idProductionFailureReport, idAfterSaleReport,idFailureDismantleCard) "
 									+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)");
@@ -246,8 +232,7 @@ public class FailureDaoImpl implements FailureDao {
 			
 			_stmt.executeUpdate();
 
-			_stmt = this.cnxProduct.getCnx()
-					.prepareStatement(
+			_stmt = c.prepareStatement(
 							"SELECT * FROM failure "
 									+ "WHERE (diagnosisDate=?) "
 									+ " AND (failureCode=?) "
@@ -264,31 +249,28 @@ public class FailureDaoImpl implements FailureDao {
 			if (_rs.next()) {
 				_failure = this.getFailure(_rs);
 			} else {
-				throw new FailureDaoException(exceptionMsg);
+				throw new IllegalStateException();
 			}
 
 			// Update failureReport object
 			// afterSaleReport.addFailure(_failure);
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _failure;
 	}
 
 	@Override
-	public void updateFailure(Failure failure, ProductionFailureReport failureReport)
-			throws SQLException, FailureDaoException {
+	public void updateFailure(Failure failure, ProductionFailureReport failureReport) {
 		java.sql.Date _diagnosisDate = new java.sql.Date(failure
 				.getDiagnosisDate().getTime());
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
@@ -301,9 +283,8 @@ public class FailureDaoImpl implements FailureDao {
 		}
 		//System.out.println("methode updateFailure 294 "+ failure +"insertion de getnewFailureChanged / "+ failure.getNewFailureCardChanged().getIdFailure());
 		try {
-			_stmt = this.cnxProduct
-					.getCnx()
-					.prepareStatement(
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 							"UPDATE failure "
 									+ "SET state=?, diagnosisDate=?, failureCause=?, cardFace=?, manufacturingTechnique=?, imputationCode=?, failureCode=?, dismantleCard=?, idOperator=?, idProduct=?,idFailureDismantleCard = ?"
 									+ " WHERE (idFailure=?)");
@@ -323,7 +304,7 @@ public class FailureDaoImpl implements FailureDao {
 			_stmt.executeUpdate();
 
 			// Update object
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			_stmt = c.prepareStatement(
 					"SELECT * FROM failure" + " WHERE (idFailure=?)");
 			_stmt.setInt(1, failure.getIdFailure());
 
@@ -331,43 +312,38 @@ public class FailureDaoImpl implements FailureDao {
 			if (_rs.next()) {
 				this.getFailure(_rs);
 			} else {
-				throw new FailureDaoException(exceptionMsg);
+				throw new IllegalStateException();
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 	}
 	
 	@Override
-	public void updateFailure(Failure failure)
-			throws SQLException, FailureDaoException {
+	public void updateFailure(Failure failure) {
 		this.updateFailure(failure, null);
 	}
 
 	@Override
-	public void removeFailure(Failure failure) throws SQLException {
+	public void removeFailure(Failure failure) {
+		Connection c = null;
 		PreparedStatement _stmt = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 					"DELETE FROM failure " + "WHERE (idFailure=?)");
 			_stmt.setInt(1, failure.getIdFailure());
 			_stmt.executeUpdate();
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_stmt);
+			close(c);
 		}
 	}
 
@@ -384,11 +360,9 @@ public class FailureDaoImpl implements FailureDao {
 	private Failure getFailure(ResultSet rs) throws SQLException {
 		
 		// Retreive operator
-		OperatorDao _operatorDao = new OperatorDaoImpl(this.cnxOperator);
 		Operator _operator = _operatorDao.getOperator(rs.getInt("idOperator"));
 
 		// Retreive Product
-		ProductDao _productDao = new ProductDaoImpl(this.cnxProduct);
 		Product _product = _productDao.getProduct(rs.getInt("idProduct"));
 
 		// Failure
@@ -416,8 +390,6 @@ public class FailureDaoImpl implements FailureDao {
 				false, _operator, _product, _dismantleCard,_failureDismantleCard);
 
 		// Retreive elementChanged
-		ElementChangedDao _elementChangedDao = new ElementChangedDaoImpl(
-				this.cnxProduct);
 		List<ElementChanged> elementsChanged = _elementChangedDao.getElementsChanged(_failure);
 		_failure.setElementsChanged(elementsChanged);
 

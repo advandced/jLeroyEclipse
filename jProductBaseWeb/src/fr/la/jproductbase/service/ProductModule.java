@@ -1,20 +1,17 @@
 package fr.la.jproductbase.service;
 
-import fr.la.configfilereader.ConfigFileReaderException;
-import fr.la.jproductbase.dao.ConnectionProduct;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import javax.naming.NamingException;
+
 import fr.la.jproductbase.dao.ProductDao;
-import fr.la.jproductbase.dao.ProductDaoException;
-import fr.la.jproductbase.dao.ProductDaoImpl;
 import fr.la.jproductbase.dao.ProductFamilyDao;
-import fr.la.jproductbase.dao.ProductFamilyDaoImpl;
 import fr.la.jproductbase.dao.ProductSupplyDao;
-import fr.la.jproductbase.dao.ProductSupplyDaoImpl;
 import fr.la.jproductbase.dao.ProductTypeDao;
-import fr.la.jproductbase.dao.ProductTypeDaoImpl;
 import fr.la.jproductbase.dao.SoftwareDao;
-import fr.la.jproductbase.dao.SoftwareDaoException;
-import fr.la.jproductbase.dao.SoftwareDaoImpl;
-import fr.la.jproductbase.metier.JProductBaseException;
 import fr.la.jproductbase.metier.Product;
 import fr.la.jproductbase.metier.ProductConf;
 import fr.la.jproductbase.metier.ProductConfModel;
@@ -23,123 +20,79 @@ import fr.la.jproductbase.metier.ProductSupply;
 import fr.la.jproductbase.metier.ProductType;
 import fr.la.jproductbase.metier.Software;
 import fr.la.jproductbase.metier.ToolsProduct;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import javax.naming.NamingException;
 
-/**
- * @author Gary-pro
- *
- */
 public class ProductModule {
 
-    private ConnectionProduct cnxProduct;
+	ProductDao _productDao;
+	SoftwareDao _softwareDao;
+	ProductTypeDao _productTypeDao;
+	ProductFamilyDao _productFamilyDao;
+	ProductSupplyDao _productSupplyDao;
+	
+	ProductConfModule _productConfModule;
+	SoftwareModule _softwareModule;
 
-    protected ProductModule(ConnectionProduct cnxProduct) {
-        this.cnxProduct = cnxProduct;
+    public ProductModule(ProductConfModule productConfModule, SoftwareModule softwareModule, ProductDao productDao, SoftwareDao softwareDao, ProductTypeDao productTypeDao, ProductFamilyDao productFamilyDao, ProductSupplyDao productSupplyDao) {
+    	_productDao = productDao;
+    	_softwareDao = softwareDao;
+    	_productTypeDao = productTypeDao;
+    	_productFamilyDao = productFamilyDao;
+    	_productSupplyDao = productSupplyDao;
+    	
+    	_productConfModule = productConfModule;
+    	_softwareModule = softwareModule;
     }
 
-    /**
-     * Recherche les produits de la base de donn&eacute;es.
-     *
-     * @return Liste des produits.
-     *
-     * @throws SQLException
-     */
-    protected List<Product> getProducts() throws SQLException {
-        ProductDao _productDao = new ProductDaoImpl(this.cnxProduct);
-
-        List<Product> _products = _productDao.getProducts();
-
-        return _products;
+    public List<Product> getProducts() {
+        return _productDao.getProducts();
     }
 
-    protected List<Product> getProducts(ProductType productType)
-            throws SQLException {
-        ProductDao _productDao = new ProductDaoImpl(this.cnxProduct);
-
-        List<Product> _products = _productDao.getProducts(productType);
-
-        return _products;
+    public List<Product> getProducts(ProductType productType) {
+        return _productDao.getProducts(productType);
     }
 
-    protected List<Product> getProducts(ProductConfModel productConfModel)
-            throws SQLException {
-        ProductDao _productDao = new ProductDaoImpl(this.cnxProduct);
-
-        List<Product> _products = _productDao.getProducts(productConfModel);
-
-        return _products;
+    public List<Product> getProducts(ProductConfModel productConfModel) {
+        return _productDao.getProducts(productConfModel);
     }
 
-    protected List<Product> getProducts(ProductConf productConf)
-            throws SQLException {
-        ProductDao _productDao = new ProductDaoImpl(this.cnxProduct);
-
-        List<Product> _products = _productDao.getProducts(productConf);
-
-        return _products;
+    public List<Product> getProducts(ProductConf productConf) {
+        return _productDao.getProducts(productConf);
     }
 
-    protected List<Product> getProductsEnables(int idproduct, String reference)
-            throws SQLException {
-        ProductDao _productDao = new ProductDaoImpl(this.cnxProduct);
-        List<Product> _products = _productDao.getProductsEnables(idproduct,
-                reference);
-        return _products;
+    public List<Product> getProductsEnables(int idproduct, String reference) {
+        return _productDao.getProductsEnables(idproduct, reference);
     }
 
-    protected List<Product> getProductsRecordables(String modele)
-            throws SQLException {
-        ProductDao _productDao = new ProductDaoImpl(this.cnxProduct);
-        List<Product> _products = _productDao.getProductsRecordables(modele);
-        return _products;
+    public List<Product> getProductsRecordables(String modele) {
+        return _productDao.getProductsRecordables(modele);
     }
     
-        public List<Product> getProductsSearch(int startingAt, int maxPerPage, Map<String, String> filters, int type) throws SQLException{
-        ProductDao _productDao = new ProductDaoImpl(this.cnxProduct);
-        List<Product> _products = _productDao.getProductsSearch(startingAt, maxPerPage, filters, type);
-        return _products;
+    public List<Product> getProductsSearch(int startingAt, int maxPerPage, Map<String, String> filters, int type) {
+        return _productDao.getProductsSearch(startingAt, maxPerPage, filters, type);
     }
 
-    protected List<Product> getProducts(String serialNumber, String datecode)
-            throws SQLException {
-        ProductDao _productDao = new ProductDaoImpl(this.cnxProduct);
-
+    public List<Product> getProducts(String serialNumber, String datecode) {
         String _serialNumber = ToolsProduct.deleteAhead("0", serialNumber);
-
-        List<Product> _products = _productDao.getProducts(_serialNumber,
-                datecode);
-
-        return _products;
+        return _productDao.getProducts(_serialNumber, datecode);
     }
 
-    protected Product getProduct(int idProduct) throws SQLException {
-        ProductDao _productDao = new ProductDaoImpl(this.cnxProduct);
-
+    public Product getProduct(int idProduct) {
         Product _product = _productDao.getProduct(idProduct);
 
         return _product;
     }
 
-    protected Product getProduct(ProductConf productConf, String serialNumber,
-            String datecode) throws SQLException {
-        ProductDao _productDao = new ProductDaoImpl(this.cnxProduct);
+    public Product getProduct(ProductConf productConf, String serialNumber, String datecode) {
 
         String _serialNumber = ToolsProduct.deleteAhead("0", serialNumber);
 
-        Product _product = _productDao.getProduct(productConf, _serialNumber,
-                datecode);
+        Product _product = _productDao.getProduct(productConf, _serialNumber, datecode);
 
         return _product;
     }
 
-    protected Product getProduct(String productConfReference,
-            String serialNumber, String datecode) throws SQLException {
-        ProductDao _productDao = new ProductDaoImpl(this.cnxProduct);
+    public Product getProduct(String productConfReference, String serialNumber, String datecode) {
+
 
         String _serialNumber = ToolsProduct.deleteAhead("0", serialNumber);
 
@@ -150,8 +103,7 @@ public class ProductModule {
     }
 
     // 09-05-12 : RMO : Création de la méthode
-    protected Product getMainProduct(Product carte) throws SQLException {
-        ProductDao _productDao = new ProductDaoImpl(this.cnxProduct);
+    public Product getMainProduct(Product carte) {
 
         Product _product = _productDao.getMainProduct(carte);
 
@@ -175,11 +127,9 @@ public class ProductModule {
      * @return le nombre de résultat
      * @throws SQLException
      */
-    protected int countQueryResult(Map<String, String> filters, int type) throws SQLException {
-        
-        ProductDao _productDAO = new ProductDaoImpl(this.cnxProduct);
-        
-        int count = _productDAO.countProducts(filters, type);
+    public int countQueryResult(Map<String, String> filters, int type) {
+     
+        int count = _productDao.countProducts(filters, type);
         return count;
     }
 
@@ -204,9 +154,7 @@ public class ProductModule {
      */
     private Product setProduct(Product product, ProductConf productConf,
             String serialNumber, String datecode,
-            List<Product> productComponents, List<Software> productSoftwares)
-            throws SQLException, ProductDaoException, SoftwareDaoException,
-            NamingException {
+            List<Product> productComponents, List<Software> productSoftwares) {
         Product _product = product;
         if (null == product) {
             // New product
@@ -219,13 +167,8 @@ public class ProductModule {
             product.setProductComponents(productComponents);
             product.setProductSoftwares(productSoftwares);
 
-            try {
-                this.updateProduct(product);
-                this.cnxProduct.getCnx().commit();
-            } catch (NamingException e) {
-                e.printStackTrace();
-                this.cnxProduct.getCnx().rollback();
-            }
+            this.updateProduct(product);
+
         }
 
         // Update link between product and components
@@ -237,57 +180,38 @@ public class ProductModule {
         return _product;
     }
 
-    protected Product setProduct(Product product) throws SQLException,
-            ProductDaoException, ConfigFileReaderException, IOException,
-            SoftwareDaoException, JProductBaseException, NamingException {
+    public Product setProduct(Product product) {
         Product _product = null;
-        try {
-            // Start transaction
-            this.cnxProduct.getCnx().setAutoCommit(false);
 
-            // Retreive product
-            if (product.getIdProduct() != 0) {
-                _product = this.getProduct(product.getIdProduct());
-            } else {
-                _product = this.getProduct(product.getProductConf(),
-                        product.getSerialNumber(), product.getDatecode());
-            }
-
-            // Update product components
-            List<Product> _productComponents = this
-                    .updateProductComponents(product.getProductComponents());
-
-            // Update product softwares
-            List<Software> _productSoftwares = this
-                    .updateProductSoftwares(product.getProductSoftwares());
-
-            // Save product
-            _product = this.setProduct(_product, product.getProductConf(),
-                    product.getSerialNumber(), product.getDatecode(),
-                    _productComponents, _productSoftwares);
-
-            // Commit
-            this.cnxProduct.getCnx().commit();
-        } catch (Exception e) {
-            this.cnxProduct.getCnx().rollback();
-            e.printStackTrace();
-            throw new JProductBaseException(e.getMessage());
+        // Retreive product
+        if (product.getIdProduct() != 0) {
+            _product = this.getProduct(product.getIdProduct());
+        } else {
+            _product = this.getProduct(product.getProductConf(),
+                    product.getSerialNumber(), product.getDatecode());
         }
+
+        // Update product components
+        List<Product> _productComponents = this.updateProductComponents(this.getProductComponents(product));
+
+        // Update product softwares
+        List<Software> _productSoftwares = this.updateProductSoftwares(product.getProductSoftwares());
+
+        // Save product
+        _product = this.setProduct(_product, product.getProductConf(),
+                product.getSerialNumber(), product.getDatecode(),
+                _productComponents, _productSoftwares);
+
 
         return _product;
     }
 
-    protected Product setProduct(int idProduct, String productConfReference,
+    public Product setProduct(int idProduct, String productConfReference,
             String productConfMajorIndex, String productConfMinorIndex,
             String serialNumber, String datecode, String[][] productComponents,
-            String[][] productSoftwares) throws SQLException,
-            JProductBaseException, ConfigFileReaderException, IOException,
-            NamingException {
+            String[][] productSoftwares) {
         Product _product = null;
 
-        // Retrieve productConf
-        ProductConfModule _productConfModule = new ProductConfModule(
-                this.cnxProduct);
         ProductConf _productConf = _productConfModule.getProductConf(
                 productConfReference, productConfMajorIndex,
                 productConfMinorIndex);
@@ -306,86 +230,138 @@ public class ProductModule {
                 _product = new Product(_productConf, datecode, _serialNumber,
                         "");
             }
-            this.cnxProduct.getCnx().setAutoCommit(false);
-            // Update product components
-            try {
-                _product.updateProductComponents(productComponents);
-                this.cnxProduct.getCnx().commit();
-            } catch (ProductDaoException e) {
-                this.cnxProduct.getCnx().rollback();
-                e.printStackTrace();
-            }
+             updateProductComponents(_product, productComponents);
 
             // Update product softwares
-            try {
-                _product.updateProductSoftwares(productSoftwares);
-                this.cnxProduct.getCnx().commit();
-            } catch (SoftwareDaoException e) {
-                this.cnxProduct.getCnx().rollback();
-                e.printStackTrace();
-            }
+             updateProductSoftwares(_product, productSoftwares);
 
             // Save product
-            try {
-                _product = this.setProduct(_product);
-                this.cnxProduct.getCnx().commit();
-            } catch (ProductDaoException e) {
-                this.cnxProduct.getCnx().rollback();
-                e.printStackTrace();
-            } catch (SoftwareDaoException e) {
-                this.cnxProduct.getCnx().rollback();
-                e.printStackTrace();
-            }
+            _product = this.setProduct(_product);
+
         } else {
-            throw new JProductBaseException("Configuration produit inconnue.");
+            //throw new JProductBaseException("Configuration produit inconnue.");
         }
 
         return _product;
     }
 
-    protected Product setProduct(Product product, ProductConf productConf,
+	private void updateProductComponents(Product _product , String[][] productComponents) {
+		_product.setProductComponents( new ArrayList<Product>() );
+
+		if (null != productComponents) {
+			Product _productComponent;
+
+			int _nbRow = productComponents[0].length;
+			int _idProductConf = 0;
+			String _productConfReference;
+			String _productConfMajorIndex;
+			String _productConfMinorIndex;
+			String _datecode;
+			String _serialNumber;
+			String _provider;
+			for (int _componentRow = 0; _componentRow < _nbRow; _componentRow++) {
+				if (productComponents[0][_componentRow].equals("")) {
+					_idProductConf = Integer
+							.parseInt(productComponents[0][_componentRow]);
+				}
+				_productConfReference = productComponents[1][_componentRow];
+				_productConfMajorIndex = productComponents[2][_componentRow];
+				_productConfMinorIndex = productComponents[3][_componentRow];
+				_datecode = productComponents[5][_componentRow];
+				_serialNumber = productComponents[6][_componentRow];
+				_provider = productComponents[7][_componentRow];
+
+				//ServiceInterface _serviceInterface = new ServiceInterface();
+				// Retreive productConf
+				ProductConf _productConf = null;
+				if (0 == _idProductConf) {
+					_productConf = _productConfModule.getProductConf(_productConfReference, _productConfMajorIndex, _productConfMinorIndex);
+				} else {
+					_productConf = _productConfModule.getProductConf(_idProductConf);
+				}
+
+				if (null != _productConf) {
+					// Retreive component
+					_productComponent = getProduct(_productConf,_serialNumber, _datecode);
+					if (null == _productComponent) {
+						// New component
+						_productComponent = addProduct(_productConf, _serialNumber, _datecode, _provider);
+					} else {
+						// Exiting component
+					}
+
+					_product.getProductComponents().add(_productComponent);
+				} else {
+					throw new IllegalStateException("Configuration produit inconnue.");
+				}
+			}
+		}
+	}
+    
+	private void updateProductSoftwares(Product _product , String[][] productSoftwares) {
+		_product.setProductSoftwares( new ArrayList<Software>() );
+
+		if (null != productSoftwares) {
+			Software _software;
+
+			int _nbRow = productSoftwares[0].length;
+			String _name;
+			String _version;
+			for (int _softwareRow = 0; _softwareRow < _nbRow; _softwareRow++) {
+				_name = productSoftwares[1][_softwareRow];
+				_version = productSoftwares[2][_softwareRow];
+
+				//ServiceInterface _serviceInterface = new ServiceInterface();
+				// Retreive software
+				_software = _softwareModule.getSoftware(_name, _version);
+				if (null == _software) {
+					// New software
+					_software = _softwareModule.addSoftware(_name, _version);
+				} else {
+					// Exiting component
+				}
+
+				_product.getProductSoftwares().add(_software);
+			}
+		}
+	}
+    
+    public Product setProduct(Product product, ProductConf productConf,
             String serialNumber, String dateCode, String macAddress,
             String providerCode, int state, List<Product> productComponents,
-            List<Software> productSoftwares) throws Exception {
+            List<Software> productSoftwares) {
         Product _product = product;
-        try {
-            this.cnxProduct.getCnx().setAutoCommit(false);
-            if (null == _product) {
-                // New product
 
-                // Add
-                _product = this.addProduct(productConf, serialNumber, dateCode,
-                        macAddress, providerCode);
-            } else {
-                // Existing product
+        if (null == _product) {
+            // New product
 
-                // Update
-                this.updateProduct(_product, productConf, serialNumber,
-                        dateCode, macAddress, providerCode, state);
-            }
+            // Add
+            _product = this.addProduct(productConf, serialNumber, dateCode,
+                    macAddress, providerCode);
+        } else {
+            // Existing product
 
-            // Update link between product and components
-            if ((productComponents != null)) {
-                /* && (productConfComponents.isEmpty() == false)) { */
-                this.updateProductComponents(_product, productComponents);
-            } else {
-                // rien
-            }
-
-            // Update link between productConf and softwares in database
-            if ((productSoftwares != null)) {
-                /* && (productConfSoftwares.isEmpty() == false)) { */
-                this.updateProductSoftwares(_product, productSoftwares);
-            } else {
-                // rien
-            }
-
-            // Commit
-            this.cnxProduct.getCnx().commit();
-        } catch (SQLException e) {
-            this.cnxProduct.getCnx().rollback();
-            throw new Exception(e.getMessage());
+            // Update
+            this.updateProduct(_product, productConf, serialNumber,
+                    dateCode, macAddress, providerCode, state);
         }
+
+        // Update link between product and components
+        if ((productComponents != null)) {
+            /* && (productConfComponents.isEmpty() == false)) { */
+            this.updateProductComponents(_product, productComponents);
+        } else {
+            // rien
+        }
+
+        // Update link between productConf and softwares in database
+        if ((productSoftwares != null)) {
+            /* && (productConfSoftwares.isEmpty() == false)) { */
+            this.updateProductSoftwares(_product, productSoftwares);
+        } else {
+            // rien
+        }
+
 
         return _product;
     }
@@ -396,9 +372,7 @@ public class ProductModule {
      * 
      * @param productComponents Liste des composants.
      */
-    private List<Product> updateProductComponents(
-            List<Product> productComponents) throws SQLException,
-            ProductDaoException, NamingException {
+    private List<Product> updateProductComponents(List<Product> productComponents) {
         List<Product> _productComponents = new ArrayList<Product>();
 
         if (null != productComponents) {
@@ -424,14 +398,7 @@ public class ProductModule {
                     _productComponent.setDatecode(_datecode);
                     _productComponent.setSerialNumber(_serialNumber);
                     _productComponent.setProviderCode(_provider);
-                    try {
-                        this.cnxProduct.getCnx().setAutoCommit(false);
-                        this.updateProduct(_productComponent);
-                        this.cnxProduct.getCnx().commit();
-                    } catch (NamingException e) {
-                        this.cnxProduct.getCnx().rollback();
-                        e.printStackTrace();
-                    }
+                     this.updateProduct(_productComponent);
                 }
 
                 _productComponents.add(_productComponent);
@@ -448,8 +415,7 @@ public class ProductModule {
      * @param productSoftwares Liste des logiciels.
      */
     private List<Software> updateProductSoftwares(
-            List<Software> productSoftwares) throws SQLException,
-            ConfigFileReaderException, IOException, NamingException {
+            List<Software> productSoftwares) {
         List<Software> _productSoftwares = new ArrayList<Software>();
 
         if (null != productSoftwares) {
@@ -460,8 +426,6 @@ public class ProductModule {
                 _version = _productSoftware.getVersion();
 
                 // Retreive software
-                SoftwareModule _softwareModule = new SoftwareModule(
-                        this.cnxProduct);
                 _productSoftware = _softwareModule.getSoftware(_name, _version);
                 if (null == _productSoftware) {
                     // New software
@@ -478,43 +442,17 @@ public class ProductModule {
         return _productSoftwares;
     }
 
-    protected Product addProduct(ProductConf productConf, String serialNumber,
-            String datecode, String macAddress, String providerCode)
-            throws SQLException, NamingException {
-        ProductDao _productDao = new ProductDaoImpl(this.cnxProduct);
-
+    public Product addProduct(ProductConf productConf, String serialNumber, String datecode, String macAddress, String providerCode) {
         String _serialNumber = ToolsProduct.deleteAhead("0", serialNumber);
-
-        Product _product = null;
-        try {
-            this.cnxProduct.getCnx().setAutoCommit(false);
-            _product = _productDao.addProduct(productConf, _serialNumber,
-                    datecode, macAddress, providerCode);
-            this.cnxProduct.getCnx().commit();
-        } catch (ProductDaoException e) {
-            this.cnxProduct.getCnx().rollback();
-            e.printStackTrace();
-        }
-
-        return _product;
+        return _productDao.addProduct(productConf, _serialNumber, datecode, macAddress, providerCode);
     }
 
-    protected Product addProduct(ProductConf productConf, String serialNumber,
-            String datecode, String providerCode) throws SQLException,
-            ProductDaoException, NamingException {
-        Product _product = this.addProduct(productConf, serialNumber, datecode,
-                "", providerCode);
-
-        return _product;
+    public Product addProduct(ProductConf productConf, String serialNumber, String datecode, String providerCode)  {
+        return this.addProduct(productConf, serialNumber, datecode, "", providerCode);
     }
 
-    protected Product addProduct(ProductConf productConf, String serialNumber,
-            String datecode) throws SQLException, ProductDaoException,
-            NamingException {
-        Product _product = this.addProduct(productConf, serialNumber, datecode,
-                "", "");
-
-        return _product;
+    public Product addProduct(ProductConf productConf, String serialNumber, String datecode) {
+        return this.addProduct(productConf, serialNumber, datecode,  "", "");
     }
 
     /**
@@ -523,18 +461,8 @@ public class ProductModule {
      * @param product Produit.
      * @throws NamingException
      */
-    protected void updateProduct(Product product) throws SQLException,
-            NamingException {
-        ProductDao _productDao = new ProductDaoImpl(this.cnxProduct);
-
-        try {
-            this.cnxProduct.getCnx().setAutoCommit(false);
-            _productDao.updateProduct(product);
-            this.cnxProduct.getCnx().commit();
-        } catch (ProductDaoException e) {
-            this.cnxProduct.getCnx().rollback();
-            e.printStackTrace();
-        }
+    public void updateProduct(Product product) {
+        _productDao.updateProduct(product);
     }
 
     /*
@@ -560,19 +488,8 @@ public class ProductModule {
      */
     private void updateProduct(Product product, ProductConf productConf,
             String serialNumber, String dateCode, String macAddress,
-            String providerCode, int state) throws SQLException,
-            NamingException {
-        ProductDao _productDao = new ProductDaoImpl(this.cnxProduct);
-
-        try {
-            this.cnxProduct.getCnx().setAutoCommit(false);
-            _productDao.updateProduct(product, productConf, serialNumber,
-                    dateCode, macAddress, providerCode, state);
-            this.cnxProduct.getCnx().commit();
-        } catch (ProductDaoException e) {
-            this.cnxProduct.getCnx().rollback();
-            e.printStackTrace();
-        }
+            String providerCode, int state) {
+        _productDao.updateProduct(product, productConf, serialNumber, dateCode, macAddress, providerCode, state);
     }
 
     /**
@@ -584,31 +501,18 @@ public class ProductModule {
      * @throws SQLException
      * @throws ProductDaoException
      */
-    protected void updateProduct(Product product, String macAddress)
-            throws SQLException, ProductDaoException {
-        ProductDao _productDao = new ProductDaoImpl(this.cnxProduct);
-
+    public void updateProduct(Product product, String macAddress) {
         _productDao.updateProduct(product, macAddress);
     }
 
     /*
      * Mise à jour des liens entre un produit et des composants
      */
-    private void updateProductComponents(Product product,
-            List<Product> productComponents) throws SQLException,
-            NamingException {
+    private void updateProductComponents(Product product, List<Product> productComponents) {
         // Suppression des anciens composants
-        List<Product> _previousProductComponents = this
-                .getProductComponents(product);
+        List<Product> _previousProductComponents = this.getProductComponents(product);
         for (Product _productComponent : _previousProductComponents) {
-            try {
-                this.cnxProduct.getCnx().setAutoCommit(false);
-                this.removeProductComponent(product, _productComponent);
-                this.cnxProduct.getCnx().commit();
-            } catch (ProductDaoException e) {
-                this.cnxProduct.getCnx().rollback();
-                e.printStackTrace();
-            }
+              this.removeProductComponent(product, _productComponent);
         }
 
         // Création de la composition
@@ -620,12 +524,9 @@ public class ProductModule {
     /*
      * Mise à jour des liens entre un produit et des logiciels
      */
-    private void updateProductSoftwares(Product product,
-            List<Software> productSoftwares) throws SQLException,
-            SoftwareDaoException, NamingException {
+    private void updateProductSoftwares(Product product, List<Software> productSoftwares) {
         // Suppression des anciens logiciels
-        List<Software> _previousProductSoftwares = this
-                .getProductSoftwares(product);
+        List<Software> _previousProductSoftwares = this.getProductSoftwares(product);
         for (Software _productSoftware : _previousProductSoftwares) {
             this.removeProductSoftware(product, _productSoftware);
         }
@@ -645,10 +546,7 @@ public class ProductModule {
      * @throws SQLException
      * @throws ProductDaoException
      */
-    protected void removeProductComponent(Product product,
-            Product productComponent) throws SQLException, ProductDaoException {
-        ProductDao _productDao = new ProductDaoImpl(this.cnxProduct);
-
+    public void removeProductComponent(Product product, Product productComponent) {
         _productDao.removeProductComponent(product, productComponent);
     }
 
@@ -662,46 +560,20 @@ public class ProductModule {
      * @throws NamingException
      * @throws ProductDaoException
      */
-    protected void addProductComponent(Product product, Product productComponent)
-            throws SQLException, NamingException {
-        ProductDao _productDao = new ProductDaoImpl(this.cnxProduct);
-
-        try {
-            this.cnxProduct.getCnx().setAutoCommit(false);
-            _productDao.addProductComponent(product, productComponent);
-            this.cnxProduct.getCnx().commit();
-        } catch (ProductDaoException e) {
-            this.cnxProduct.getCnx().rollback();
-            e.printStackTrace();
-        }
+    public void addProductComponent(Product product, Product productComponent) {
+        _productDao.addProductComponent(product, productComponent);
     }
 
-    protected List<Product> getProductComponents(Product product)
-            throws SQLException {
-        ProductDao _productDao = new ProductDaoImpl(this.cnxProduct);
-
-        List<Product> _productComponents = _productDao
-                .getProductComponents(product);
-
-        return _productComponents;
+    public List<Product> getProductComponents(Product product) {
+        return _productDao.getProductComponents(product);
     }
 
-    protected List<Product> getProductsDispensationNeeded() throws SQLException {
-        ProductDao _productDao = new ProductDaoImpl(this.cnxProduct);
-
-        List<Product> _products = _productDao.getProductsDispensationNeeded();
-
-        return _products;
+    public List<Product> getProductsDispensationNeeded() {
+        return _productDao.getProductsDispensationNeeded();
     }
 
-    protected boolean isNeedDispensation(Product product) throws SQLException {
-        boolean _isNeedDispensation = true;
-
-        ProductDao _productDao = new ProductDaoImpl(this.cnxProduct);
-
-        _isNeedDispensation = _productDao.isNeedDispensation(product);
-
-        return _isNeedDispensation;
+    public boolean isNeedDispensation(Product product) {
+        return _productDao.isNeedDispensation(product);
     }
 
     /**
@@ -713,40 +585,22 @@ public class ProductModule {
      *
      * @throws SQLException
      */
-    protected List<Software> getProductSoftwares(Product product)
-            throws SQLException {
-        SoftwareDao _softwareDao = new SoftwareDaoImpl(this.cnxProduct);
-
-        List<Software> _productSoftwares = _softwareDao.getSoftwares(product);
-
-        return _productSoftwares;
+    public List<Software> getProductSoftwares(Product product) {
+        return _softwareDao.getSoftwares(product);
     }
 
     /*
      * Suppression du lien entre un produit et un logiciel
      */
-    private void removeProductSoftware(Product product, Software software)
-            throws SQLException {
-        SoftwareDao _softwareDao = new SoftwareDaoImpl(this.cnxProduct);
-
+    private void removeProductSoftware(Product product, Software software) {
         _softwareDao.removeProductSoftware(product, software);
     }
 
     /*
      * Création d'un lien entre un produit et un logiciel
      */
-    private void addProductSoftware(Product product, Software software)
-            throws SQLException, NamingException {
-        SoftwareDao _softwareDao = new SoftwareDaoImpl(this.cnxProduct);
-
-        try {
-            this.cnxProduct.getCnx().setAutoCommit(false);
-            _softwareDao.addProductSoftware(product, software);
-            this.cnxProduct.getCnx().commit();
-        } catch (SoftwareDaoException e) {
-            this.cnxProduct.getCnx().rollback();
-            e.printStackTrace();
-        }
+    private void addProductSoftware(Product product, Software software) {
+    	_softwareDao.addProductSoftware(product, software);
     }
 
     // 15-12-11 : RMO : Creation de la méthode
@@ -755,11 +609,7 @@ public class ProductModule {
      * 
      * @param productSupplyToDelete l'alimentation à supprimer
      */
-    protected void removeProductSupply(ProductSupply productSupplyToDelete)
-            throws SQLException {
-        ProductSupplyDao _productSupplyDao = new ProductSupplyDaoImpl(
-                this.cnxProduct);
-
+    public void removeProductSupply(ProductSupply productSupplyToDelete) {
         _productSupplyDao.deleteProductSupply(productSupplyToDelete);
     }
 
@@ -769,11 +619,7 @@ public class ProductModule {
      * 
      * @param productFamilyToDelete la famille de produits à supprimer
      */
-    protected void removeProductFamily(ProductFamily productFamilyToDelete)
-            throws SQLException {
-        ProductFamilyDao _productFamilyDao = new ProductFamilyDaoImpl(
-                this.cnxProduct);
-
+    public void removeProductFamily(ProductFamily productFamilyToDelete) {
         _productFamilyDao.deleteProductFamily(productFamilyToDelete);
     }
 
@@ -783,10 +629,7 @@ public class ProductModule {
      * 
      * @param productTypeToDelete le produit à supprimer
      */
-    protected void removeProductType(ProductType productTypeToDelete)
-            throws SQLException {
-        ProductTypeDao _productTypeDao = new ProductTypeDaoImpl(this.cnxProduct);
-
+    public void removeProductType(ProductType productTypeToDelete) {
         _productTypeDao.deleteProductType(productTypeToDelete);
     }
 
@@ -796,31 +639,16 @@ public class ProductModule {
      * 
      * @param softwareToDelete le produit à supprimer
      */
-    protected void removeSoftware(Software softwareToDelete)
-            throws SQLException {
-        SoftwareDao _softwareDao = new SoftwareDaoImpl(this.cnxProduct);
-
+    public void removeSoftware(Software softwareToDelete) {
         _softwareDao.deleteSoftware(softwareToDelete);
     }
 
-    protected List<Product> getProductWithMother(int startingAt, int maxPerPage, Map<String, String> filters) throws SQLException {
-
-        ProductDao _productDao = new ProductDaoImpl(cnxProduct);
-
-        List<Product> _product = _productDao.getProductWithMother(startingAt, maxPerPage, filters);
-
-        return _product;
-
+    public List<Product> getProductWithMother(int startingAt, int maxPerPage, Map<String, String> filters) {
+        return _productDao.getProductWithMother(startingAt, maxPerPage, filters);
     }
 
-    protected Product getProductWithProductConfRef(String reference) throws SQLException {
-
-        ProductDao _productDao = new ProductDaoImpl(cnxProduct);
-
-        Product _product = _productDao.getProductWithProductConfRef(reference);
-
-        return _product;
-
+    public Product getProductWithProductConfRef(String reference) {
+        return _productDao.getProductWithProductConfRef(reference);
     }
 
     // 20-04-12 : RMO : Creation de la méthode
@@ -837,43 +665,15 @@ public class ProductModule {
      * 
      * @param idProductFEDD l'id du produit dans la base FEDD
      */
-    protected Product setProductFEDDtoLAI(int idProductFEDD,
-            ProductConf config, String serialNumber, String datecode)
-            throws SQLException, ProductDaoException,
-            ConfigFileReaderException, IOException, SoftwareDaoException,
-            JProductBaseException, NamingException {
-        Product _product = null;
-        try {
-            this.cnxProduct.getCnx().setAutoCommit(false);
-
-            ProductDao _productDao = new ProductDaoImpl(this.cnxProduct);
-
-            // Enregistre le produit
-            _product = _productDao.setProductFEDDtoLAI(idProductFEDD, config,
-                    serialNumber, datecode);
-
-            // Commit
-            this.cnxProduct.getCnx().commit();
-        } catch (Exception e) {
-            this.cnxProduct.getCnx().rollback();
-            e.printStackTrace();
-            throw new JProductBaseException(e.getMessage());
-        }
-
-        return _product;
+    public Product setProductFEDDtoLAI(int idProductFEDD, ProductConf config, String serialNumber, String datecode) {
+        return _productDao.setProductFEDDtoLAI(idProductFEDD, config, serialNumber, datecode);
     }
 
-    protected Product retreiveProduct(String productConfReference,
-            String serialNumber, String datecode)
-            throws ConfigFileReaderException, IOException, SQLException,
-            JProductBaseException {
+    public Product retreiveProduct(String productConfReference, String serialNumber, String datecode) {
         Product _product = null;
 
         // Retreive productConf
-        ProductConfModule _productConfModule = new ProductConfModule(
-                this.cnxProduct);
-        List<ProductConf> _productConfs = _productConfModule
-                .getActiveProductConfs(productConfReference);
+        List<ProductConf> _productConfs = _productConfModule.getActiveProductConfs(productConfReference);
         Product _selectedProduct = null;
         for (ProductConf _productConf : _productConfs) {
             String _serialNumber = ToolsProduct.deleteAhead("0", serialNumber);

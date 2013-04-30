@@ -1,16 +1,16 @@
 package fr.la.juserright.dao;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.naming.NamingException;
-
+import fr.la.jproductbase.dao.GenericDao;
 import fr.la.juserright.metier.Permission;
 
-public class PermissionDAO implements ModelDAO<Permission> {
+public class PermissionDAO extends GenericDao implements ModelDAO<Permission> {
 
 	private ConnectionUserRight cnxUserRight;
 
@@ -18,38 +18,35 @@ public class PermissionDAO implements ModelDAO<Permission> {
 		this.cnxUserRight = cnxUserRight;
 	}
 
-	public void create(Permission _object) throws SQLException {
+	public void create(Permission _object) {
+		Connection c = null;
 		PreparedStatement _stmt = null;
 
 		try {
-			_stmt = this.cnxUserRight.getCnx().prepareStatement(
+			c = cnxUserRight.getCnx();
+			_stmt = c.prepareStatement(
 					"INSERT INTO permission (idPermission, name) " + "VALUES ("
 							+ _object.getIdpermission() + ", '"
 							+ _object.getName() + "');");
 			_stmt.executeUpdate();
 
-		} catch (NamingException e) {
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _stmt) {
-				_stmt.close();
-			}
-			try {
-				this.cnxUserRight.getCnx().close();
-			} catch (NamingException e) {
-				e.printStackTrace();
-			}
+			close(_stmt);
+			close(c);
 		}
 	}
 
-	public Permission read(Permission _object) throws SQLException {
+	public Permission read(Permission _object) {
 		Permission _permission = null;
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxUserRight.getCnx().prepareStatement(
-					"SELECT * FROM permission" + " WHERE idpermission= ?;");
+			c = cnxUserRight.getCnx();
+			_stmt = c.prepareStatement("SELECT * FROM permission" + " WHERE idpermission= ?;");
 			_stmt.setInt(1, _object.getIdpermission());
 			_rs = _stmt.executeQuery();
 			if (_rs.next()) {
@@ -57,28 +54,25 @@ public class PermissionDAO implements ModelDAO<Permission> {
 			} else {
 				_permission = null;
 			}
-		} catch (NamingException e) {
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
-		
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 		return _permission;
 	}
 
-	public Permission read(String _name) throws SQLException {
+	public Permission read(String _name) {
+		Connection c = null;
 		Permission _permission = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxUserRight.getCnx().prepareStatement(
-					"SELECT * FROM permission" + " WHERE  name= ?;");
+			c = cnxUserRight.getCnx();
+			_stmt = c.prepareStatement("SELECT * FROM permission" + " WHERE  name= ?;");
 			_stmt.setString(1, _name);
 			_rs = _stmt.executeQuery();
 			if (_rs.next()) {
@@ -86,27 +80,25 @@ public class PermissionDAO implements ModelDAO<Permission> {
 			} else {
 				_permission = null;
 			}
-		} catch (NamingException e) {
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
-		
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 		return _permission;
 	}
 
-	public Permission read(int _id) throws SQLException {
+	public Permission read(int _id) {
+		Connection c = null;
 		Permission _permission = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxUserRight.getCnx().prepareStatement(
+			c = cnxUserRight.getCnx();
+			_stmt = c.prepareStatement(
 					"SELECT * FROM permission" + " WHERE idpermission= ?;");
 			_stmt.setInt(1, _id);
 			_rs = _stmt.executeQuery();
@@ -115,91 +107,76 @@ public class PermissionDAO implements ModelDAO<Permission> {
 			} else {
 				_permission = null;
 			}
-		} catch (NamingException e) {
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
-		
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 		return _permission;
 	}
 
-	public List<Permission> readAll() throws SQLException {
+	public List<Permission> readAll() {
 		List<Permission> _permission = new ArrayList<Permission>();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxUserRight.getCnx().prepareStatement(
-					"SELECT * FROM permission");
+			c = cnxUserRight.getCnx();
+			_stmt = c.prepareStatement("SELECT * FROM permission");
 			_rs = _stmt.executeQuery();
 			while (_rs.next()) {
 				Permission _permissiontmp = this.getPermission(_rs);
 				_permission.add(_permissiontmp);
 			}
-		} catch (NamingException e) {
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
-			
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 		return _permission;
 	}
 
-	public void update(Permission _object) throws SQLException {
+	public void update(Permission _object) {
+		Connection c = null;
 		PreparedStatement _stmt = null;
 
 		try {
-			_stmt = this.cnxUserRight.getCnx().prepareStatement(
+			c = cnxUserRight.getCnx();
+			_stmt = c.prepareStatement(
 					"UPDATE permission " + "SET name = '" + _object.getName()
 							+ "' " + "WHERE idPermission = "
 							+ _object.getIdpermission() + ";");
 			_stmt.executeUpdate();
 
-		} catch (NamingException e) {
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _stmt) {
-				_stmt.close();
-			}
-			try {
-				this.cnxUserRight.getCnx().close();
-			} catch (NamingException e) {
-				e.printStackTrace();
-			}
+			close(_stmt);
+			close(c);
 		}
 	}
 
-	public void delete(Permission _object) throws SQLException {
+	public void delete(Permission _object) {
+		Connection c = null;
 		PreparedStatement _stmt = null;
 
 		try {
-			_stmt = this.cnxUserRight.getCnx().prepareStatement(
+			c = cnxUserRight.getCnx();
+			_stmt = c.prepareStatement(
 					"DELETE FROM permission " + "WHERE idpermission = "
 							+ _object.getIdpermission() + ";");
 			_stmt.executeUpdate();
 
-		} catch (NamingException e) {
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _stmt) {
-				_stmt.close();
-			}
-			try {
-				this.cnxUserRight.getCnx().close();
-			} catch (NamingException e) {
-				e.printStackTrace();
-			}
+			close(_stmt);
+			close(c);
 		}
 
 	}

@@ -21,5 +21,5 @@ public interface ProductLineDao {
 	 * 
 	 * @throws SQLException
 	 */
-	ProductLine getProductLine(int idProductLine) throws SQLException;
+	ProductLine getProductLine(int idProductLine);
 }

@@ -1,5 +1,6 @@
 package fr.la.jproductbase.dao;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -7,14 +8,11 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.naming.NamingException;
-
 import fr.la.jproductbase.metier.ProductDocumentType;
 
-public class ProductDocumentTypeDaoImpl implements ProductDocumentTypeDao {
-	private static String exceptionMsg = "Type de document produit inconnu dans la base de données.";
+public class ProductDocumentTypeDaoImpl extends GenericDao implements ProductDocumentTypeDao {
 
-	private ConnectionProduct cnxProduct;
+	ConnectionProduct cnxProduct;
 
 	public ProductDocumentTypeDaoImpl(ConnectionProduct cnxProduct) {
 		this.cnxProduct = cnxProduct;
@@ -22,14 +20,15 @@ public class ProductDocumentTypeDaoImpl implements ProductDocumentTypeDao {
 	
 	
 	@Override
-	public ProductDocumentType addProductDocumentType(int state, String name)
-			throws SQLException, ProductDocumentTypeDaoException {
+	public ProductDocumentType addProductDocumentType(int state, String name) {
 		ProductDocumentType _productDocumentType = null;
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 					"INSERT INTO productDocumentType (state, name)"
 							+ " VALUES (?, ?)");
 			_stmt.setInt(1, state);
@@ -37,7 +36,7 @@ public class ProductDocumentTypeDaoImpl implements ProductDocumentTypeDao {
 			_stmt.executeUpdate();
 
 			// Retrieve ProductDocumentType data
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			_stmt = c.prepareStatement(
 					"SELECT * FROM productDocumentType" + " WHERE (name=?)");
 			_stmt.setString(1, name);
 
@@ -45,33 +44,28 @@ public class ProductDocumentTypeDaoImpl implements ProductDocumentTypeDao {
 			if (_rs.next()) {
 				_productDocumentType = this.getProductDocumentType(_rs);
 			} else {
-				throw new ProductDocumentTypeDaoException(exceptionMsg);
+				throw new IllegalStateException();
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
-
 		return _productDocumentType;
 	}
 
 	@Override
-	public ProductDocumentType updateProductDocumentType(
-			ProductDocumentType productDocumentType) throws SQLException,
-			ProductDocumentTypeDaoException {
+	public ProductDocumentType updateProductDocumentType(ProductDocumentType productDocumentType) {
 		ProductDocumentType _productDocumentType = null;
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 					"UPDATE productDocumentType "
 							+ "SET state=?, name=?"
 							+ " WHERE (idProductDocumentType=?)");
@@ -81,7 +75,7 @@ public class ProductDocumentTypeDaoImpl implements ProductDocumentTypeDao {
 			_stmt.executeUpdate();
 			
 			// Retrieve ProductDocumentType data
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			_stmt = c.prepareStatement(
 					"SELECT * FROM productDocumentType" + " WHERE (idProductDocumentType=?)");
 			_stmt.setInt(1, productDocumentType.getIdProductDocumentType());
 
@@ -89,30 +83,30 @@ public class ProductDocumentTypeDaoImpl implements ProductDocumentTypeDao {
 			if (_rs.next()) {
 				_productDocumentType = this.getProductDocumentType(_rs);
 			} else {
-				throw new ProductDocumentTypeDaoException(exceptionMsg);
+				throw new IllegalStateException();
 			}
 						
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _productDocumentType;
 	}
 
 	@Override
-	public ProductDocumentType getProductDocumentType(int idProductDocumentType)
-			throws SQLException {
+	public ProductDocumentType getProductDocumentType(int idProductDocumentType) {
 		ProductDocumentType _productDocumentType = null;
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 					"SELECT * FROM productDocumentType " + " WHERE (idProductDocumentType=?)");
 			_stmt.setInt(1, idProductDocumentType);
 			_rs = _stmt.executeQuery();
@@ -120,47 +114,39 @@ public class ProductDocumentTypeDaoImpl implements ProductDocumentTypeDao {
 			while (_rs.next()) {
 				_productDocumentType = this.getProductDocumentType(_rs);
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _productDocumentType;
 	}
 
 	@Override
-	public ProductDocumentType getProductDocumentType(String name)
-			throws SQLException {
+	public ProductDocumentType getProductDocumentType(String name) {
 		ProductDocumentType _productDocumentType = null;
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
-					"SELECT * FROM productDocumentType " + " WHERE (name=?)");
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement("SELECT * FROM productDocumentType WHERE (name=?)");
 			_stmt.setString(1, name);
 			_rs = _stmt.executeQuery();
 
 			while (_rs.next()) {
 				_productDocumentType = this.getProductDocumentType(_rs);
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _productDocumentType;
@@ -174,46 +160,42 @@ public class ProductDocumentTypeDaoImpl implements ProductDocumentTypeDao {
 	}*/
 
 	@Override
-	public List<ProductDocumentType> getProductDocumentTypes()
-			throws SQLException {
+	public List<ProductDocumentType> getProductDocumentTypes() {
 		List<ProductDocumentType> _productDocumentTypes = new ArrayList<ProductDocumentType>();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
-					"SELECT * FROM productDocumentType ");
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement("SELECT * FROM productDocumentType ");
 			_rs = _stmt.executeQuery();
 
 			while (_rs.next()) {
 				ProductDocumentType _productDocumentType = this.getProductDocumentType(_rs);
 				_productDocumentTypes.add(_productDocumentType);
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _productDocumentTypes;
 	}
 
 	@Override
-	public List<ProductDocumentType> getActiveProductDocumentTypes()
-			throws SQLException {
+	public List<ProductDocumentType> getActiveProductDocumentTypes() {
 		List<ProductDocumentType> _productDocumentTypes = new ArrayList<ProductDocumentType>();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
-					"SELECT * FROM productDocumentType " + " WHERE (state=?)");
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement("SELECT * FROM productDocumentType WHERE (state=?)");
 			_stmt.setInt(1, 1);
 			_rs = _stmt.executeQuery();
 
@@ -221,16 +203,12 @@ public class ProductDocumentTypeDaoImpl implements ProductDocumentTypeDao {
 				ProductDocumentType _productDocumentType = this.getProductDocumentType(_rs);
 				_productDocumentTypes.add(_productDocumentType);
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _productDocumentTypes;
@@ -252,10 +230,7 @@ public class ProductDocumentTypeDaoImpl implements ProductDocumentTypeDao {
 		Timestamp _timestamp = rs.getTimestamp("timestamp");
 		int _state = rs.getInt("state");
 		String _name = rs.getString("name");
-		ProductDocumentType _productDocumentType = new ProductDocumentType(_idProductDocumentType, _timestamp, _state,
-				_name);
-
-		return _productDocumentType;
+		return new ProductDocumentType(_idProductDocumentType, _timestamp, _state, _name);
 	}
 	
 }

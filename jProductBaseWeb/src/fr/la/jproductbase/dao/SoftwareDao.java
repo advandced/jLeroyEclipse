@@ -24,7 +24,7 @@ public interface SoftwareDao {
 	 * 
 	 * @throws SQLException
 	 */
-	public List<Software> getSoftwares(Product product) throws SQLException;
+	public List<Software> getSoftwares(Product product);
 
 	/**
 	 * Recherche les logiciels d'une configuration produit de la base de
@@ -37,8 +37,7 @@ public interface SoftwareDao {
 	 * 
 	 * @throws SQLException
 	 */
-	public List<Software> getSoftwares(ProductConf productConf)
-			throws SQLException;
+	public List<Software> getSoftwares(ProductConf productConf);
 
 	/**
 	 * Recherche un logiciel de la base de donn&eacute;es.
@@ -52,8 +51,7 @@ public interface SoftwareDao {
 	 * 
 	 * @throws SQLException
 	 */
-	public Software getSoftware(String name, String version)
-			throws SQLException;
+	public Software getSoftware(String name, String version);
 
 	/**
 	 * Ajout d'un logiciel dans la base de donn&eacute;es.
@@ -68,8 +66,7 @@ public interface SoftwareDao {
 	 * @throws SQLException
 	 * @throws SoftwareDaoException
 	 */
-	public Software addSoftware(String name, String version)
-			throws SQLException, SoftwareDaoException;
+	public Software addSoftware(String name, String version);
 
 	/**
 	 * Supprimer un logiciel d'un produit de la base de donn&eacute;es.
@@ -81,8 +78,7 @@ public interface SoftwareDao {
 	 * 
 	 * @throws SQLException
 	 */
-	public void removeProductSoftware(Product product, Software software)
-			throws SQLException;
+	public void removeProductSoftware(Product product, Software software);
 
 	/**
 	 * Ajouter un logiciel &agrave; un produit de la base de donn&eacute;es.
@@ -95,8 +91,7 @@ public interface SoftwareDao {
 	 * @throws SQLException
 	 * @throws SoftwareDaoException
 	 */
-	public void addProductSoftware(Product product, Software software)
-			throws SQLException, SoftwareDaoException;
+	public void addProductSoftware(Product product, Software software);
 
 	/**
 	 * Rechercher les logiciels d'une configuration produit de la base de
@@ -106,7 +101,7 @@ public interface SoftwareDao {
 	 * 
 	 * @throws SQLException
 	 */
-	public List<Software> getSoftwares() throws SQLException;
+	public List<Software> getSoftwares();
 
 	/**
 	 * Ajout d'un logiciel dans la base de donn&eacute;es.
@@ -121,8 +116,7 @@ public interface SoftwareDao {
 	 * @throws SQLException
 	 * @throws SoftwareDaoException
 	 */
-	public Software addSoftware(int state, String name, String version)
-			throws SQLException, SoftwareDaoException;
+	public Software addSoftware(int state, String name, String version);
 
 	/**
 	 * Mettre à jour un Logiciel
@@ -133,7 +127,7 @@ public interface SoftwareDao {
 	 * @throws SQLException
 	 * @throws SoftwareDaoException 
 	 */
-	void updateSoftware(Software softwareToUpdate) throws SQLException, SoftwareDaoException;
+	void updateSoftware(Software softwareToUpdate);
 
 	/**
 	 * Supprimer un Logiciel
@@ -143,7 +137,7 @@ public interface SoftwareDao {
 	 * 
 	 * @throws SQLException
 	 */
-	void deleteSoftware(Software softwareToDelete) throws SQLException;
+	void deleteSoftware(Software softwareToDelete);
 
 	/**
 	 * Rechercher un Logiciel dans la base de données
@@ -154,7 +148,7 @@ public interface SoftwareDao {
 	 * 
 	 * @throws SQLException
 	 */
-	Software getSoftware(int idSoftware) throws SQLException;
+	Software getSoftware(int idSoftware);
 	
 	/**
 	 * Supprimer un logiciel d'une config produit de la base de donn&eacute;es.
@@ -166,8 +160,7 @@ public interface SoftwareDao {
 	 * 
 	 * @throws SQLException
 	 */
-	public void removeProductConfSoftware(ProductConf productConf, Software software)
-			throws SQLException;
+	public void removeProductConfSoftware(ProductConf productConf, Software software);
 
 	/**
 	 * Ajouter un logiciel &agrave; une config produit de la base de donn&eacute;es.
@@ -180,8 +173,7 @@ public interface SoftwareDao {
 	 * @throws SQLException
 	 * @throws SoftwareDaoException
 	 */
-	public void addProductConfSoftware(ProductConf productConf, Software software)
-			throws SQLException, SoftwareDaoException;
+	public void addProductConfSoftware(ProductConf productConf, Software software);
 
 	/**
 	 * Rechercher les logiciels actifs de la base de
@@ -191,6 +183,6 @@ public interface SoftwareDao {
 	 * 
 	 * @throws SQLException
 	 */
-	public List<Software> getActiveSoftwares() throws SQLException;
+	public List<Software> getActiveSoftwares();
 
 }

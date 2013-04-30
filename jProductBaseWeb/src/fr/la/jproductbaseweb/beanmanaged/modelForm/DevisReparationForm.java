@@ -11,7 +11,7 @@ import java.io.Serializable;
 public class DevisReparationForm implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private ServiceInterface moduleGlobal = new ServiceInterface();
+    private ServiceInterface moduleGlobal = ServiceInterface.getInstance();
     private List<AfterSaleCom> listAfterSaleCom = new ArrayList<AfterSaleCom>();
 
     public DevisReparationForm(List<AfterSaleCom> _listAfterSaleCom)

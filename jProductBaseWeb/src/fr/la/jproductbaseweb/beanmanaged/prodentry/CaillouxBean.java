@@ -1,8 +1,8 @@
 package fr.la.jproductbaseweb.beanmanaged.prodentry;
 
 import fr.la.configfilereader.ConfigFileReaderException;
-import fr.la.jproductbase.dao.AfterSaleReportDaoException;
 import fr.la.jproductbase.metier.AfterSaleCom;
+import fr.la.jproductbase.service.ServiceInterface;
 import fr.la.jproductbaseweb.beanmanaged.exception.CaillouxException;
 import fr.la.jproductbaseweb.beanmanaged.modelForm.CaillouxForm;
 import java.io.IOException;
@@ -28,8 +28,7 @@ public class CaillouxBean {
 
 	private Boolean result = false;
 
-	public CaillouxBean() throws SQLException, ConfigFileReaderException,
-			IOException, AfterSaleReportDaoException {
+	public CaillouxBean() {
 	}
 
 	public List<AfterSaleCom> getListAfterSaleCom() {

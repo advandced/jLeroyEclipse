@@ -14,17 +14,9 @@ import javax.naming.NamingException;
 import javax.swing.JOptionPane;
 
 import fr.la.configfilereader.ConfigFileReaderException;
-import fr.la.jproductbase.dao.ConnectionOperator;
-import fr.la.jproductbase.dao.ConnectionProduct;
-import fr.la.jproductbase.dao.ConnectionTester;
 import fr.la.jproductbase.dao.DefectDao;
-import fr.la.jproductbase.dao.DefectDaoException;
-import fr.la.jproductbase.dao.DefectDaoImpl;
 import fr.la.jproductbase.dao.TesterReportDao;
-import fr.la.jproductbase.dao.TesterReportDaoException;
-import fr.la.jproductbase.dao.TesterReportDaoImpl;
 import fr.la.jproductbase.metier.Defect;
-import fr.la.jproductbase.metier.ProductionFailureReport;
 import fr.la.jproductbase.metier.JProductBaseException;
 import fr.la.jproductbase.metier.LabviewTestType;
 import fr.la.jproductbase.metier.LabviewTesterReport;
@@ -33,21 +25,37 @@ import fr.la.jproductbase.metier.PreTesterReport;
 import fr.la.jproductbase.metier.Product;
 import fr.la.jproductbase.metier.ProductConf;
 import fr.la.jproductbase.metier.ProductTest;
+import fr.la.jproductbase.metier.ProductionFailureReport;
 import fr.la.jproductbase.metier.TestType;
 import fr.la.jproductbase.metier.Tester;
 import fr.la.jproductbase.metier.TesterReport;
 import fr.la.jproductbase.metier.TesterReportException;
 
 public class TesterReportModule {
-	private ConnectionOperator cnxOperator;
-	private ConnectionProduct cnxProduct;
-	private ConnectionTester cnxTester;
 
-	public TesterReportModule(ConnectionOperator cnxOperator,
-			ConnectionProduct cnxProduct, ConnectionTester cnxTester) {
-		this.cnxOperator = cnxOperator;
-		this.cnxProduct = cnxProduct;
-		this.cnxTester = cnxTester;
+	TesterReportDao _testerReportDao;
+	DefectDao _defectDao;
+	
+	ProductConfModule _productConfModule;
+	ProductModule _productModule;
+	TestTypeModule _testTypeModule;
+	OperatorModule _operatorModule;
+	FailureModule _failureModule;
+	TesterModule _testerModule;
+	
+	
+	public TesterReportModule(TesterReportDao testerReportDao, DefectDao defectDao, ProductConfModule productConfModule, ProductModule productModule, TestTypeModule testTypeModule, OperatorModule operatorModule, FailureModule failureModule, TesterModule testerModule) {
+		
+		_testerReportDao = testerReportDao;
+		_defectDao = defectDao;
+		
+		_productConfModule = productConfModule;
+		_productModule = productModule;
+		_testTypeModule = testTypeModule;
+		_operatorModule = operatorModule;
+		_failureModule = failureModule;
+		_testerModule = testerModule;
+		
 	}
 
 	/**
@@ -71,38 +79,30 @@ public class TesterReportModule {
 	 * @throws SQLException
 	 * @throws TesterModuleException
 	 */
-	protected TesterReport getTesterReport(Date testerReportDate,
+	public TesterReport getTesterReport(Date testerReportDate,
 			String productConfReference, String productConfMajorIndex,
 			String productConfMinorIndex, String serialNumber, String datecode,
-			String testTypeName) throws SQLException, TesterModuleException {
+			String testTypeName) {
 		TesterReport _testerReport = null;
 
 		// Retrieve product
-		ProductConfModule _productConfModule = new ProductConfModule(
-				this.cnxProduct);
-		ProductConf _productConf = _productConfModule.getProductConf(
-				productConfReference, productConfMajorIndex,
-				productConfMinorIndex);
+		ProductConf _productConf = _productConfModule.getProductConf(productConfReference, productConfMajorIndex, productConfMinorIndex);
 
-		ProductModule _productModule = new ProductModule(this.cnxProduct);
 		Product _product = _productModule.getProduct(_productConf,
 				serialNumber, datecode);
 		if (null != _product) {
 			// Retrieve testerType
-			TestTypeModule _testTypeModule = new TestTypeModule(this.cnxTester);
 			TestType _testType = _testTypeModule.getTestType(testTypeName);
 			if (null != _testType) {
 				// Verify last testerReport
-				TesterReportDao _testerReportDao = new TesterReportDaoImpl(
-						cnxProduct, cnxTester);
 				_testerReport = _testerReportDao.getTesterReport(new Timestamp(
 						testerReportDate.getTime()), _testType, _product);
 			} else {
-				throw new TesterModuleException("Type de test (" + testTypeName
+				throw new IllegalArgumentException("Type de test (" + testTypeName
 						+ ") inconnu dans la base de données.");
 			}
 		} else {
-			throw new TesterModuleException(
+			throw new IllegalArgumentException(
 					"Produit inconnu dans la base de données.");
 		}
 
@@ -137,118 +137,96 @@ public class TesterReportModule {
 	 * @throws TesterModuleException
 	 * @throws NamingException
 	 */
-	protected TesterReport setTesterReport(Date testerReportDate,
+	public TesterReport setTesterReport(Date testerReportDate,
 			String productConfReference, String productConfMajorIndex,
 			String productConfMinorIndex, String serialNumber, String datecode,
 			String testTypeName, String reportOperatorCode, String testResult,
-			String customerComment) throws SQLException, TesterModuleException,
-			NamingException {
+			String customerComment) {
 		TesterReport _testerReport = null;
-		try {
-			// Start transaction
-			this.cnxTester.getCnx().setAutoCommit(false);
 
-			// Retrieve product
-			ProductConfModule _productConfModule = new ProductConfModule(
-					this.cnxProduct);
-			ProductConf _productConf = _productConfModule.getProductConf(
-					productConfReference, productConfMajorIndex,
-					productConfMinorIndex);
 
-			ProductModule _productModule = new ProductModule(this.cnxProduct);
-			Product _product = _productModule.getProduct(_productConf,
-					serialNumber, datecode);
-			if (null != _product) {
-				// Retrieve testerType
-				TestTypeModule _testTypeModule = new TestTypeModule(
-						this.cnxTester);
-				TestType _testType = _testTypeModule.getTestType(testTypeName);
-				if (null != _testType) {
-					// Retrieve operator
-					OperatorModule _operatorModule = new OperatorModule(
-							this.cnxOperator);
-					Operator _operator = _operatorModule
-							.getOperator(reportOperatorCode);
-					if (null == _operator) {
-						int _confirm = JOptionPane
-								.showConfirmDialog(
-										null,
-										"Code opérateur '"
-												+ reportOperatorCode
-												+ "' inconnu.\nConfirmez-vous cette information ?",
-										"Confirmation",
-										JOptionPane.YES_NO_OPTION);
-						if (JOptionPane.YES_OPTION == _confirm) {
-							// Continue
-						} else {
-							throw new TesterModuleException(
-									"Opérateur inconnu dans la base de données.");
-						}
-					}
+		// Retrieve product
+		ProductConf _productConf = _productConfModule.getProductConf(productConfReference, productConfMajorIndex,productConfMinorIndex);
 
-					boolean _startTest = false;
-					boolean _inFlow = this.inFlowProcess(_product, _testType);
-					if (false == _inFlow) {
-						// Process not respected.
-						StringBuffer _msgBuffer = new StringBuffer(150);
-						_msgBuffer.append("\n\n");
-						_msgBuffer
-								.append("Souhaitez-vous tout de même enregistrer le ");
-						_msgBuffer.append(testTypeName);
-
-						int _confirm = JOptionPane.showConfirmDialog(null,
-								"Le produit ne respecte pas le flux."
-										+ _msgBuffer.toString(),
-								"Confirmation", JOptionPane.YES_NO_OPTION);
-						if (JOptionPane.YES_OPTION == _confirm) {
-							_startTest = true;
-						} else {
-							_startTest = false;
-						}
+		Product _product = _productModule.getProduct(_productConf,
+				serialNumber, datecode);
+		if (null != _product) {
+			// Retrieve testerType
+			TestType _testType = _testTypeModule.getTestType(testTypeName);
+			if (null != _testType) {
+				// Retrieve operator
+				Operator _operator = _operatorModule.getOperator(reportOperatorCode);
+				if (null == _operator) {
+					int _confirm = JOptionPane
+							.showConfirmDialog(
+									null,
+									"Code opérateur '"
+											+ reportOperatorCode
+											+ "' inconnu.\nConfirmez-vous cette information ?",
+									"Confirmation",
+									JOptionPane.YES_NO_OPTION);
+					if (JOptionPane.YES_OPTION == _confirm) {
+						// Continue
 					} else {
-						/* Product test respect process flow. */
+						throw new IllegalArgumentException("Opérateur inconnu dans la base de données.");
+					}
+				}
+
+				boolean _startTest = false;
+				boolean _inFlow = this.inFlowProcess(_product, _testType);
+				if (false == _inFlow) {
+					// Process not respected.
+					StringBuffer _msgBuffer = new StringBuffer(150);
+					_msgBuffer.append("\n\n");
+					_msgBuffer
+							.append("Souhaitez-vous tout de même enregistrer le ");
+					_msgBuffer.append(testTypeName);
+
+					int _confirm = JOptionPane.showConfirmDialog(null,
+							"Le produit ne respecte pas le flux."
+									+ _msgBuffer.toString(),
+							"Confirmation", JOptionPane.YES_NO_OPTION);
+					if (JOptionPane.YES_OPTION == _confirm) {
 						_startTest = true;
-					}
-
-					if (true == _startTest) {
-						/* Etat de rapport */
-						int _state = this.getTesterReportState(true, _inFlow);
-
-						/* date du rapport */
-						/*
-						 * Fixe l'heure à 23:59:59 pour être certain que ce sera
-						 * le dernier test lors d'un tri par date. TODO :
-						 * Problème possible : Si le résultat est NOK et que le
-						 * produit repasse en TF1 le même jour.
-						 */
-						Timestamp _testerReportDate = new Timestamp(
-								testerReportDate.getTime()
-										+ (((((23 * 60) + 59) * 60) + 59) * 1000));
-
-						/* New testerReport */
-						_testerReport = this.addTesterReport(_state,
-								_testerReportDate, testResult, _testType,
-								reportOperatorCode, _product);
 					} else {
-						throw new TesterModuleException(
-								"Le flux n'est pas respecté.");
+						_startTest = false;
 					}
 				} else {
-					throw new TesterModuleException("Type de test ("
-							+ testTypeName
-							+ ") inconnu dans la base de données.");
+					/* Product test respect process flow. */
+					_startTest = true;
+				}
+
+				if (true == _startTest) {
+					/* Etat de rapport */
+					int _state = this.getTesterReportState(true, _inFlow);
+
+					/* date du rapport */
+					/*
+					 * Fixe l'heure à 23:59:59 pour être certain que ce sera
+					 * le dernier test lors d'un tri par date. TODO :
+					 * Problème possible : Si le résultat est NOK et que le
+					 * produit repasse en TF1 le même jour.
+					 */
+					Timestamp _testerReportDate = new Timestamp(
+							testerReportDate.getTime()
+									+ (((((23 * 60) + 59) * 60) + 59) * 1000));
+
+					/* New testerReport */
+					_testerReport = this.addTesterReport(_state,
+							_testerReportDate, testResult, _testType,
+							reportOperatorCode, _product);
+				} else {
+					throw new IllegalArgumentException(
+							"Le flux n'est pas respecté.");
 				}
 			} else {
-				throw new TesterModuleException(
-						"Produit inconnu dans la base de données.");
+				throw new IllegalArgumentException("Type de test ("
+						+ testTypeName
+						+ ") inconnu dans la base de données.");
 			}
-
-			// Commit
-			this.cnxTester.getCnx().commit();
-		} catch (Exception e) {
-			this.cnxTester.getCnx().rollback();
-			e.printStackTrace();
-			throw new TesterModuleException(e.getMessage());
+		} else {
+			throw new IllegalArgumentException(
+					"Produit inconnu dans la base de données.");
 		}
 
 		return _testerReport;
@@ -273,9 +251,7 @@ public class TesterReportModule {
 	 */
 	private TesterReport addTesterReport(int state, Timestamp date,
 			String result, TestType testType, String operatorCode,
-			Product product) throws SQLException, TesterReportDaoException,
-			FailureModuleException, ConfigFileReaderException, IOException,
-			TesterModuleException, DefectDaoException, NamingException {
+			Product product) {
 		TesterReport _testerReport = new TesterReport(state, date, result,
 				testType, operatorCode, product);
 
@@ -291,11 +267,7 @@ public class TesterReportModule {
 	 * 
 	 * @return Rapport testeur.
 	 */
-	private TesterReport addTesterReport(TesterReport testerReport)
-			throws SQLException, TesterModuleException,
-			TesterReportDaoException, DefectDaoException,
-			ConfigFileReaderException, IOException, FailureModuleException,
-			NamingException {
+	private TesterReport addTesterReport(TesterReport testerReport) {
 		TesterReport _testerReport = this.addTesterReport(testerReport, "");
 
 		return _testerReport;
@@ -308,34 +280,20 @@ public class TesterReportModule {
 	 * 
 	 * @return Rapport testeur.
 	 */
-	private TesterReport addTesterReport(TesterReport testerReport,
-			String customerComment) throws SQLException, TesterModuleException,
-			TesterReportDaoException, ConfigFileReaderException, IOException,
-			FailureModuleException, NamingException {
+	private TesterReport addTesterReport(TesterReport testerReport,	String customerComment) {
 		TesterReport _testerReport = null;
-		TesterReportDao _testerReportDao = new TesterReportDaoImpl(cnxProduct,
-				cnxTester);
 		_testerReport = _testerReportDao.addTesterReport(testerReport);
 
 		// Add testerReport defects.
-		DefectDao _defectDao = new DefectDaoImpl(this.cnxTester);
 		for (Defect _defect : testerReport.getDefects()) {
-			try {
-				this.cnxOperator.getCnx().setAutoCommit(false);
-				_defectDao.addDefect(_defect, _testerReport);
-				this.cnxOperator.getCnx().commit();
-			} catch (DefectDaoException e) {
-				this.cnxOperator.getCnx().rollback();
-				e.printStackTrace();
-			}
+			_defectDao.addDefect(_defect, _testerReport);
 		}
 
 		// FailureReport si résultat "Failed" et état actif.
 		if ((_testerReport.getResult().equals("Failed"))
 				&& (0 != _testerReport.getState())) {
 			// Create FailureReport
-			ServiceInterface _serviceInterface = new ServiceInterface();
-			_serviceInterface.setFailureReport(_testerReport, customerComment);
+			_failureModule.setProductionFailureReport(_testerReport, customerComment);
 		} else {
 			// Don't create FailureReport
 		}
@@ -343,25 +301,9 @@ public class TesterReportModule {
 		return _testerReport;
 	}
 
-	protected TesterReport addTesterReport(TestType testType, Tester tester,
-			String operatorCode, Product product) throws SQLException,
-			NamingException {
-		TesterReportDao _teterReportDao = new TesterReportDaoImpl(
-				this.cnxProduct, this.cnxTester);
-
-		java.sql.Timestamp _reportDate = new java.sql.Timestamp(
-				new Date().getTime());
-		TesterReport _testerReport = null;
-		try {
-			this.cnxOperator.getCnx().setAutoCommit(false);
-			_testerReport = _teterReportDao.addTesterReport(testType, tester,
-					_reportDate, operatorCode, product);
-			this.cnxOperator.getCnx().commit();
-		} catch (TesterReportDaoException e) {
-			this.cnxOperator.getCnx().rollback();
-			e.printStackTrace();
-		}
-
+	public TesterReport addTesterReport(TestType testType, Tester tester, String operatorCode, Product product) {
+		java.sql.Timestamp _reportDate = new java.sql.Timestamp(new Date().getTime());
+		TesterReport _testerReport = _testerReportDao.addTesterReport(testType, tester,	_reportDate, operatorCode, product);
 		return _testerReport;
 	}
 
@@ -389,8 +331,7 @@ public class TesterReportModule {
 		return _state;
 	}
 
-	protected boolean inFlowProcess(Product product, TestType testType)
-			throws SQLException {
+	public boolean inFlowProcess(Product product, TestType testType) {
 		boolean _inFlow = false;
 
 		if ((null != product) && (null != testType)) {
@@ -425,9 +366,7 @@ public class TesterReportModule {
 				} else {
 					if (_result.equals("Failed")) {
 						// failureReport may be closed
-						ServiceInterface _serviceInterface = new ServiceInterface();
-						ProductionFailureReport _failureReport = _serviceInterface
-								.getFailureReport(_lastTesterReport);
+						ProductionFailureReport _failureReport = _failureModule.getProductionFailureReport(_lastTesterReport);
 						if (null != _failureReport) {
 							if (2 == _failureReport.getState()) {
 								/* Ok for verify process */
@@ -487,15 +426,8 @@ public class TesterReportModule {
 	 * 
 	 * @return Liste des rapports des testeurs d'un produits.
 	 */
-	private List<TesterReport> getInFlowTesterReport(Product product)
-			throws SQLException {
-		TesterReportDao _testerReportDao = new TesterReportDaoImpl(
-				this.cnxProduct, this.cnxTester);
-
-		List<TesterReport> _testerReports = _testerReportDao
-				.getInFlowTesterReport(product);
-
-		return _testerReports;
+	private List<TesterReport> getInFlowTesterReport(Product product) {
+		return _testerReportDao.getInFlowTesterReport(product);
 	}
 
 	/*
@@ -509,8 +441,7 @@ public class TesterReportModule {
 	 * 
 	 * @return Respect du process.
 	 */
-	private boolean inFlowDefaultProcess(Product product, TestType testType,
-			TesterReport lastTesterReport) {
+	private boolean inFlowDefaultProcess(Product product, TestType testType, TesterReport lastTesterReport) {
 		boolean _inFlow = false;
 
 		String _testTypeName = testType.getName();
@@ -583,8 +514,7 @@ public class TesterReportModule {
 	 * 
 	 * @return Respect du process.
 	 */
-	private boolean inFlowRATPProcess(Product product, TestType testType,
-			TesterReport lastTesterReport) {
+	private boolean inFlowRATPProcess(Product product, TestType testType, TesterReport lastTesterReport) {
 		boolean _inFlow = false;
 
 		String _testTypeName = testType.getName();
@@ -659,146 +589,162 @@ public class TesterReportModule {
 	 * @throws JProductBaseException
 	 * @throws NamingException
 	 */
-	protected TesterReport saveTesterReport(PreTesterReport preTesterReport,
-			LabviewTesterReport labviewTesterReport) throws ParseException,
-			SQLException, TesterReportDaoException, FailureModuleException,
-			ConfigFileReaderException, IOException, TesterModuleException,
-			TesterReportException, JProductBaseException, NamingException {
+	public TesterReport saveTesterReport(PreTesterReport preTesterReport, LabviewTesterReport labviewTesterReport) {
 		TesterReport _testerReport = null;
 
 		// Formatage de la date et heure
-		SimpleDateFormat _dateFormat = new SimpleDateFormat(
-				"yyyy-MM-dd hh:mm:ss");
+		SimpleDateFormat _dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
-		try {
-			// Start transaction
-			this.cnxTester.getCnx().setAutoCommit(false);
+		for (ProductTest _productTest : preTesterReport.getProductTests()) {
+			// TesterReport state
+			int _state = this.getTesterReportState(
+					preTesterReport.isResultConfirmation(),
+					_productTest.isInFlow());
+			// TesterReport date (timestamp)
+			String _dateString = labviewTesterReport.getDate();
+			if (labviewTesterReport.getHeure().equals("")) {
+				// No time
+				_dateString += " 00:00:00";
+			} else {
+				_dateString += " " + labviewTesterReport.getHeure();
+			}
+			Date _date = null;
+			try {
+				_date = _dateFormat.parse(_dateString);
+			} catch (ParseException e) {
+				throw new RuntimeException(e);
+			}
+			Timestamp _testerReportDate = new Timestamp(_date.getTime());
 
-			for (ProductTest _productTest : preTesterReport.getProductTests()) {
-				// TesterReport state
-				int _state = this.getTesterReportState(
-						preTesterReport.isResultConfirmation(),
-						_productTest.isInFlow());
-				// TesterReport date (timestamp)
-				String _dateString = labviewTesterReport.getDate();
-				if (labviewTesterReport.getHeure().equals("")) {
-					// No time
-					_dateString += " 00:00:00";
-				} else {
-					_dateString += " " + labviewTesterReport.getHeure();
-				}
-				Date _date = _dateFormat.parse(_dateString);
-				Timestamp _testerReportDate = new Timestamp(_date.getTime());
-
-				// TesterReport tester
-				TesterModule _testerModule = new TesterModule(this.cnxProduct,
-						this.cnxTester);
-				Tester _tester = _testerModule.getTester(labviewTesterReport
-						.getStationId());
-				if (null == _tester) {
-					// Create tester
-					_testerModule.addTester(labviewTesterReport.getStationId());
-				} else {
-					// Known tester
-				}
-
-				// TesterReport testType
-				// Retreive testType of pre-report (This test doesn't need
-				// database access).
-				LabviewTestType _labviewTestType = LabviewTestType
-						.valueOf(_productTest.getLabviewTestType());
-				TestTypeModule _testTypeModule = new TestTypeModule(
-						this.cnxTester);
-				TestType _testType = _testTypeModule
-						.retreiveTestType(_labviewTestType);
-
-				// TesterReport product
-				ProductModule _productModule = new ProductModule(
-						this.cnxProduct);
-				Product _testerReportProduct = _productModule.retreiveProduct(
-						_productTest.getProductConfReference(),
-						_productTest.getProductSerialNumber(),
-						_productTest.getProductDatecode());
-				if (null != _testerReportProduct) {
-					// Convert consos
-					int _consoUmini = 0;
-					if (null != labviewTesterReport.getConsoUmini()) {
-						_consoUmini = Integer.parseInt(labviewTesterReport
-								.getConsoUmini());
-					} else {
-						_consoUmini = 0;
-					}
-
-					int _consoUnomi = 0;
-					if (null != labviewTesterReport.getConsoUnomi()) {
-						_consoUnomi = Integer.parseInt(labviewTesterReport
-								.getConsoUnomi());
-					} else {
-						_consoUnomi = 0;
-					}
-
-					int _consoUmaxi = 0;
-					if (null != labviewTesterReport.getConsoUmaxi()) {
-						_consoUmaxi = Integer.parseInt(labviewTesterReport
-								.getConsoUmaxi());
-					} else {
-						_consoUmaxi = 0;
-					}
-
-					// Create testerReport
-					_testerReport = new TesterReport(_state, _testerReportDate,
-							labviewTesterReport.getVersionTest(),
-							labviewTesterReport.getResultat(), _consoUmini,
-							_consoUnomi, _consoUmaxi, _tester, _testType,
-							_productTest.getOperatorCode(),
-							_testerReportProduct,
-							labviewTesterReport.getDefects());
-
-					// Add testerReport in bdd
-					_testerReport = this.addTesterReport(_testerReport,
-							preTesterReport.getCustomerComment());
-
-					// Implicit report
-					this.setImplicitTesterReport(_testerReport);
-
-					// Mac address
-					String _macAddress = "";
-					if (null != labviewTesterReport.getMacAdresse()) {
-						_macAddress = labviewTesterReport.getMacAdresse();
-					} else {
-						_macAddress = "";
-					}
-					if (false == _macAddress.trim().equals("")) {
-						// Update product
-						Product _product = _productTest.getProduct();
-						_product.setMacAddress(labviewTesterReport
-								.getMacAdresse());
-						_productModule.updateProduct(_product, _macAddress);
-					} else {
-						/* Nothing to do */
-					}
-				} else {
-					throw new TesterModuleException(
-							"Produit du rapport à intégrer inconnu.");
-				}
+			// TesterReport tester
+			Tester _tester = _testerModule.getTester(labviewTesterReport.getStationId());
+			if (null == _tester) {
+				// Create tester
+				_testerModule.addTester(labviewTesterReport.getStationId());
+			} else {
+				// Known tester
 			}
 
-			// Commit
-			this.cnxTester.getCnx().commit();
-		} catch (Exception e) {
-			this.cnxTester.getCnx().rollback();
-			e.printStackTrace();
-			throw new TesterModuleException(e.getMessage());
+			// TesterReport testType
+			// Retreive testType of pre-report (This test doesn't need
+			// database access).
+			LabviewTestType _labviewTestType = LabviewTestType.valueOf(_productTest.getLabviewTestType());
+			TestType _testType = _testTypeModule.retreiveTestType(_labviewTestType);
+
+			// TesterReport product
+			Product _testerReportProduct = _productModule.retreiveProduct(
+					_productTest.getProductConfReference(),
+					_productTest.getProductSerialNumber(),
+					_productTest.getProductDatecode());
+			if (null != _testerReportProduct) {
+				// Convert consos
+				int _consoUmini = 0;
+				if (null != labviewTesterReport.getConsoUmini()) {
+					_consoUmini = Integer.parseInt(labviewTesterReport
+							.getConsoUmini());
+				} else {
+					_consoUmini = 0;
+				}
+
+				int _consoUnomi = 0;
+				if (null != labviewTesterReport.getConsoUnomi()) {
+					_consoUnomi = Integer.parseInt(labviewTesterReport
+							.getConsoUnomi());
+				} else {
+					_consoUnomi = 0;
+				}
+
+				int _consoUmaxi = 0;
+				if (null != labviewTesterReport.getConsoUmaxi()) {
+					_consoUmaxi = Integer.parseInt(labviewTesterReport
+							.getConsoUmaxi());
+				} else {
+					_consoUmaxi = 0;
+				}
+
+				// Create testerReport
+				_testerReport = new TesterReport(_state, _testerReportDate,
+						labviewTesterReport.getVersionTest(),
+						labviewTesterReport.getResultat(), _consoUmini,
+						_consoUnomi, _consoUmaxi, _tester, _testType,
+						_productTest.getOperatorCode(),
+						_testerReportProduct,
+						labviewTesterReport.getDefects());
+
+				// Add testerReport in bdd
+				_testerReport = this.addTesterReport(_testerReport,
+						preTesterReport.getCustomerComment());
+
+				// Implicit report
+				this.setImplicitTesterReport(_testerReport);
+
+				// Mac address
+				String _macAddress = "";
+				if (null != labviewTesterReport.getMacAdresse()) {
+					_macAddress = labviewTesterReport.getMacAdresse();
+				} else {
+					_macAddress = "";
+				}
+				if (false == _macAddress.trim().equals("")) {
+					// Update product
+					Product _product = getProduct(_productTest);
+					_product.setMacAddress(labviewTesterReport.getMacAdresse());
+					_productModule.updateProduct(_product, _macAddress);
+				} else {
+					/* Nothing to do */
+				}
+			} else {
+				throw new IllegalArgumentException("Produit du rapport à intégrer inconnu.");
+			}
 		}
+
 
 		return _testerReport;
 	}
 
-	private void setImplicitTesterReport(TesterReport testerReport)
-			throws ConfigFileReaderException, IOException, SQLException,
-			TesterReportException, TesterModuleException,
-			TesterReportDaoException, FailureModuleException,
-			DefectDaoException, NamingException {
+	/**
+	 * Recherche du produit &agrave; partir des donn&eacute;es du test produit.
+	 * 
+	 * @return the product
+	 * 
+	 * @throws SQLException
+	 * @throws IOException
+	 * @throws ConfigFileReaderException
+	 * @throws TesterReportException
+	 */
+	private Product getProduct(ProductTest _productTest) {
+		
+		// Retreive possible ProductConf
+		List<ProductConf> _productConfs = _productConfModule.getProductConfs(_productTest.getProductConfReference());
+
+		// Retreive possible product
+		List<Product> _products = _productModule.getProducts(_productTest.getProductSerialNumber() , _productTest.getProductDatecode());
+
+		// Retreive product
+		Product _preTesterReportProduct = null;
+		for (Product _product : _products) {
+			ProductConf _productProductConf = _product.getProductConf();
+
+			for (ProductConf _productConf : _productConfs) {
+				if (_productProductConf.getIdProductConf() == _productConf
+						.getIdProductConf()) {
+					if (null == _preTesterReportProduct) {
+						_preTesterReportProduct = _product;
+					} else {
+						// TODO 2 produits avec le même N° de série + datecode
+						// ???
+					}
+				}
+			}
+		}
+		if (null == _preTesterReportProduct) {
+			throw new IllegalArgumentException("Produit inconnu.");
+		}
+
+		return _preTesterReportProduct;
+	}
+	
+	private void setImplicitTesterReport(TesterReport testerReport) {
 		/* Date du rapport */
 		GregorianCalendar _calendar = new java.util.GregorianCalendar();
 		_calendar.setTimeInMillis(testerReport.getDate().getTime());
@@ -820,8 +766,7 @@ public class TesterReportModule {
 						_calendar.getTimeInMillis());
 
 				// Ajoute un rapport de "Examen visuel"
-				TesterReport _testerReport = this.addImplictTesterReport(
-						"Examen visuel", _testerReportTimestamp, testerReport);
+				TesterReport _testerReport = this.addImplictTesterReport("Examen visuel", _testerReportTimestamp, testerReport);
 
 				// Update testerReport
 				this.updateTesterReport(_testerReport, testerReport);
@@ -840,9 +785,7 @@ public class TesterReportModule {
 						_calendar.getTimeInMillis());
 
 				// Ajoute un rapport de "Test isolement et tenue en tension"
-				TesterReport _testerReport = addImplictTesterReport(
-						"Test isolement et tenue en tension",
-						_testerReportTimestamp, testerReport);
+				TesterReport _testerReport = addImplictTesterReport("Test isolement et tenue en tension",_testerReportTimestamp, testerReport);
 
 				// Update testerReport
 				this.updateTesterReport(testerReport, _testerReport);
@@ -851,12 +794,8 @@ public class TesterReportModule {
 	}
 
 	private TesterReport addImplictTesterReport(String testTypeName,
-			Timestamp date, TesterReport testerReport) throws SQLException,
-			TesterReportDaoException, FailureModuleException,
-			ConfigFileReaderException, IOException, TesterModuleException,
-			TesterReportException, DefectDaoException, NamingException {
+			Timestamp date, TesterReport testerReport) {
 		TesterReport _testerReport = null;
-		TestTypeModule _testTypeModule = new TestTypeModule(this.cnxTester);
 		TestType _testType = _testTypeModule.getTestType(testTypeName);
 		if (null != _testType) {
 			// New testerReport
@@ -865,10 +804,9 @@ public class TesterReportModule {
 			// Add implicite testerReport
 			_testerReport = this.addTesterReport(_testerReport);
 		} else {
-			throw new TesterReportException("Type de test (" + testTypeName
+			throw new IllegalArgumentException("Type de test (" + testTypeName
 					+ ") inconnu.");
 		}
-
 		return _testerReport;
 	}
 
@@ -879,10 +817,7 @@ public class TesterReportModule {
 	 * 
 	 * @param testerReportNext Rapport testeur suivant.
 	 */
-	private void updateTesterReport(TesterReport testerReport,
-			TesterReport testerReportNext) throws SQLException {
-		TesterReportDao _testerReportDao = new TesterReportDaoImpl(cnxProduct,
-				cnxTester);
+	private void updateTesterReport(TesterReport testerReport,	TesterReport testerReportNext)  {
 		_testerReportDao.updateTesterReport(testerReport, testerReportNext);
 	}
 }

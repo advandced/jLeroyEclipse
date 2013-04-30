@@ -9,7 +9,7 @@ import fr.la.juserright.service.ServiceUserRight;
 
 public class AjoutRessource {
 
-	private ServiceUserRight moduleGlobal = new ServiceUserRight();
+	private ServiceUserRight moduleGlobal = ServiceUserRight.getInstance();
 
 	private String path;
 

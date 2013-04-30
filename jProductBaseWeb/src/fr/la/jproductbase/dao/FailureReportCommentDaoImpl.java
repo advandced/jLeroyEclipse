@@ -1,36 +1,33 @@
 package fr.la.jproductbase.dao;
 
+import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 
-import javax.naming.NamingException;
-
 import fr.la.jproductbase.metier.ProductionFailureReport;
 import fr.la.jproductbase.metier.FailureReportComment;
 
-public class FailureReportCommentDaoImpl implements FailureReportCommentDao {
-	private static String exceptionMsg = "Commentaire de rapport de défauts inconnu dans la base de données.";
+public class FailureReportCommentDaoImpl extends GenericDao implements FailureReportCommentDao {
 
-	private ConnectionProduct cnxProduct;
+	ConnectionProduct cnxProduct;
 
 	public FailureReportCommentDaoImpl(ConnectionProduct cnxProduct) {
 		this.cnxProduct = cnxProduct;
 	}
 
 	@Override
-	public FailureReportComment getFailureReportComment(
-			ProductionFailureReport productionFailureReport) throws SQLException {
+	public FailureReportComment getFailureReportComment(ProductionFailureReport productionFailureReport) {
 		FailureReportComment _failureReportComment = new FailureReportComment();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct
-					.getCnx()
-					.prepareStatement(
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 							"SELECT * FROM failureReportComment WHERE idProductionFailureReport=?");
 			_stmt.setInt(1, productionFailureReport.getIdProductionFailureReport());
 			_rs = _stmt.executeQuery();
@@ -43,16 +40,13 @@ public class FailureReportCommentDaoImpl implements FailureReportCommentDao {
 
 			// Update failureReport object
 			productionFailureReport.setFailureReportComment(_failureReportComment);
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 		
 
@@ -60,27 +54,21 @@ public class FailureReportCommentDaoImpl implements FailureReportCommentDao {
 	}
 
 	@Override
-	public FailureReportComment addFailureReportComment(
-			ProductionFailureReport productionFailureReport, String comment) throws SQLException,
-			FailureReportCommentDaoException {
-		System.out.println("valuer de comment dans addFailureReportComment" + comment);
+	public FailureReportComment addFailureReportComment(ProductionFailureReport productionFailureReport, String comment) {
 		Date _commentDate = new Date(new java.util.Date().getTime());
-		FailureReportComment _failureReportComment = this
-				.addFailureReportComment(productionFailureReport, comment, _commentDate);
-
+		FailureReportComment _failureReportComment = this.addFailureReportComment(productionFailureReport, comment, _commentDate);
 		return _failureReportComment;
 	}
 
 	@Override
-	public FailureReportComment addFailureReportComment(
-			ProductionFailureReport productionFailureReport, String comment, Date commentDate)
-			throws SQLException, FailureReportCommentDaoException {
+	public FailureReportComment addFailureReportComment(ProductionFailureReport productionFailureReport, String comment, Date commentDate) {
 		FailureReportComment _failureReportComment = null;
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
-		System.out.println("insertion de la valeur comment"+comment);
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 					"INSERT INTO failureReportComment (comment, commentDate, idProductionFailureReport)"
 							+ " VALUES (?, ?, ?)");
 			_stmt.setString(1, comment);
@@ -89,7 +77,7 @@ public class FailureReportCommentDaoImpl implements FailureReportCommentDao {
 			_stmt.executeUpdate();
 
 			// Retrieve failureReportComment data
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			_stmt = c.prepareStatement(
 					"SELECT * FROM failureReportComment"
 							+ " WHERE (idProductionFailureReport=?)"
 							+ " 	AND (comment=?)");
@@ -100,40 +88,37 @@ public class FailureReportCommentDaoImpl implements FailureReportCommentDao {
 			if (_rs.next()) {
 				_failureReportComment = this.getFailureReportComment(_rs);
 			} else {
-				throw new FailureReportCommentDaoException(exceptionMsg);
+				throw new IllegalStateException();
 			}
 
 			// Update failureReport object
 			productionFailureReport.setFailureReportComment(_failureReportComment);
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _failureReportComment;
 	}
 
 	@Override
-	public void updateFailureReportComment(ProductionFailureReport productionFailureReport,
-			String comment) throws SQLException, FailureReportCommentDaoException {
+	public void updateFailureReportComment(ProductionFailureReport productionFailureReport,	String comment) {
+		Connection c = null;
 		PreparedStatement _stmt = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 					"UPDATE failureReportComment " + "SET comment=? "
 							+ "WHERE (idProductionFailureReport=?)");
 			_stmt.setString(1, comment);
 			_stmt.setInt(2, productionFailureReport.getIdProductionFailureReport());
 			_stmt.executeUpdate();
 
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			_stmt = c.prepareStatement(
 					"SELECT * FROM failureReportComment"
 							+ " WHERE (idProductionFailureReport=?)");
 			_stmt.setInt(1, productionFailureReport.getIdProductionFailureReport());
@@ -142,27 +127,27 @@ public class FailureReportCommentDaoImpl implements FailureReportCommentDao {
 			if (_rs.next()) {
 				
 			} else {
-				throw new FailureReportCommentDaoException(exceptionMsg);
+				throw new IllegalStateException();
 			}
 
 			// Update object
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_stmt);
+			close(c);
 		}
 	}
 
 	@Override
-	public void removeFailureReportComment(ProductionFailureReport productionFailureReport)
-			throws SQLException {
+	public void removeFailureReportComment(ProductionFailureReport productionFailureReport) {
+		Connection c = null;
 		PreparedStatement _stmt = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 					"DELETE FROM failureReportComment"
 							+ " WHERE (idProductionFailureReport=?)");
 			_stmt.setInt(1, productionFailureReport.getIdProductionFailureReport());
@@ -170,13 +155,12 @@ public class FailureReportCommentDaoImpl implements FailureReportCommentDao {
 
 			// Update failureReport object
 			productionFailureReport.setFailureReportComment(null);
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_stmt);
+			close(c);
 		}
 	}
 
@@ -188,8 +172,7 @@ public class FailureReportCommentDaoImpl implements FailureReportCommentDao {
 	 * 
 	 * @return Commentaire de rapport de d&eacute;fauts.
 	 */
-	private FailureReportComment getFailureReportComment(ResultSet rs)
-			throws SQLException {
+	private FailureReportComment getFailureReportComment(ResultSet rs) throws SQLException {
 		int _idFailureReportComment = rs.getInt("idFailureReportComment");
 		Timestamp _timestamp = rs.getTimestamp("timestamp");
 		String _comment = rs.getString("comment");

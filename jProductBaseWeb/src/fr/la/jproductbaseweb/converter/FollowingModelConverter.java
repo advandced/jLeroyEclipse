@@ -20,15 +20,8 @@ public class FollowingModelConverter implements Converter {
 
     public FollowingModelConverter() {
         System.out.println("get apparentCauseCustomerActive");
-        ServiceInterface _serviceInterface = new ServiceInterface();
-
-        try {
-            followingFormList = _serviceInterface
-                    .getAllActiveFollowingFormModel();
-        } catch (ConfigFileReaderException e) {
-        } catch (IOException e) {
-        } catch (SQLException e) {
-        }
+        ServiceInterface _serviceInterface = ServiceInterface.getInstance();
+        followingFormList = _serviceInterface.getAllActiveFollowingFormModel();
     }
 
     @Override

@@ -10,8 +10,6 @@ import java.util.List;
 import javax.naming.NamingException;
 
 import fr.la.configfilereader.ConfigFileReaderException;
-import fr.la.jproductbase.dao.ProductDaoException;
-import fr.la.jproductbase.dao.SoftwareDaoException;
 import fr.la.jproductbase.service.ServiceInterface;
 
 /**
@@ -34,8 +32,10 @@ public class Product implements Serializable {
 	protected String providerCode;
 	protected ProductConf productConf;
 	protected List<Product> productComponents;
+
+
 	protected List<Software> productSoftwares = new ArrayList<Software>();
-        private Product mother;
+    private Product mother;
 
 	/**
 	 * Cr&eacute;er un produit.
@@ -214,20 +214,19 @@ public class Product implements Serializable {
 	 * @throws IOException
 	 * @throws ConfigFileReaderException
 	 */
-	public List<Product> getProductComponents()
-			throws ConfigFileReaderException, IOException, SQLException {
+	/*
+	public List<Product> getProductComponents() {
 		if (null == this.productComponents) {
 			// Retreive productComponents
 			ServiceInterface _serviceInterface = new ServiceInterface();
-			this.productComponents = _serviceInterface
-					.getProductComponents(this);
+			this.productComponents = _serviceInterface.getProductComponents(this);
 		} else {
 			// data already
 		}
 
 		return productComponents;
 	}
-
+	*/
 	/**
 	 * @param productComponents
 	 *            the productComponents to set
@@ -347,64 +346,7 @@ public class Product implements Serializable {
 	 * @throws ConfigFileReaderException
 	 * @throws NamingException 
 	 */
-	public void updateProductComponents(String[][] productComponents)
-			throws SQLException, ProductDaoException,
-			ConfigFileReaderException, IOException, NamingException {
-		this.productComponents = new ArrayList<Product>();
 
-		if (null != productComponents) {
-			Product _productComponent;
-
-			int _nbRow = productComponents[0].length;
-			int _idProductConf = 0;
-			String _productConfReference;
-			String _productConfMajorIndex;
-			String _productConfMinorIndex;
-			String _datecode;
-			String _serialNumber;
-			String _provider;
-			for (int _componentRow = 0; _componentRow < _nbRow; _componentRow++) {
-				if (productComponents[0][_componentRow].equals("")) {
-					_idProductConf = Integer
-							.parseInt(productComponents[0][_componentRow]);
-				}
-				_productConfReference = productComponents[1][_componentRow];
-				_productConfMajorIndex = productComponents[2][_componentRow];
-				_productConfMinorIndex = productComponents[3][_componentRow];
-				_datecode = productComponents[5][_componentRow];
-				_serialNumber = productComponents[6][_componentRow];
-				_provider = productComponents[7][_componentRow];
-
-				ServiceInterface _serviceInterface = new ServiceInterface();
-				// Retreive productConf
-				ProductConf _productConf = null;
-				if (0 == _idProductConf) {
-					_productConf = _serviceInterface.getProductConf(
-							_productConfReference, _productConfMajorIndex, _productConfMinorIndex);
-				} else {
-					_productConf = _serviceInterface
-							.getProductConf(_idProductConf);
-				}
-
-				if (null != _productConf) {
-					// Retreive component
-					_productComponent = _serviceInterface.getProduct(_productConf,
-							_serialNumber, _datecode);
-					if (null == _productComponent) {
-						// New component
-						_productComponent = _serviceInterface.addProduct(
-								_productConf, _serialNumber, _datecode, _provider);
-					} else {
-						// Exiting component
-					}
-
-					this.productComponents.add(_productComponent);
-				} else {
-					throw new ProductDaoException("Configuration produit inconnue.");
-				}
-			}
-		}
-	}
 
 	/**
 	 * Cr&eacute;ation de la liste des logiciels du produit &agrave; partir d'un
@@ -417,35 +359,7 @@ public class Product implements Serializable {
 	 * @throws ConfigFileReaderException
 	 * @throws NamingException 
 	 */
-	public void updateProductSoftwares(String[][] productSoftwares)
-			throws SQLException, SoftwareDaoException,
-			ConfigFileReaderException, IOException, NamingException {
-		this.productSoftwares = new ArrayList<Software>();
 
-		if (null != productSoftwares) {
-			Software _software;
-
-			int _nbRow = productSoftwares[0].length;
-			String _name;
-			String _version;
-			for (int _softwareRow = 0; _softwareRow < _nbRow; _softwareRow++) {
-				_name = productSoftwares[1][_softwareRow];
-				_version = productSoftwares[2][_softwareRow];
-
-				ServiceInterface _serviceInterface = new ServiceInterface();
-				// Retreive software
-				_software = _serviceInterface.getSoftware(_name, _version);
-				if (null == _software) {
-					// New software
-					_software = _serviceInterface.addSoftware(_name, _version);
-				} else {
-					// Exiting component
-				}
-
-				this.productSoftwares.add(_software);
-			}
-		}
-	}
 
 	@Override
 	public String toString() {
@@ -460,6 +374,8 @@ public class Product implements Serializable {
         this.mother = mother;
     }
 	
-	
+	public List<Product> getProductComponents() {
+		return productComponents;
+	}
 	
 }

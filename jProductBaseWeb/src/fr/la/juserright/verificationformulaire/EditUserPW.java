@@ -8,7 +8,7 @@ import fr.la.juserright.service.ServiceUserRight;
 
 public class EditUserPW {
 
-	private ServiceUserRight moduleGlobal = new ServiceUserRight();
+	private ServiceUserRight moduleGlobal = ServiceUserRight.getInstance();
 
 	private int id;
 

@@ -24,7 +24,7 @@ public interface ProductDao {
      * @return le nombre de resultat
      * @throws SQLException
      */
-    public int countProducts(Map<String, String> filters, int type) throws SQLException;
+    public int countProducts(Map<String, String> filters, int type);
 
     /**
      * Recherche les produits de la base de donn&eacute;es.
@@ -33,7 +33,7 @@ public interface ProductDao {
      *
      * @throws SQLException
      */
-    public List<Product> getProducts() throws SQLException;
+    public List<Product> getProducts();
 
     /**
      * Recherche les produits de la base de donn&eacute;es en fonction du type
@@ -45,8 +45,7 @@ public interface ProductDao {
      *
      * @throws SQLException
      */
-    public List<Product> getProducts(ProductType productType)
-            throws SQLException;
+    public List<Product> getProducts(ProductType productType);
 
     /**
      * Recherche les produits de la base de donn&eacute;es en fonction du
@@ -58,8 +57,7 @@ public interface ProductDao {
      *
      * @throws SQLException
      */
-    public List<Product> getProducts(ProductConfModel productConfModel)
-            throws SQLException;
+    public List<Product> getProducts(ProductConfModel productConfModel);
 
     /**
      * Recherche les produits de la base de donn&eacute;es en fonction de la
@@ -71,8 +69,7 @@ public interface ProductDao {
      *
      * @throws SQLException
      */
-    public List<Product> getProducts(ProductConf productConf)
-            throws SQLException;
+    public List<Product> getProducts(ProductConf productConf);
 
     /**
      * Recherche les cartes disponibles donc non rattachés à un produit de la
@@ -85,8 +82,7 @@ public interface ProductDao {
      *
      * @throws SQLException
      */
-    public List<Product> getProductsEnables(int idproduct, String reference)
-            throws SQLException;
+    public List<Product> getProductsEnables(int idproduct, String reference);
 
     /**
      * Recherche les produits enregistrables donc présents dans la base FEDD
@@ -99,8 +95,7 @@ public interface ProductDao {
      *
      * @throws SQLException
      */
-    public List<Product> getProductsRecordables(String modele)
-            throws SQLException;
+    public List<Product> getProductsRecordables(String modele);
 
     /**
      * Recherche les produits de la base de donn&eacute;es en fonction des
@@ -124,7 +119,7 @@ public interface ProductDao {
      * @throws IOException
      * @throws ConfigFileReaderException
      */
-    public List<Product> getProductsSearch(int startingAt, int maxPerPage, Map<String, String> filters, int type) throws SQLException;
+    public List<Product> getProductsSearch(int startingAt, int maxPerPage, Map<String, String> filters, int type);
 
     /**
      * Recherche les produits en fonction du num&eacute;ro de s&eacute;rie et di
@@ -137,8 +132,7 @@ public interface ProductDao {
      *
      * @throws SQLException
      */
-    public List<Product> getProducts(String serialNumber, String datecode)
-            throws SQLException;
+    public List<Product> getProducts(String serialNumber, String datecode);
 
     /**
      * Recherche un produit de la base de donn&eacute;es &agrave; partir de son
@@ -150,7 +144,7 @@ public interface ProductDao {
      *
      * @throws SQLException
      */
-    public Product getProduct(int idProduct) throws SQLException;
+    public Product getProduct(int idProduct);
 
     /**
      * Recherche un produit de la base de donn&eacute;es.
@@ -163,8 +157,7 @@ public interface ProductDao {
      *
      * @throws SQLException
      */
-    public Product getProduct(ProductConf productConf, String serialNumber,
-            String datecode) throws SQLException;
+    public Product getProduct(ProductConf productConf, String serialNumber, String datecode);
 
     /**
      * Recherche un produit de la base de donn&eacute;es.
@@ -177,8 +170,7 @@ public interface ProductDao {
      *
      * @throws SQLException
      */
-    public Product getProduct(String productConfReference, String serialNumber,
-            String datecode) throws SQLException;
+    public Product getProduct(String productConfReference, String serialNumber, String datecode);
 
     /**
      * Recherche le produit principal auquel une carte appartient.
@@ -189,7 +181,7 @@ public interface ProductDao {
      *
      * @throws SQLException
      */
-    public Product getMainProduct(Product carte) throws SQLException;
+    public Product getMainProduct(Product carte);
 
     /**
      * Ajouter un produit dans la base de donn&eacute;s.
@@ -205,9 +197,7 @@ public interface ProductDao {
      * @throws SQLException
      * @throws ProductDaoException
      */
-    public Product addProduct(ProductConf productConf, String serialNumber,
-            String datecode, String macAddress, String providerCode)
-            throws SQLException, ProductDaoException;
+    public Product addProduct(ProductConf productConf, String serialNumber,  String datecode, String macAddress, String providerCode);
 
     /**
      * Mise &agrave; jour d'un produit dans la base de donn&eacute;s.
@@ -217,7 +207,7 @@ public interface ProductDao {
      * @throws SQLException
      * @throws ProductDaoException
      */
-    public void updateProduct(Product product) throws SQLException, ProductDaoException;
+    public void updateProduct(Product product);
 
     /**
      * Mise &agrave; jour d'un produit dans la base de donn&eacute;s.
@@ -235,8 +225,7 @@ public interface ProductDao {
      */
     public void updateProduct(Product product, ProductConf productConf,
             String serialNumber, String dateCode, String macAddress,
-            String providerCode, int state) throws SQLException,
-            ProductDaoException;
+            String providerCode, int state);
 
     /**
      * Mise &agrave; jour d'un produit dans la base de donn&eacute;s.
@@ -247,8 +236,7 @@ public interface ProductDao {
      * @throws SQLException
      * @throws ProductDaoException
      */
-    public void updateProduct(Product product, String macAddress)
-            throws SQLException, ProductDaoException;
+    public void updateProduct(Product product, String macAddress);
 
     /**
      * Cr&eacute;tion du lien entre un produit et un composant.
@@ -259,8 +247,7 @@ public interface ProductDao {
      * @throws SQLException
      * @throws ProductDaoException
      */
-    public void addProductComponent(Product product, Product productComponent)
-            throws SQLException, ProductDaoException;
+    public void addProductComponent(Product product, Product productComponent);
 
     /**
      * D&eacute;mont&eacute; un composant d'un produit de la base de
@@ -271,8 +258,7 @@ public interface ProductDao {
      *
      * @throws SQLException
      */
-    public void removeProductComponent(Product product, Product productComponent)
-            throws SQLException;
+    public void removeProductComponent(Product product, Product productComponent);
 
     /**
      * Recherche les composants d'un produit de la base de donn&eacute;es.
@@ -283,8 +269,7 @@ public interface ProductDao {
      *
      * @throws SQLException
      */
-    public List<Product> getProductComponents(Product product)
-            throws SQLException;
+    public List<Product> getProductComponents(Product product);
 
     /**
      * Recherche les produits devant faire l'objet d'une demande de
@@ -294,7 +279,7 @@ public interface ProductDao {
      *
      * @throws SQLException
      */
-    public List<Product> getProductsDispensationNeeded() throws SQLException;
+    public List<Product> getProductsDispensationNeeded();
 
     /**
      * V&eacute;rifie si un produit doit faire l'objet d'une demande de
@@ -305,7 +290,7 @@ public interface ProductDao {
      *
      * @throws SQLException
      */
-    public boolean isNeedDispensation(Product product) throws SQLException;
+    public boolean isNeedDispensation(Product product);
 
     /**
      * 20-04-12 : RMO : Création de la méthode Méthode qui va enregistrer dans
@@ -320,14 +305,12 @@ public interface ProductDao {
      * @throws SQLException
      * @throws ProductDaoException
      */
-    public Product setProductFEDDtoLAI(int idProductFEDD, ProductConf config,
-			String serialNumber, String datecode) throws SQLException,
-			ProductDaoException, ConfigFileReaderException, IOException;
+    public Product setProductFEDDtoLAI(int idProductFEDD, ProductConf config, String serialNumber, String datecode);
 
     /*
      * Retourne la list des differents produits avec la carte ou produit sur lequels ils sont montés.
      */
-    public List<Product> getProductWithMother(int startingAt, int maxPerPage, Map<String, String> filters) throws SQLException;
+    public List<Product> getProductWithMother(int startingAt, int maxPerPage, Map<String, String> filters);
     
-    public Product getProductWithProductConfRef(String reference) throws SQLException;
+    public Product getProductWithProductConfRef(String reference);
 }

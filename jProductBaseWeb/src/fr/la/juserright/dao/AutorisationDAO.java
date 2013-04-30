@@ -1,47 +1,53 @@
 package fr.la.juserright.dao;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.naming.NamingException;
-
+import fr.la.jproductbase.dao.GenericDao;
 import fr.la.juserright.metier.Autorisation;
 import fr.la.juserright.metier.Permission;
 import fr.la.juserright.metier.Ressource;
 import fr.la.juserright.metier.Role;
 import fr.la.juserright.metier.UserRole;
-import fr.la.juserright.service.ServiceUserRight;
 
-public class AutorisationDAO implements ModelDAO<Autorisation> {
+public class AutorisationDAO extends GenericDao implements ModelDAO<Autorisation> {
 
-	private ConnectionUserRight cnxUserRight;
+	ConnectionUserRight cnxUserRight;
+	UserRoleDAO _userroleDao;
+	PermissionDAO _permissionDao;
+	RessourceDAO _ressourceDao;
+	RoleDAO _roleDao;
 
-	private ServiceUserRight moduleGlobal = new ServiceUserRight();
-
-	public AutorisationDAO(ConnectionUserRight _cnxUserRight) {
-		this.cnxUserRight = _cnxUserRight;
+	public AutorisationDAO(ConnectionUserRight cnxUserRight, UserRoleDAO userroleDao, PermissionDAO permissionDao, RessourceDAO ressourceDao, RoleDAO roleDao) {
+		this.cnxUserRight = cnxUserRight;
+		_userroleDao = userroleDao;
+		_permissionDao = permissionDao;
+		_ressourceDao = ressourceDao;
+		_roleDao = roleDao;
 	}
 
-	public void create(Autorisation _object) throws SQLException {
+	public void create(Autorisation _object) {
+		Connection c = null;
 		PreparedStatement _stmt = null;
 
 		try {
-			_stmt = this.cnxUserRight.getCnx().prepareStatement(
+			c = cnxUserRight.getCnx();
+			_stmt = c.prepareStatement(
 					"INSERT INTO autorisation (idpermission, idressource, idrole) "
 							+ "VALUES ("
 							+ _object.getPermission().getIdpermission() + ""
 							+ ", " + _object.getRessource().getIdressource()
 							+ "" + ", " + _object.getRole().getIdrole() + ");");
 			_stmt.executeUpdate();
-		} catch (NamingException e) {
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_stmt);
+			close(c);
 		}
 	}
 
@@ -49,14 +55,15 @@ public class AutorisationDAO implements ModelDAO<Autorisation> {
 		return null;
 	}
 
-	public List<Autorisation> readAll() throws SQLException {
+	public List<Autorisation> readAll() {
 		List<Autorisation> _autorisation = new ArrayList<Autorisation>();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxUserRight.getCnx().prepareStatement(
-					"SELECT * FROM autorisation;");
+			c = cnxUserRight.getCnx();
+			_stmt = c.prepareStatement("SELECT * FROM autorisation;");
 			_rs = _stmt.executeQuery();
 			if (_rs.next()) {
 				Autorisation _autorisationtmp = this.getAutorisation(_rs);
@@ -64,72 +71,64 @@ public class AutorisationDAO implements ModelDAO<Autorisation> {
 			} else {
 				_autorisation = null;
 			}
-		} catch (NamingException e) {
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 		return _autorisation;
 	}
 
-	public void update(Autorisation _autorisation) throws SQLException {
+	public void update(Autorisation _autorisation) {
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		try {
-			_stmt = this.cnxUserRight.getCnx().prepareStatement(
+			c = cnxUserRight.getCnx();
+			_stmt = c.prepareStatement(
 					"UPDATE autorisation SET idpermission = ? "
 							+ "WHERE idressource = ? and idrole = ?;");
 			_stmt.setInt(1, _autorisation.getPermission().getIdpermission());
 			_stmt.setInt(2, _autorisation.getRessource().getIdressource());
 			_stmt.setInt(3, _autorisation.getRole().getIdrole());
 			_stmt.executeUpdate();
-
-		} catch (NamingException e) {
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _stmt) {
-				_stmt.close();
-			}
-			
-			try {
-				this.cnxUserRight.getCnx().close();
-			} catch (NamingException e) {
-				e.printStackTrace();
-			}
+			close(_stmt);
+			close(c);
 		}
 	}
 
-	public void delete(Autorisation _object) throws SQLException {
+	public void delete(Autorisation _object) {
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		try {
-			_stmt = this.cnxUserRight.getCnx().prepareStatement(
+			c = cnxUserRight.getCnx();
+			_stmt = c.prepareStatement(
 					"DELETE FROM autorisation " + "WHERE idressource = ?"
 							+ " AND idrole = ?;");
 			_stmt.setInt(1, _object.getRessource().getIdressource());
 			_stmt.setInt(2, _object.getRole().getIdrole());
 			_stmt.executeUpdate();
-			
-		} catch (NamingException e) {
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_stmt);
+			close(c);
 		}
 	}
 
-	public List<Autorisation> getAutorisationWithIdPermission(int idpermission)
-			throws SQLException {
+	public List<Autorisation> getAutorisationWithIdPermission(int idpermission) {
 		List<Autorisation> _autorisation = new ArrayList<Autorisation>();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxUserRight.getCnx().prepareStatement(
+			c = cnxUserRight.getCnx();
+			_stmt = c.prepareStatement(
 					"SELECT * FROM autorisation" + " WHERE idpermission = ?;");
 			_stmt.setInt(1, idpermission);
 			_rs = _stmt.executeQuery();
@@ -139,27 +138,25 @@ public class AutorisationDAO implements ModelDAO<Autorisation> {
 			} else {
 				_autorisation = null;
 			}
-		} catch (NamingException e) {
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 		return _autorisation;
 	}
 
-	public List<Autorisation> getAutorisationWithIdRessource(int idressource)
-			throws SQLException {
+	public List<Autorisation> getAutorisationWithIdRessource(int idressource) {
 		List<Autorisation> _autorisation = new ArrayList<Autorisation>();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxUserRight.getCnx().prepareStatement(
+			c = cnxUserRight.getCnx();
+			_stmt = c.prepareStatement(
 					"SELECT * FROM autorisation" + " WHERE idressource = ?;");
 			_stmt.setInt(1, idressource);
 			_rs = _stmt.executeQuery();
@@ -169,27 +166,25 @@ public class AutorisationDAO implements ModelDAO<Autorisation> {
 			} else {
 				_autorisation = null;
 			}
-		} catch (NamingException e) {
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 		return _autorisation;
 	}
 
-	public List<Autorisation> getAutorisationWithIdRole(int idrole)
-			throws SQLException {
+	public List<Autorisation> getAutorisationWithIdRole(int idrole) {
 		List<Autorisation> _autorisation = new ArrayList<Autorisation>();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxUserRight.getCnx().prepareStatement(
+			c = cnxUserRight.getCnx();
+			_stmt = c.prepareStatement(
 					"SELECT * FROM autorisation WHERE idrole = ?;");
 			_stmt.setInt(1, idrole);
 			_rs = _stmt.executeQuery();
@@ -198,27 +193,25 @@ public class AutorisationDAO implements ModelDAO<Autorisation> {
 				_autorisation.add(_autorisationtmp);
 			}
 			_rs.setFetchSize(100);
-		} catch (NamingException e) {
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 		return _autorisation;
 	}
 
-	public Autorisation checkAutorisationExists(Autorisation _autorisation)
-			throws SQLException {
+	public Autorisation checkAutorisationExists(Autorisation _autorisation) {
 		Autorisation __autorisation = new Autorisation();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxUserRight.getCnx().prepareStatement(
+			c = cnxUserRight.getCnx();
+			_stmt = c.prepareStatement(
 					"SELECT * FROM autorisation"
 							+ " WHERE idrole = ? AND idressource = ?;");
 			_stmt.setInt(1, _autorisation.getRole().getIdrole());
@@ -229,28 +222,23 @@ public class AutorisationDAO implements ModelDAO<Autorisation> {
 			} else {
 				__autorisation = null;
 			}
-		} catch (NamingException e) {
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 		return __autorisation;
 	}
 
-	public List<Autorisation> getAutorisationByLogin(String login)
-			throws SQLException {
-		List<UserRole> _ur = moduleGlobal.getUserRoleWithLogin(login);
+	public List<Autorisation> getAutorisationByLogin(String login) {
+		List<UserRole> _ur = _userroleDao.getUserRoleWithLogin(login);
 		List<Autorisation> _AutorisationTmp = new ArrayList<Autorisation>();
-		List<Autorisation> _AutorisationReturn = new ArrayList<Autorisation>();
+		List<Autorisation> _AutorisationReturn = null;
 		if (_ur != null) {
 			for (UserRole ur : _ur) {
-				_AutorisationTmp = this.getAutorisationWithIdRole(ur.getRole()
-						.getIdrole());
+				_AutorisationTmp = this.getAutorisationWithIdRole(ur.getRole().getIdrole());
 				if (_AutorisationTmp != null) {
 					if (_AutorisationReturn == null) {
 						_AutorisationReturn = _AutorisationTmp;
@@ -260,11 +248,8 @@ public class AutorisationDAO implements ModelDAO<Autorisation> {
 							for (Autorisation rtn : _AutorisationReturn) {
 								if (rtn.getRessource() == tmp.getRessource()) {
 									found++;
-									if (rtn.getPermission().getIdpermission() < tmp
-											.getPermission().getIdpermission()) {
-										rtn.getPermission().setIdpermission(
-												tmp.getPermission()
-														.getIdpermission());
+									if (rtn.getPermission().getIdpermission() < tmp.getPermission().getIdpermission()) {
+										rtn.getPermission().setIdpermission(tmp.getPermission().getIdpermission());
 									}
 								}
 							}
@@ -285,9 +270,9 @@ public class AutorisationDAO implements ModelDAO<Autorisation> {
 		int _idressource = _rs.getInt("idressource");
 		int _idrole = _rs.getInt("idrole");
 
-		Permission _perm = moduleGlobal.getPermission(_idpermission);
-		Ressource _ress = moduleGlobal.getRessource(_idressource);
-		Role _role = moduleGlobal.getRole(_idrole);
+		Permission _perm = _permissionDao.read(_idpermission);
+		Ressource _ress = _ressourceDao.read(_idressource);
+		Role _role = _roleDao.getRole(_idrole);
 
 		Autorisation _autorisation = new Autorisation(_perm, _ress, _role);
 		return _autorisation;

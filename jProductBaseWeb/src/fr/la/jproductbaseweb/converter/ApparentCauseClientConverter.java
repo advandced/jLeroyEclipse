@@ -19,17 +19,8 @@ public class ApparentCauseClientConverter implements Converter {
 	private List<ApparentCauseCustomer> apparentCauseList;
 
 	public ApparentCauseClientConverter() {
-		
-		ServiceInterface _serviceInterface = new ServiceInterface();
-		try {
-			apparentCauseList = _serviceInterface
-					.getActiveApparentCausesCustomer();
-			//System.out.println("taille list" + apparentCauseList.size());
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
+		ServiceInterface _serviceInterface = ServiceInterface.getInstance();
+		apparentCauseList = _serviceInterface.getActiveApparentCausesCustomer();
 	}
 
 	@Override

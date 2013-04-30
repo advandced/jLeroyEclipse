@@ -29,8 +29,7 @@ public class MenuWeb implements MenuModel, Serializable {
         if (nameResource == null) {
             for (Autorisation autorisation : this.autorisations) {
                 MenuItem _menuItem = new MenuItem();
-                if (autorisation.getRessource().getRessourceMere()
-                        .getIdressource() == 0) {
+                if (autorisation.getRessource().getRessourceMere().getIdressource() == 0) {
                     _menuItem.setValue(autorisation.getRessource().getMenu());
                     _menuItem.setUrl(autorisation.getRessource().getPath());
                     this.modelMenu.addMenuItem(_menuItem);
@@ -39,10 +38,8 @@ public class MenuWeb implements MenuModel, Serializable {
         } else {
             for (Autorisation autorisation : this.autorisations) {
                 MenuItem _menuItem = new MenuItem();
-                if (autorisation.getRessource().getRessourceMere()
-                        .getManagedBean() != null) {
-                    if (autorisation.getRessource().getRessourceMere()
-                            .getManagedBean().equals(nameResource)) {
+                if (autorisation.getRessource().getRessourceMere().getManagedBean() != null) {
+                    if (autorisation.getRessource().getRessourceMere().getManagedBean().equals(nameResource)) {
                         FacesContext _facesContext = FacesContext
                                 .getCurrentInstance();
                         ELContext _elContext = _facesContext.getELContext();

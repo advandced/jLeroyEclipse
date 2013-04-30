@@ -4,12 +4,11 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.SQLException;
-import java.text.ParseException;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -17,7 +16,6 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-import javax.naming.NamingException;
 import javax.swing.JOptionPane;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -33,35 +31,36 @@ import org.xml.sax.helpers.DefaultHandler;
 import fr.la.configfilereader.ConfigFileReaderException;
 import fr.la.importdyntesteurdata.ImportDynTesteurData;
 import fr.la.jproductbase.dao.ProductDaoXml;
-import fr.la.jproductbase.dao.TesterReportDaoException;
 import fr.la.jproductbase.metier.FilesTools;
 import fr.la.jproductbase.metier.JProductBaseException;
 import fr.la.jproductbase.metier.JProductBaseParameters;
 import fr.la.jproductbase.metier.LabviewTesterReport;
-import fr.la.jproductbase.metier.LabviewTesterReportException;
 import fr.la.jproductbase.metier.PreTesterReport;
 import fr.la.jproductbase.metier.Product;
 import fr.la.jproductbase.metier.ProductIntegrationHandler;
 import fr.la.jproductbase.metier.ProductTest;
-import fr.la.jproductbase.metier.TesterReportException;
 import fr.la.jproductbase.metier.XmlFilenameFilter;
 import fr.la.jproductbase.metier.ZipFilenameFilter;
 
 public class XMLProductModule {
-	protected void setProductXml(String productConfReference,
+	
+	XMLTesterModule _xmlTesterModule;
+	
+	public XMLProductModule(XMLTesterModule xmlTesterModule) {
+		_xmlTesterModule = xmlTesterModule;
+	}
+	
+	public void setProductXml(String productConfReference,
 			String productConfMajorIndex, String productConfMinorIndex,
 			String serialNumber, String datecode, String[][] productComponents,
-			String[][] productSoftwares) throws ConfigFileReaderException,
-			IOException {
+			String[][] productSoftwares) {
 		ProductDaoXml _productDaoXml = new ProductDaoXml();
 		_productDaoXml.addProduct(productConfReference, productConfMajorIndex,
 				productConfMinorIndex, serialNumber, datecode,
 				productComponents, productSoftwares);
 	}
 
-	protected void insertClientFiles() throws JDOMException, IOException,
-			SAXException, ParserConfigurationException,
-			ConfigFileReaderException, JProductBaseException {
+	public void insertClientFiles() {
 		this.insertDataFiles();
 		this.insertReportFiles();
 	}
@@ -70,9 +69,7 @@ public class XMLProductModule {
 	 * Intégration des fichiers de données en attente. Liste des fichiers XML du
 	 * répertoire data.
 	 */
-	private void insertDataFiles() throws JDOMException, IOException,
-			SAXException, ParserConfigurationException,
-			ConfigFileReaderException, JProductBaseException {
+	private void insertDataFiles() {
 		JProductBaseParameters _jProductBaseParameters = JProductBaseParameters
 				.getInstance();
 
@@ -102,8 +99,7 @@ public class XMLProductModule {
 	 * 
 	 * @param dataFile Fichier à intégrer.
 	 */
-	private void insertDataFile(File dataFile)
-			throws ConfigFileReaderException, IOException {
+	private void insertDataFile(File dataFile) {
 		JProductBaseParameters _jProductBaseParameters = JProductBaseParameters
 				.getInstance();
 
@@ -217,10 +213,8 @@ public class XMLProductModule {
 	 * Intégration des fichiers de données en attente. Liste des fichiers ZIP du
 	 * répertoire report.
 	 */
-	private void insertReportFiles() throws ConfigFileReaderException,
-			IOException {
-		JProductBaseParameters _jProductBaseParameters = JProductBaseParameters
-				.getInstance();
+	private void insertReportFiles() {
+		JProductBaseParameters _jProductBaseParameters = JProductBaseParameters.getInstance();
 
 		// Répertoire contenant les fichiers à intégrer
 		String _reportFilesServerDirectory = _jProductBaseParameters
@@ -251,12 +245,8 @@ public class XMLProductModule {
 	 * 
 	 * @param reportFile Rapport de testeur à intégrer.
 	 */
-	private void insertReportFile(File reportFile)
-			throws ConfigFileReaderException, IOException {
-		JProductBaseParameters _jProductBaseParameters = JProductBaseParameters
-				.getInstance();
-
-		System.out.println("Intégration du fichier : " + reportFile);
+	private void insertReportFile(File reportFile) {
+		JProductBaseParameters _jProductBaseParameters = JProductBaseParameters.getInstance();
 
 		// Error file name
 		String _reportFileErrName = _jProductBaseParameters
@@ -301,15 +291,9 @@ public class XMLProductModule {
 	 * contenu dans l'archive. Détermine si le type du rapport en fonction de
 	 * l'extension du fichier contenu dans l'archive.
 	 */
-	private void insertZipDataFile(File reportFile)
-			throws ConfigFileReaderException, IOException, JDOMException,
-			SQLException, TesterReportException, ParserConfigurationException,
-			SAXException, XMLProductModuleException, ParseException,
-			TesterReportDaoException, FailureModuleException,
-			TesterModuleException, JProductBaseException, NamingException {
+	private void insertZipDataFile(File reportFile) throws ConfigFileReaderException, IOException, ParserConfigurationException, SAXException, XMLProductModuleException {
 		// Read config file parameters
-		JProductBaseParameters _jProductBaseParameters = JProductBaseParameters
-				.getInstance();
+		JProductBaseParameters _jProductBaseParameters = JProductBaseParameters.getInstance();
 		String _preTesterReportXmlFileName = _jProductBaseParameters
 				.getPreTesterReportXmlFileName();
 
@@ -353,7 +337,7 @@ public class XMLProductModule {
 							.getLabviewXmlTesterReport(_zipInputStream);
 
 					// Save testerReport
-					ServiceInterface _serviceInterface = new ServiceInterface();
+					ServiceInterface _serviceInterface = ServiceInterface.getInstance();
 					_serviceInterface.saveTesterReport(_preTesterReport,
 							_labviewTesterReport);
 				} else {
@@ -564,11 +548,8 @@ public class XMLProductModule {
 	 * 
 	 * @throws IOException
 	 */
-	private void reportTransfer(String preTesterReportXmlFileName,
-			String testerReportXmlFileName) throws IOException,
-			ConfigFileReaderException {
-		File _testerReportFileArchive = this.buildTesterReportArchive(
-				preTesterReportXmlFileName, testerReportXmlFileName);
+	private void reportTransfer(String preTesterReportXmlFileName, String testerReportXmlFileName) {
+		File _testerReportFileArchive = this.buildTesterReportArchive(preTesterReportXmlFileName, testerReportXmlFileName);
 
 		this.transferTesterReportArchive(_testerReportFileArchive);
 
@@ -596,48 +577,49 @@ public class XMLProductModule {
 	 * 
 	 * @return Fichier d'archive.
 	 */
-	private File buildTesterReportArchive(String preTesterReportXmlFileName,
-			String testerReportXmlFileName) throws IOException {
+	private File buildTesterReportArchive(String preTesterReportXmlFileName, String testerReportXmlFileName) {
 		File _fileArchive = this.createFileArchive(testerReportXmlFileName);
-		FileOutputStream _fileArchiveOutputStream = new FileOutputStream(
-				_fileArchive);
-		BufferedOutputStream _bufferOutputStream = new BufferedOutputStream(
-				_fileArchiveOutputStream);
-
-		ZipOutputStream _zipOutputStream = new ZipOutputStream(
-				_bufferOutputStream);
-
-		String[] _files = { preTesterReportXmlFileName, testerReportXmlFileName };
-		final int _BUFFERSIZE = 2048;
-		byte _data[] = new byte[_BUFFERSIZE];
-		for (int _i = 0; _i < _files.length; _i++) {
-			try {
-				File _file = new File(_files[_i]);
-				FileInputStream _fileInputStream = new FileInputStream(_file);
-
-				BufferedInputStream _bufferInputStream = new BufferedInputStream(
-						_fileInputStream, _BUFFERSIZE);
-
-				ZipEntry _zipEntry = new ZipEntry(_file.getName());
-
-				_zipOutputStream.putNextEntry(_zipEntry);
-
-				int _count;
-				while (-1 != (_count = _bufferInputStream.read(_data, 0,
-						_BUFFERSIZE))) {
-					_zipOutputStream.write(_data, 0, _count);
+		try {
+			FileOutputStream _fileArchiveOutputStream = new FileOutputStream(_fileArchive);
+			BufferedOutputStream _bufferOutputStream = new BufferedOutputStream(
+					_fileArchiveOutputStream);
+	
+			ZipOutputStream _zipOutputStream = new ZipOutputStream(
+					_bufferOutputStream);
+	
+			String[] _files = { preTesterReportXmlFileName, testerReportXmlFileName };
+			final int _BUFFERSIZE = 2048;
+			byte _data[] = new byte[_BUFFERSIZE];
+			for (int _i = 0; _i < _files.length; _i++) {
+				try {
+					File _file = new File(_files[_i]);
+					FileInputStream _fileInputStream = new FileInputStream(_file);
+	
+					BufferedInputStream _bufferInputStream = new BufferedInputStream(
+							_fileInputStream, _BUFFERSIZE);
+	
+					ZipEntry _zipEntry = new ZipEntry(_file.getName());
+	
+					_zipOutputStream.putNextEntry(_zipEntry);
+	
+					int _count;
+					while (-1 != (_count = _bufferInputStream.read(_data, 0,
+							_BUFFERSIZE))) {
+						_zipOutputStream.write(_data, 0, _count);
+					}
+					_zipOutputStream.flush();
+					_zipOutputStream.closeEntry();
+	
+					_bufferInputStream.close();
+				} catch (IOException e) {
+					// Don't archive this file
 				}
-				_zipOutputStream.flush();
-				_zipOutputStream.closeEntry();
-
-				_bufferInputStream.close();
-			} catch (IOException e) {
-				// Don't archive this file
 			}
+			_zipOutputStream.flush();
+			_zipOutputStream.close();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
 		}
-		_zipOutputStream.flush();
-		_zipOutputStream.close();
-
 		return _fileArchive;
 	}
 
@@ -668,8 +650,7 @@ public class XMLProductModule {
 	 * 
 	 * @param productTestArchive Fichier d'archive.
 	 */
-	private void transferTesterReportArchive(File productTestArchive)
-			throws IOException, ConfigFileReaderException {
+	private void transferTesterReportArchive(File productTestArchive) {
 		// Read config file parameters
 		JProductBaseParameters _jProductBaseParameters = JProductBaseParameters
 				.getInstance();
@@ -692,34 +673,29 @@ public class XMLProductModule {
 		}
 	}
 
-	protected void integrationTransfer(String testerReportFileName,
-			LabviewTesterReport labviewTesterReport, boolean confirmTestResult,
-			StringBuffer customerComment) throws ParserConfigurationException,
-			SAXException, IOException, ConfigFileReaderException,
-			JDOMException, LabviewTesterReportException, SQLException,
-			JProductBaseException {
+	public void integrationTransfer(String testerReportFileName, LabviewTesterReport labviewTesterReport, boolean confirmTestResult, StringBuffer customerComment) {
 		// Read config file parameters
-		JProductBaseParameters _jProductBaseParameters = JProductBaseParameters
-				.getInstance();
+		JProductBaseParameters _jProductBaseParameters = JProductBaseParameters.getInstance();
 		// Pre-testerReport file
-		String _preTesterReportXmlFileName = _jProductBaseParameters
-				.getPreTesterReportXmlFileName();
+		String _preTesterReportXmlFileName = _jProductBaseParameters.getPreTesterReportXmlFileName();
+		
 		if (null == _preTesterReportXmlFileName) {
-			throw new JProductBaseException(
-					"Fichier de pré-rapport non configuré.");
+			throw new IllegalArgumentException("Fichier de pré-rapport non configuré.");
 		}
 
 		// Save test result and confirmation in preTesterReport file
-		XMLTesterModule _xmlTesterModule = new XMLTesterModule();
 		_xmlTesterModule.updatePreTesterReportXml(_preTesterReportXmlFileName,
 				labviewTesterReport.getResultat(), confirmTestResult,
 				customerComment);
 
 		// Read preTesterReport after file transfer (for dispensation alert).
-		InputStream _preTesterReportInputStream = new FileInputStream(
-				_preTesterReportXmlFileName);
-		PreTesterReport _preTesterReport = PreTesterReport
-				.getPreTesterReport(_preTesterReportInputStream);
+		InputStream _preTesterReportInputStream;
+		try {
+			_preTesterReportInputStream = new FileInputStream(_preTesterReportXmlFileName);
+		} catch (FileNotFoundException e) {
+			throw new RuntimeException(e);
+		}
+		PreTesterReport _preTesterReport = PreTesterReport.getPreTesterReport(_preTesterReportInputStream);
 
 		// Prepare report file transfer
 		this.reportTransfer(_preTesterReportXmlFileName, testerReportFileName);
@@ -728,13 +704,11 @@ public class XMLProductModule {
 		this.dispensationAlert(_preTesterReport);
 	}
 
-	private void dispensationAlert(PreTesterReport preTesterReport)
-			throws ConfigFileReaderException, IOException, SQLException,
-			JProductBaseException {
+	private void dispensationAlert(PreTesterReport preTesterReport) {
 		// Result "Passed"
 		if (preTesterReport.getResult().equals("Passed")) {
 			// Products
-			ServiceInterface _serviceInterface = new ServiceInterface();
+			ServiceInterface _serviceInterface = ServiceInterface.getInstance();
 
 			List<ProductTest> _productTests = preTesterReport.getProductTests();
 			for (ProductTest _productTest : _productTests) {

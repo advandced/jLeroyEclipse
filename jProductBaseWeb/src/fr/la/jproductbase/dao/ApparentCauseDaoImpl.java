@@ -1,5 +1,6 @@
 package fr.la.jproductbase.dao;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -7,60 +8,57 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.naming.NamingException;
-
 import fr.la.jproductbase.metier.ApparentCause;
 import fr.la.jproductbase.metier.ApparentCauseCustomer;
 
-public class ApparentCauseDaoImpl implements ApparentCauseDao {
-	private static String exceptionMsg = "Cause probable inconnu dans la base de données.";
+public class ApparentCauseDaoImpl extends GenericDao implements ApparentCauseDao {
 
-	private ConnectionProduct cnxProduct;
+	ConnectionProduct cnxProduct;
+	
+	ApparentCauseCustomerDao _apparentCauseCustomerDao;
 
-	public ApparentCauseDaoImpl(ConnectionProduct cnxProduct) {
+	public ApparentCauseDaoImpl(ConnectionProduct cnxProduct, ApparentCauseCustomerDao apparentCauseCustomerDao) {
 		this.cnxProduct = cnxProduct;
+		_apparentCauseCustomerDao = apparentCauseCustomerDao;
 	}
 
 	@Override
-	public List<ApparentCause> getApparentCauses() throws SQLException {
+	public List<ApparentCause> getApparentCauses() {
 		List<ApparentCause> _apparentCauses = new ArrayList<ApparentCause>();
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
-					"SELECT * FROM apparentCause ORDER BY description;");
+			c = cnxProduct.getCnx();
+			_stmt = c.prepareStatement("SELECT * FROM apparentCause ORDER BY description;");
 			_rs = _stmt.executeQuery();
 
 			while (_rs.next()) {
 				ApparentCause _apparentCause = this.getApparentCause(_rs);
 				_apparentCauses.add(_apparentCause);
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _apparentCauses;
 	}
 
 	@Override
-	public ApparentCause getApparentCause(int idApparentCause)
-			throws SQLException {
+	public ApparentCause getApparentCause(int idApparentCause) {
 		ApparentCause _apparentCause = null;
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
-					"SELECT * FROM apparentCause WHERE idApparentCause=?");
+			c = cnxProduct.getCnx();
+			_stmt = c.prepareStatement("SELECT * FROM apparentCause WHERE idApparentCause=?");
 			_stmt.setInt(1, idApparentCause);
 			_rs = _stmt.executeQuery();
 
@@ -69,30 +67,28 @@ public class ApparentCauseDaoImpl implements ApparentCauseDao {
 			} else {
 				_apparentCause = null;
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _apparentCause;
 	}
 
 	@Override
-	public ApparentCause addApparentCause(ApparentCause apparentCause)
-			throws SQLException, ApparentCauseDaoException {
+	public ApparentCause addApparentCause(ApparentCause apparentCause) {
 		ApparentCause _apparentCause = apparentCause;
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			c = cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 					"INSERT INTO apparentCause " + "(state, description, idApparentCauseCustomer) "
 							+ "VALUES (?, ?, ?)");
 			_stmt.setInt(1, apparentCause.getState());
@@ -101,7 +97,7 @@ public class ApparentCauseDaoImpl implements ApparentCauseDao {
 					.getIdApparentCauseCustomer());
 			_stmt.executeUpdate();
 
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			_stmt = c.prepareStatement(
 					"SELECT * FROM apparentCause " + "WHERE (state=?) "
 							+ " AND (description=?) AND (idApparentCauseCustomer=?)");
 			_stmt.setInt(1, apparentCause.getState());
@@ -112,32 +108,28 @@ public class ApparentCauseDaoImpl implements ApparentCauseDao {
 			if (_rs.next()) {
 				_apparentCause = this.getApparentCause(_rs);
 			} else {
-				throw new ApparentCauseDaoException(exceptionMsg);
+				throw new IllegalStateException();
 			}
-
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 
 		return _apparentCause;
 	}
 
 	@Override
-	public void updateApparentCause(ApparentCause apparentCause)
-			throws SQLException, ApparentCauseDaoException {
+	public void updateApparentCause(ApparentCause apparentCause) {
+		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			c = cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
 					"UPDATE apparentCause " + "SET state=?, description=?, idApparentCauseCustomer=? "
 							+ " WHERE (idApparentCause=?)");
 			System.out.println("dao updateApparentCause"+apparentCause.getApparentCauseCustomer().getIdApparentCauseCustomer()+" "+apparentCause.getIdApparentCause());
@@ -148,7 +140,7 @@ public class ApparentCauseDaoImpl implements ApparentCauseDao {
 			_stmt.executeUpdate();
 
 			// Update object
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
+			_stmt = c.prepareStatement(
 					"SELECT * FROM apparentCause"
 							+ " WHERE (idApparentCause=?)");
 			_stmt.setInt(1, apparentCause.getIdApparentCause());
@@ -157,38 +149,33 @@ public class ApparentCauseDaoImpl implements ApparentCauseDao {
 			if (_rs.next()) {
 				this.getApparentCause(_rs);
 			} else {
-				throw new ApparentCauseDaoException(exceptionMsg);
+				throw new IllegalStateException();
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _rs) {
-				_rs.close();
-			}
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_rs);
+			close(_stmt);
+			close(c);
 		}
 	}
 
 	@Override
-	public void removeApparentCause(ApparentCause apparentCause)
-			throws SQLException {
+	public void removeApparentCause(ApparentCause apparentCause) {
+		Connection c = null;
 		PreparedStatement _stmt = null;
 
 		try {
-			_stmt = this.cnxProduct.getCnx().prepareStatement(
-					"DELETE FROM apparentCause " + "WHERE (idApparentCause=?)");
+			c = cnxProduct.getCnx();
+			_stmt = c.prepareStatement("DELETE FROM apparentCause " + "WHERE (idApparentCause=?)");
 			_stmt.setInt(1, apparentCause.getIdApparentCause());
 			_stmt.executeUpdate();
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+		} catch (SQLException e) {
+			handleDAOException(e);
 		} finally {
-			if (null != _stmt) {
-				_stmt.close();
-			}
+			close(_stmt);
+			close(c);
 		}
 	}
 
@@ -211,14 +198,8 @@ public class ApparentCauseDaoImpl implements ApparentCauseDao {
 		String _description = rs.getString("description");
 		// Retreive ApparentCauseCustomer
 		int _idApparentCauseCustomer = rs.getInt("idApparentCauseCustomer");
-		ApparentCauseCustomerDao _apparentCauseCustomerDao = new ApparentCauseCustomerDaoImpl(
-				this.cnxProduct);
-		ApparentCauseCustomer _apparentCauseCustomer = _apparentCauseCustomerDao
-				.getApparentCauseCustomer(_idApparentCauseCustomer);
-
-		ApparentCause _apparentCause = new ApparentCause(_idApparentCause,
-				_timestamp, _state, _description, _apparentCauseCustomer);
-
+		ApparentCauseCustomer _apparentCauseCustomer = _apparentCauseCustomerDao.getApparentCauseCustomer(_idApparentCauseCustomer);
+		ApparentCause _apparentCause = new ApparentCause(_idApparentCause,_timestamp, _state, _description, _apparentCauseCustomer);
 		return _apparentCause;
 	}
 }
