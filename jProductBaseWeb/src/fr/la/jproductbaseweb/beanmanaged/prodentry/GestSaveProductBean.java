@@ -33,9 +33,9 @@ public class GestSaveProductBean {
         String modele = null;
 
     	java.util.Date uDate = new java.util.Date (System.currentTimeMillis ()); //Relever l'heure avant le debut du progamme (en milliseconde) 
-        System.out.println("START");
+        System.out.println("Debut de la recherche de la liste des produits");
         List<Product> _productList = this.globalService.getProductsRecordables(modele);
-        System.out.println("OUT");
+        System.out.println("Fin de la recherche de la liste des produits");
     	Date dateFin = new Date (System.currentTimeMillis()); //Relever l'heure a la fin du progamme (en milliseconde) 
     	Date duree = new Date (System.currentTimeMillis()); //Pour calculer la différence
     	duree.setTime (dateFin.getTime () - uDate.getTime ());  //Calcul de la différence
@@ -50,19 +50,16 @@ public class GestSaveProductBean {
 
             ProductBean _productBean = new ProductBean();
 
-            _productBean.setIdProduct(p.getIdProduct());
+            _productBean.setIdProduct(p.getIdProduct()); // JB : cette ligne ne semble pas servir
             _productBean.setSerialNumber(p.getSerialNumber());
-
-            _productBean.setProductConf(p.getProductConf());
+            _productBean.setProductConf(p.getFEDDProductConf());
             _productBean.setDatecode(p.getDatecode());
-            //_productBean.getProductConf().setReference(p.getProductConf().getReference());
+            //_productBean.getProductConf().setReference(p.getProductConf().getReference()); en commentaire par RMO
 
-            this.productBeanList.add(_productBean);
-
+           this.productBeanList.add(_productBean);
         }
-        System.out.println("STOP");
+        System.out.println("Fin de la recuperation des informations produits");
         this.result = true;
-
     }
 
     public void saveProduct() {

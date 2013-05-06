@@ -1,36 +1,26 @@
 <html xmlns="http://www.w3c.org/1999/xhtml"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:p="http://primefaces.org/ui"
-	xmlns:ui="http://java.sun.com/jsf/facelets">
-<h:head>
-	<link type="text/css" rel="stylesheet"
-		href="#{request.contextPath}/css/default.css" />
-	<link type="text/css" rel="stylesheet"
-		href="#{request.contextPath}/css/syntaxhighlighter.css"></link>
-	<style type="text/css">
-.ui-tabs .ui-tabs-panel {
-	padding: 0px !important;
-}
-</style>
-</h:head>
-<h:body>
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:p="http://primefaces.org/ui"
+	  xmlns:ui="http://java.sun.com/jsf/facelets">
+  <h:head>
+      <title> Authentification Base Produits </title>
+	  <link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/default.css" />
+	  <link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/syntaxhighlighter.css" />
+	  <style type="text/css"> .ui-tabs .ui-tabs-panel {padding: 0px !important}</style>
+  </h:head>
+  <h:body>
 	<p:layout id="layoutParams" fullPage="true">
 
-		<p:layoutUnit id="layoutNorth" position="north"
-			style="text-align:center;" size="117">
+		<p:layoutUnit id="layoutNorth" position="north"	style="text-align:center;" size="117">
 			<h:form>
-				<h:graphicImage value="/images/entete.jpg" />
-
 				<p:growl id="messages" />
+				<h:graphicImage value="/images/entete.jpg" />
 			</h:form>
-
-
 		</p:layoutUnit>
 		
 		<p:layoutUnit position="center" id="panelCenterParam">
-			<p:panel header="Connectez-Vous"
-				style="width: 390px; text-align: center;margin: auto;">
+			<p:panel header="Connectez-Vous" style="width: 390px; text-align: center;margin: auto">
 				<h:form>
 					<p:messages id="messages" showDetail="true" autoUpdate="true" />
 					<p:panelGrid style="margin: auto;">
@@ -53,30 +43,12 @@
 						</p:row>
 					</p:panelGrid>
 					<p:row>
-						<p:commandButton style="margin: 0;"
-							action="#{loginBean.loginAction}" value="Connexion"
-							update=":content" ajax="false"></p:commandButton>
+						<p:commandButton style="margin:0"	action="#{loginBean.loginAction}" value="Connexion" update=":content" ajax="false" />
 					</p:row>
 				</h:form>
 			</p:panel>
 		</p:layoutUnit>
-	
-		<!--<p:layoutUnit position="center" id="panelCenterParam">
-			<p:panel header="Connectez-Vous"
-				style="width: 390px; text-align: center;margin: auto;">
 
-				<form action="j_security_check" method="post" id="LoginForm" name="LoginForm">
-					<h:panelGrid columns="2">
-						<h:outputText value="Username:" />
-						<h:inputText id="j_username" autocomplete="on" />
-						<h:outputText value="Password:" />
-						<h:inputSecret id="j_password" autocomplete="on" />
-						<h:commandButton type="submit" value="Se connecter" />
-					</h:panelGrid>
-				</form>
-			</p:panel>
-		</p:layoutUnit> -->
-	</p:layout>
-</h:body>
-
+    </p:layout>
+  </h:body>
 </html>

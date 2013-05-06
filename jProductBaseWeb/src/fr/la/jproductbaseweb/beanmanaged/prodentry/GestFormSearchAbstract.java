@@ -5,7 +5,6 @@ import fr.la.jproductbase.metier.ProductFamily;
 import fr.la.jproductbase.service.ServiceInterface;
 import java.sql.SQLException;
 import java.util.List;
-import javax.annotation.PostConstruct;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import org.primefaces.component.commandbutton.CommandButton;
@@ -24,7 +23,6 @@ public abstract class GestFormSearchAbstract<T> {
     protected String supplierCode;
     protected String configuration;
     protected int state;
-    protected String pathLoadingPage;
     protected Product Mother;
     protected List<ProductFamily> productFamilies;
     protected List<T> productObjectList;
@@ -34,54 +32,31 @@ public abstract class GestFormSearchAbstract<T> {
     protected FacesContext context;
 
     public GestFormSearchAbstract() {
-
         this.moduleGlobale = ServiceInterface.getInstance();
         this.context = FacesContext.getCurrentInstance();
         try {
             getFamiliesListProduct();
         } catch (SQLException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
-
-
-    }
-
-    @PostConstruct
-    protected void loadedPage() {
-        System.out.println("page Loaded");
-
-        this.pathLoadingPage = this.context.getViewRoot().getViewId();
-
-        System.out.println("path" + this.pathLoadingPage);
-
     }
 
     protected Dialog getDialogToButton(CommandButton commandButton) {
-
         Dialog _dialog = null;
-
         _dialog = (Dialog) commandButton.getParent();
-
         return _dialog;
     }
 
     protected void hideDialog(Dialog dialog) {
-
         RequestContext _context = RequestContext.getCurrentInstance();
-
         _context.execute(dialog.getWidgetVar() + ".hide()");
-
     }
 
     public void quit(ActionEvent event) {
-
         CommandButton _buttonAnnul = (CommandButton) event.getSource();
         Dialog _dialog = getDialogToButton(_buttonAnnul);
-
         hideDialog(_dialog);
         // return "/param/operator.jsf";
-
     }
 
     public abstract void detailAction();

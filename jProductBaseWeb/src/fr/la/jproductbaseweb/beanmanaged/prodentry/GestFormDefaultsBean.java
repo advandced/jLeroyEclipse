@@ -10,37 +10,18 @@ import fr.la.jproductbase.metier.ProductionFailureReport;
 @SessionScoped
 public class GestFormDefaultsBean<T> extends GestFormSearchAbstract<ProductionFailureReport> {
 	
-	public GestFormDefaultsBean(){
-				
-		System.out.println("valeur path prout" + this.pathLoadingPage);
-		
-	}
-	
-	
-	
+	public GestFormDefaultsBean(){}
 
 	@Override
-	public void detailAction() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void detailAction() {}
 
 	@Override
-	public void getFamiliesListProduct() throws SQLException {
-		// TODO Auto-generated method stub
-		
-	}
+	public void getFamiliesListProduct() throws SQLException {}
 
 	@Override
-	public void searchProduct() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void searchProduct() {}
 
 	@Override
-	public void modifyProduct(ActionEvent event) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void modifyProduct(ActionEvent event) {}
 
 }

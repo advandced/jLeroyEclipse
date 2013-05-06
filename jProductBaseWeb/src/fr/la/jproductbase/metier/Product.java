@@ -200,6 +200,13 @@ public class Product implements Serializable {
 	}
 
 	/**
+	 * @return the productConf from FEDDproductBase
+	 */
+	public ProductConf getFEDDProductConf() {
+		return productConf;
+	}
+
+	/**
 	 * @param productConf
 	 *            the productConf to set
 	 */

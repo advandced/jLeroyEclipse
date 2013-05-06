@@ -75,6 +75,34 @@ public class ProductConfDaoImpl extends GenericDao implements ProductConfDao {
 	}
 
 	@Override
+	public ProductConf getFEDDProductConf(int idProductConf) {
+		ProductConf _productConf = null;
+		Connection c = null;
+		PreparedStatement _stmt = null;
+		ResultSet _rs = null;
+
+		try {
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
+					"SELECT * FROM FEDDproductBase.productConf" + " WHERE (idProductConf=?)");
+			_stmt.setInt(1, idProductConf);
+			_rs = _stmt.executeQuery();
+			if (_rs.next()) {
+				_productConf = this.getProductConf(_rs);
+			} else {
+				_productConf = null;
+			}
+		} catch (SQLException e) {
+			handleDAOException(e);
+		} finally {
+			close(_rs);
+			close(_stmt);
+			close(c);
+		}
+		return _productConf;
+	}
+
+	@Override
 	public ProductConf getProductConf(String reference, String majorIndex, String minorIndex) {
 		ProductConf _productConf = null;
 		Connection c = null;

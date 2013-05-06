@@ -248,4 +248,6 @@ public interface ProductConfDao {
     public List<ProductConf> getProductConfLazy(Map<String, String> filters, int limit, int maxperpage);
 
     public int countProductConf(Map<String, String> filters);
+
+	public ProductConf getFEDDProductConf(int idProductConf);
 }

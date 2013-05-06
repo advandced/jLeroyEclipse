@@ -1,4 +1,3 @@
-
 <ui:composition xmlns="http://www.w3c.org/1999/xhtml"
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:h="http://java.sun.com/jsf/html"
@@ -13,41 +12,33 @@
             <f:facet name="header">
                 <h:outputText value="FORMULAIRE DE RECHERCHE DE PRODUITS" />
             </f:facet>
-            <p:commandButton value="Afficher Produits OK"
-                             action="#{gestSaveProductBean.displayProduct}" process="@form"
-                             update=":form tab:productSearched">
-            </p:commandButton>
-
-            <p:commandButton value="Enregistrement Selection"
-                             action="#{gestSaveProductBean.saveProduct}">
-
-            </p:commandButton>
-
+            
+            <p:commandButton value="Afficher Produits OK" action="#{gestSaveProductBean.displayProduct}" update=":form tab:productSearched" process="@form" />
+            <p:commandButton value="Enregistrement Selection" action="#{gestSaveProductBean.saveProduct}" />
 
             <h:form id="tab" rendered="#{gestSaveProductBean.result}">
                 <p:contextMenu for="productSearched">
                     <p:menuitem value="Detail" icon="ui-icon-search"
                                 action="#{gestSearchProduct.detailAction}"
-                                oncomplete="productDialog.show()" process="@form"
-                                update=":form:formDial"></p:menuitem>
+                                oncomplete="productDetail.show()" process="@form"
+                                update=":form:formDial">
+                    </p:menuitem>
                 </p:contextMenu>
 
-                <p:dataTable id="productSearched" var="product"
+                <p:dataTable id="productSearched" 
+                             var="product"
                              value="#{gestSaveProductBean.productBeanList}">
 
-                    <f:facet name="header">
+                    <f:facet name="header" >
                         <h:outputText value="ELEMENTS" />
                     </f:facet>
 
-                    <p:column headerText="SELECTION">
-                        <p:selectBooleanCheckbox value="#{product.selectedProduct}">
-                        </p:selectBooleanCheckbox>
-
+                    <p:column headerText="Selection">
+                        <p:selectBooleanCheckbox value="#{product.selectedProduct}" />
                     </p:column>
 
                     <p:column headerText="Modele">
-                        <h:outputText
-                            value="#{product.productConf.productConfModel.reference}" />
+                        <h:outputText value="#{product.productConf.productConfModel.reference}" />
                     </p:column>
 
                     <p:column headerText="Famille">
@@ -63,14 +54,13 @@
                     </p:column>
 
                     <p:column headerText="Configuration">
-                        <h:outputText
-                            value="#{product.productConf.reference}~#{product.productConf.majorIndex}~#{product.productConf.minorIndex}" />
+                        <h:outputText value="#{product.productConf.reference}~#{product.productConf.majorIndex}~#{product.productConf.minorIndex}" />
                     </p:column>
                 </p:dataTable>
             </h:form>
+            
             <h:form id="formDial">
-                <p:dialog id="dialProd" widgetVar="productDialog" width="800"
-                          height="600">
+                <p:dialog id="dialProd" widgetVar="productDetail" width="972" height="600">
 
                     <p:panelGrid id="display">
                         <f:facet name="header">
@@ -120,29 +110,23 @@
                                 <p:selectOneMenu value="#{gestSearchProduct.state}">
                                     <f:selectItem itemLabel="actif" itemValue="1" />
                                     <f:selectItem itemLabel="inactif" itemValue="0" />
-
                                 </p:selectOneMenu>
                             </p:column>
                         </p:row>
                     </p:panelGrid>
 
                     <p:tabView id="tabViewCard">
-                        <p:ajax event="tabChange" process="@this" update="tabViewCard"
-                                Listener="#{gestSearchProduct.onTabChange}" />
+                        <p:ajax event="tabChange" process="@this" update="tabViewCard" Listener="#{gestSearchProduct.onTabChange}" />
                         <p:tab id="tabView" title="Carte installees">
-                            <p:dataTable value="#{gestSearchProduct.elementList}"
-                                         var="elementCard">
-
+                            <p:dataTable value="#{gestSearchProduct.elementList}" var="elementCard">
                                 <f:facet name="header">
                                     <h:outputText value="ELEMENTS" />
                                 </f:facet>
-
                                 <p:column headerText="Configuration">
                                     <h:outputText value="#{elementCard.productConf.reference}" />
                                 </p:column>
                                 <p:column headerText="Identifiable">
-                                    <p:selectBooleanCheckbox disabled="true"
-                                                             value="#{elementCard.productConf.identifiable}"></p:selectBooleanCheckbox>
+                                    <p:selectBooleanCheckbox disabled="true" value="#{elementCard.productConf.identifiable}" />
                                 </p:column>
                                 <p:column headerText="Numero de Serie">
                                     <h:outputText value="#{elementCard.serialNumber}" />
@@ -153,9 +137,9 @@
                                 <p:column headerText="Code fournisseur">
                                     <h:outputText value="#{elementCard.providerCode}" />
                                 </p:column>
-
                             </p:dataTable>
                         </p:tab>
+<!-- mis en commentaire par JB
                         <p:tab id="tabList" title="Liste des Cartes">
                             <p:dataTable value="#{gestSearchProduct.cardElementList}"
                                          var="card" rowKey="#{card.idProduct}"
@@ -186,15 +170,13 @@
                                 </p:column>
                             </p:dataTable>
                         </p:tab>
+-->
                     </p:tabView>
-
 
                     <p:tabView id="tabViewSoft">
                         <p:ajax event="tabChange" process="@this" update="tabViewSoft" />
                         <p:tab id="tabView" title="Logiciels installes">
-
-                            <p:dataTable value="#{gestSearchProduct.softwareList}"
-                                         var="software">
+                            <p:dataTable value="#{gestSearchProduct.softwareList}" var="software">
                                 <f:facet name="header">
                                     <p:row>
                                         <p:column>
@@ -208,18 +190,12 @@
                                 <p:column headerText="version">
                                     <h:outputText value="#{software.version}" />
                                 </p:column>
-
                             </p:dataTable>
-
                         </p:tab>
-
+<!-- mis en commentaire par JB
                         <p:tab id="tabList" title="Liste des logiciels">
-
-                            <p:dataTable value="#{gestSearchProduct.softwareElementList}"
-                                         var="softwareElement">
-
+                            <p:dataTable value="#{gestSearchProduct.softwareElementList}" var="softwareElement">
                                 <f:facet name="header">
-
                                     <p:row>
                                         <p:column>
                                             <h:outputText value="LOGICIELS" />
@@ -227,36 +203,27 @@
                                     </p:row>
                                 </f:facet>
                                 <p:column headerText="SELECTION">
-
-                                    <p:selectBooleanCheckbox
-                                        value="#{softwareElement.selectedSoftware}">
+                                    <p:selectBooleanCheckbox value="#{softwareElement.selectedSoftware}">
                                         <p:ajax listener="#{gestSearchProduct.selectSoftCheckBox}" />
                                     </p:selectBooleanCheckbox>
-
                                 </p:column>
-
                                 <p:column headerText="Nom">
                                     <h:outputText value="#{softwareElement.name}" />
                                 </p:column>
-
                                 <p:column headerText="Version">
                                     <h:outputText value="#{softwareElement.version}" />
                                 </p:column>
-
                             </p:dataTable>
-
                         </p:tab>
-
+-->
                     </p:tabView>
 
-                    <p:commandButton value="Modifier"
-                                     action="#{gestSearchProduct.modifyProduct}" update="@form"></p:commandButton>
-
+<!-- mis en commentaire par JB
+                    <p:commandButton value="Modifier" action="#{gestSearchProduct.modifyProduct}" update="@form" />
+-->
                 </p:dialog>
+            </h:form>
 
-            </h:form>        </h:form>
-
-
+        </h:form>
     </ui:define>
-
 </ui:composition>

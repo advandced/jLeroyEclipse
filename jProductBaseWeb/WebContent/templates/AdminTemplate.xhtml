@@ -1,36 +1,30 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui">
-<h:head>
-	<title> Gestion des droits. </title>
-</h:head>
-<h:body>
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:p="http://primefaces.org/ui">
+  <h:head>
+	<title> Gestion des Droits </title>
+      <link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/default.css" />
+      <link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/syntaxhighlighter.css" />
+      <style type="text/css"> .ui-tabs .ui-tabs-panel {padding: 0px !important;}</style>
+  </h:head>
+  <h:body>
 	<p:layout fullPage="true">
-		<p:layoutUnit id="header" position="north" size="200"
-			style="text-align : center;border:0; ">
-			<h:outputLink value="index.jsf"><p:graphicImage value="/images/entete.jpg" /></h:outputLink>
-			<h:form style="float: right; margin-right: 10px; ">
-					<p:commandButton value="deconnexion" action="#{loginBean.logout}"
-						ajax="false"></p:commandButton>
-				</h:form>
+
+		<p:layoutUnit id="header" position="north" size="156" style="text-align : center;border:0">
+			<h:outputLink value="index.jsf">
+				<p:graphicImage value="/images/entete.jpg" />
+			</h:outputLink>
+			<h:form style="float: right; margin-right: 10px">
+				<p:commandButton value="deconnexion" action="#{loginBean.logout}" ajax="false" />
+			</h:form>
 			<p:menubar>
-				<p:menuitem value="Utilisateur" url="/admin/utilisateur.jsf"
-					icon="ui-icon-document" />
-
-				<p:menuitem value="Role" url="/admin/role.jsf"
-					icon="ui-icon-document" />
-
-				<p:menuitem value="Ressource" url="/admin/ressource.jsf"
-					icon="ui-icon-document" />
-
-				<p:menuitem value="Permission" url="/admin/permission.jsf"
-					icon="ui-icon-document" />
-
-				<p:menuitem value="Autorisation"
-					url="/admin/autorisation.jsf" icon="ui-icon-document" />
-					<p:menuitem value="Retourner à l'accueil"
-					url="..//panel.jsf" icon="ui-icon-document" />
+				<p:menuitem value="Utilisateur  " 			url="/admin/utilisateur.jsf" />
+				<p:menuitem value="Role  " 					url="/admin/role.jsf" />
+				<p:menuitem value="Ressource  " 			url="/admin/ressource.jsf" />
+				<p:menuitem value="Permission  " 			url="/admin/permission.jsf" />
+				<p:menuitem value="Autorisation  " 			url="/admin/autorisation.jsf" />
+				<p:menuitem value="Retourner à l'accueil" 	url="../panel.jsf" />
 			</p:menubar>
 		</p:layoutUnit>
 
@@ -38,11 +32,6 @@
 			<ui:insert name="content" />
 		</p:layoutUnit>
 
-		<p:layoutUnit id="footer" position="south" size="27"
-			style="text-align : center;border: 0;">
-			<h:outputLabel style="font-size: 9px;"
-				value="LEROY AUTOMATION WEB APPLICATION - JUSERRIGHT" />
-		</p:layoutUnit>
 	</p:layout>
 </h:body>
 </html>

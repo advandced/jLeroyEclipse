@@ -1,9 +1,7 @@
 package fr.la.jproductbaseweb.beanmanaged.prodentry;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -18,8 +16,6 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
-import javax.naming.NamingException;
-
 import org.primefaces.component.celleditor.CellEditor;
 import org.primefaces.component.column.Column;
 import org.primefaces.component.commandbutton.CommandButton;
@@ -33,19 +29,15 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.RowEditEvent;
 import org.primefaces.event.SelectEvent;
 
-import fr.la.configfilereader.ConfigFileReaderException;
 import fr.la.jproductbase.metier.CustomerComment;
 import fr.la.jproductbase.metier.ElementChanged;
 import fr.la.jproductbase.metier.Failure;
 import fr.la.jproductbase.metier.FailureReportComment;
-import fr.la.jproductbase.metier.JProductBaseException;
 import fr.la.jproductbase.metier.Operator;
 import fr.la.jproductbase.metier.Product;
 import fr.la.jproductbase.metier.ProductConf;
 import fr.la.jproductbase.metier.ProductionFailureReport;
-import fr.la.jproductbaseweb.beanmanaged.exception.ApparentCauseException;
 import fr.la.jproductbaseweb.beanmanaged.exception.EntryDefaultRapportException;
-import fr.la.jproductbaseweb.beanmanaged.exception.GestRapportDefaultsException;
 import fr.la.jproductbaseweb.beanmanaged.modelForm.EntryDefaultRapportForm;
 
 @ManagedBean(name = "gestRapportDefaults")
@@ -76,9 +68,7 @@ public class GestRapportDefaultsBean extends
 
 	public GestRapportDefaultsBean() {
 		super();
-
-		this.pathLoadingPage = this.context.getViewRoot().getViewId();
-
+		
 		selectedObject = new ProductionFailureReport();
 		this.cptFailure = 0;
 		this.newListFailure = new ArrayList<Failure>();
@@ -196,8 +186,7 @@ public class GestRapportDefaultsBean extends
 			// on verifie qu'on se trouve sur la colonne Carte remplacee
 			if (col.getHeaderText().equals("Carte Remplacee")) {
 
-				// on reva récuperer la valeur de la case coché de la ligne
-				// modifiée
+				// on va recuperer la valeur de la case cochee de la ligne modifiee
 				for (UIComponent compo : col.getChildren()) {
 					System.out.println("233 " + (compo instanceof CellEditor));
 					if (compo instanceof CellEditor) {
@@ -207,7 +196,7 @@ public class GestRapportDefaultsBean extends
 
 							SelectBooleanCheckbox _selectBoolean = (SelectBooleanCheckbox) _cellEditor
 									.getFacet("input");
-							// si l'utilisateur à coché carte remplacée
+							// si l'utilisateur a�coche carte remplacee
 							if (_selectBoolean.getValue().toString()
 									.equals("true")) {
 								System.out
@@ -247,17 +236,9 @@ public class GestRapportDefaultsBean extends
 								}
 
 								if (createFailure == true) {
-									// System.out.println("del "+del);
-									System.out.println("281 changement carte "
-											+ _failure);
-									System.out.println("283 list failure"
-											+ this.selectedObject
-
-											.getFailures());
-
-									System.out
-											.println("289 enregistrement de la failure"
-													+ _failure);
+									System.out.println("281 changement carte " + _failure);
+									System.out.println("283 list failure" + this.selectedObject.getFailures());
+									System.out.println("289 enregistrement de la failure" + _failure);
 									// insertin de l'id = 0 pour la failure pour
 									// indiquer a la couche DAO que c'est une
 									// nouvelle Failure
@@ -268,30 +249,20 @@ public class GestRapportDefaultsBean extends
 									 * this.selectedObject);
 									 */
 									this.selectedFailure = _failure;
-									System.out
-											.println("301 "
-													+ this.selectedObject
-															.getFailures());
+									System.out.println("301 " + this.selectedObject.getFailures());
 
 									newFailure("true");
 
-									RequestContext request = RequestContext
-											.getCurrentInstance();
+									RequestContext request = RequestContext.getCurrentInstance();
 
-									// on effectue un click en js pour
-									// raffraichir le tableau
-
+									// on effectue un click en js pour raffraichir le tableau
 									request.execute("document.getElementById('formDial:refreshFailure').click()");
 									createFailure = false;
-
 								}
-
 							}
 						}
 					}
-
 				}
-
 			}
 
 			if (col.getHeaderText().equals("Ref Carte")) {
@@ -322,11 +293,9 @@ public class GestRapportDefaultsBean extends
 							this.listElementChangedToSave = new ArrayList<ElementChanged>();
 							// System.out.println(this.productCardSelected);
 							// System.out.println(_failure);
-
 						}
 					}
 				}
-
 			}
 
 			if (col.getHeaderText().equals("Date Code")) {
@@ -582,7 +551,7 @@ public class GestRapportDefaultsBean extends
 		CommandButton _commandButton = (CommandButton) event.getSource();
 		Dialog _dialog = getDialogToButton(_commandButton);
 
-		// verification des Failures rajoutés
+		// verification des Failures rajoutees
 		int cptFailure = 0;
 		for (Failure failure : this.selectedObject.getFailures()) {
 

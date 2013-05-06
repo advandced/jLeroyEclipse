@@ -5,41 +5,23 @@
 	xmlns:f="http://java.sun.com/jsf/core">
 <ui:composition template="/templates/AdminTemplate.xhtml">
 	<ui:define name="content"> 
-		<h1 style="text-align:center;margin-top:0;">Gestion des Utilisateurs</h1>
+		<h1 style="text-align:center;margin-top:0px">Gestion des Utilisateurs</h1>
+
 		<h:form id="form">
 			<p:contextMenu for="form">
-				<p:menuitem value="Cree" update=":form2:dialogAdd"
-					icon="ui-icon-search" oncomplete="utilisateurDialogAdd.show()" />
-				<p:menuitem value="Modifier" update=":form3:dialogEdit"
-					icon="ui-icon-search" oncomplete="utilisateurDialogEdit.show()" />
+				<p:menuitem value="Cree" update=":form2:dialogAdd" icon="ui-icon-search" oncomplete="utilisateurDialogAdd.show()" />
+				<p:menuitem value="Modifier" update=":form3:dialogEdit" icon="ui-icon-search" oncomplete="utilisateurDialogEdit.show()" />
 			</p:contextMenu>
-
-			<p:dataTable id="users" var="User"
-				value="#{utilisateurBean.userList}" rowKey="#{User.iduser}"
+			<p:dataTable id="users" var="User" value="#{utilisateurBean.userList}" rowKey="#{User.iduser}"
 				selection="#{utilisateurBean.userSelected}" selectionMode="single">
-
-				<p:column style="text-align:center;" headerText="Login">
-            			#{User.login}  
-					</p:column>
-
-				<p:column style="text-align:center;" headerText="Actif">
-            			#{User.actif}  
-					</p:column>
-
-				<p:column style="text-align:center;" headerText="Nom">
-            			#{User.nom}  
-					</p:column>
-
-				<p:column style="text-align:center;" headerText="Prenom">
-            			#{User.prenom}  
-					</p:column>
-
-				<p:column style="text-align:center;" headerText="E-Mail">
-            			#{User.email}  
-					</p:column>
-
+				<p:column style="text-align:center" headerText="Login"> #{User.login} </p:column>
+				<p:column style="text-align:center" headerText="Actif"> #{User.actif} </p:column>
+				<p:column style="text-align:center" headerText="Nom">   #{User.nom}   </p:column>
+				<p:column style="text-align:center" headerText="Prenom">#{User.prenom}</p:column>
+				<p:column style="text-align:center" headerText="E-Mail">#{User.email} </p:column>
 			</p:dataTable>
 		</h:form>
+
 		<h:form id="form2">
 			<p:dialog header="Ajout d'un utilisateur" closable="false"
 				widgetVar="utilisateurDialogAdd" resizable="false" width="340"
