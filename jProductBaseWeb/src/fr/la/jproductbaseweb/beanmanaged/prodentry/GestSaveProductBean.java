@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
 import javax.naming.NamingException;
 
 import fr.la.configfilereader.ConfigFileReaderException;
@@ -17,7 +18,7 @@ import fr.la.jproductbase.service.ServiceInterface;
 import fr.la.jproductbaseweb.beanmanaged.ProductBean;
 
 @ManagedBean(name = "gestSaveProductBean")
-@ApplicationScoped
+@ViewScoped
 public class GestSaveProductBean {
 
     private List<ProductBean> productBeanList;
@@ -63,17 +64,12 @@ public class GestSaveProductBean {
     }
 
     public void saveProduct() {
-
         for (ProductBean productBean : productBeanList) {
-
             if (productBean.isSelectedProduct()) {
             	this.globalService.setProductFEDDtoLAI(productBean.getIdProduct(), productBean.getProductConf(), productBean.getSerialNumber(), productBean.getDatecode());
-
             }
-
         }
         displayProduct();
-
     }
 
     public List<ProductBean> getProductBeanList() {

@@ -1017,48 +1017,65 @@ public class ProductDaoImpl extends GenericDao implements ProductDao {
 		return _product;
 	}
 
-	/* 20-04-12 : RMO : CrÃ©ation de la mÃ©thode */
+	// JB : methode permettant de copier les produits selectionnes de la base FEDD sur la base LAI
 	@Override
-	public Product setProductFEDDtoLAI(int idProductFEDD, ProductConf config,
-			String serialNumber, String datecode)  {
+	public Product setProductFEDDtoLAI(int idProductFEDD, ProductConf config, String serialNumber, String datecode)  {
 
 		Product _product = null;
 		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
-		String ordreInsertion = "";
-		String ordreSelect = "";
 
-		try {
-			/* 1 +++++++++++++++++++++++++++++++++++++ */
+		try { // je prends la connexion pour cette longue transaction
+			c = this.cnxProduct.getCnx();
+
+			/*
+			 * Ajout de colonnes dans des tables pour conserver le lien entre les enregistrements de FEDD et de LAI.
+			 * Ces colonnes une fois les donnees enregistrees chez LAI seront supprimees
+			 */
+			
+			String modifTempTable = "";
+			
+			if (!this.ColumnAlreadyExist("testerBase", "testerReport", "idTesterReportFEDD")) {
+				System.out.println ("je cree la colonne idTesterReportFEDD");
+				modifTempTable = "ALTER TABLE `testerBase`.`testerReport` ADD COLUMN idTesterReportFEDD int(10)";
+				_stmt = c.prepareStatement(modifTempTable);
+				_stmt.executeUpdate();
+			}
+			if (!this.ColumnAlreadyExist("productBase", "ProductionFailureReport", "idProductionFailureReportFEDD")) {
+				System.out.println ("je cree la colonne idProductionFailureReportFEDD");
+				modifTempTable = "ALTER TABLE `productBase`.`ProductionFailureReport` ADD COLUMN idProductionFailureReportFEDD int(10)";
+				_stmt = c.prepareStatement(modifTempTable);
+				_stmt.executeUpdate();
+			}
+			if (!this.ColumnAlreadyExist("productBase", "failure", "idFailureFEDD")) {
+				System.out.println ("je cree la colonne idFailureFEDD");
+				modifTempTable = "ALTER TABLE `productBase`.`failure` ADD COLUMN idFailureFEDD int(10)";
+				_stmt = c.prepareStatement(modifTempTable);
+				_stmt.executeUpdate();
+			}
+
+			/* 1 ++++++++++++++++++++++++++++++++++++ */
 			/* Partie insertion dans la table product */
 			/* -------------------------------------- */
-			ordreInsertion = "INSERT INTO `productBase`.`product` "
+			_stmt = c.prepareStatement("INSERT INTO `productBase`.`product` "
 					+ "(timeStamp, state, serialNumber, datecode, macAddress, providerCode, idProductConf) "
-					+ "SELECT p.timestamp, p.state, p.serialNumber, p.datecode, p.macAddress, p.providerCode, p.idProductConf "
-					+ "FROM `FEDDproductBase`.`product` p "
-					+ "WHERE p.idProduct = ? "
-					+ "UNION "
-					+ "SELECT p2.timestamp, p2.state, p2.serialNumber, p2.datecode, p2.macAddress, p2.providerCode, p2.idProductConf "
-					+ "FROM `FEDDproductBase`.`product` p1, `FEDDproductBase`.`product` p2, `FEDDproductBase`.`product_product` pp "
-					+ "WHERE p1.idProduct = pp.idProduct AND pp.idProductComponent = p2.idProduct "
-					+ "AND p1.idProduct = ? "
-					+ "AND p2.idProduct NOT IN (1, 2, 3)";
-			c = this.cnxProduct.getCnx();
-			_stmt = c.prepareStatement(ordreInsertion);
+					+ "SELECT fp.timestamp, fp.state, fp.serialNumber, fp.datecode, fp.macAddress, fp.providerCode, fp.idProductConf "
+					+ "FROM `FEDDproductBase`.`product` fp "
+					+ "WHERE fp.idProduct = ? OR fp.idProduct IN (SELECT idProductComponent from `FEDDproductBase`.`product_product` fpp where fpp.idProduct = ? AND idProductComponent NOT IN (1, 2, 3))");
 			_stmt.setInt(1, idProductFEDD);
 			_stmt.setInt(2, idProductFEDD);
 			_stmt.executeUpdate();
+			System.out.println (_stmt);
 
-			int idProductLAI = this.getProduct(config, serialNumber, datecode)
-					.getIdProduct();
+			// JB : permet de recuperer idProduct de la base LAI (qui est un autoincrement) apres insertion depuis la base FEDD
+			int idProductLAI = this.getProduct(config, serialNumber, datecode).getIdProduct();
+			System.out.println (idProductLAI);
 
-
-			/* 2 +++++++++++++++++++++++++++++++++++++++++++++ */
+			/* 2 ++++++++++++++++++++++++++++++++++++++++++++ */
 			/* Partie insertion dans la table product_product */
 			/* ---------------------------------------------- */
-			ordreInsertion = "INSERT INTO `productBase`.`product_product` "
-					+ "(idProduct, idProductComponent) "
+			/*ordreInsertion = "INSERT INTO `productBase`.`product_product` (idProduct, idProductComponent) "
 					+ "SELECT p1.idProduct as idprod_LAI, p2.idProduct as idprodcomp_LAI "
 					+ "FROM `productBase`.`product` p1, `productBase`.`product` p2, "
 					+ "`FEDDproductBase`.`product` p3, `FEDDproductBase`.`product` p4, "
@@ -1071,90 +1088,65 @@ public class ProductDaoImpl extends GenericDao implements ProductDao {
 					+ "AND p2.datecode = p4.datecode "
 					+ "AND p2.idProductConf = p4.idProductConf "
 					+ "AND p3.idProduct = pp.idProduct "
-					+ "AND pp.idProductComponent = p4.idProduct";
-			_stmt = c.prepareStatement(ordreInsertion);
+					+ "AND pp.idProductComponent = p4.idProduct"; */
+			_stmt = c.prepareStatement("INSERT INTO `productBase`.`product_product` (idProduct, idProductComponent) "
+					+ "SELECT "+idProductLAI+", p.idProduct "
+					+ "FROM `productBase`.`product` p, `FEDDproductBase`.`product` fp, `FEDDproductBase`.`product_product` fpp "
+					+ "WHERE p.serialNumber = fp.serialNumber"
+					+ "  AND p.datecode = fp.datecode"
+					+ "  AND p.idProductConf = fp.idProductConf"
+					+ "  AND fp.idProduct = fpp.idProductComponent"
+					+ "  AND fpp.idproduct = ? ");
 			_stmt.setInt(1, idProductFEDD);
 			_stmt.executeUpdate();
+			System.out.println (_stmt);
 
-			/* 3 ++++++++++++++++++++++++++++++++++++++++++++++ */
+			/* 3 +++++++++++++++++++++++++++++++++++++++++++++ */
 			/* Partie insertion dans la table product_software */
 			/* ----------------------------------------------- */
-			ordreInsertion = "INSERT INTO `productBase`.`product_software` "
-					+ "(idProduct, idSoftware) " + "SELECT ?, ps.idSoftware "
+			_stmt = c.prepareStatement("INSERT INTO `productBase`.`product_software` (idProduct, idSoftware) "
+					+ "SELECT "+idProductLAI+", ps.idSoftware "
 					+ "FROM `FEDDproductBase`.`product_software` ps "
-					+ "WHERE ps.idProduct = ?";
-			_stmt = c.prepareStatement(ordreInsertion);
-			_stmt.setInt(1, idProductLAI);
-			_stmt.setInt(2, idProductFEDD);
-			_stmt.executeUpdate();
-
-			/* 4 ++++++++++++++++++++++++++++++++++++++++++++ */
-			/*
-			 * Partie laissÃ©e en stand by car non testÃ©e faute de
-			 * donnÃ©es.
-			 */
-			/* Partie insertion dans la table productComment */
-			/* --------------------------------------------- */
-			ordreInsertion = "INSERT INTO `productBase`.`productComment` "
-					+ "(timestamp, comment, idProduct) "
-					+ "SELECT pc.timestamp, pc.comment, ? "
-					+ "FROM `FEDDproductBase`.`productComment` pc "
-					+ "WHERE pc.idproduct = ? ";
-			_stmt = c.prepareStatement(ordreInsertion);
-			_stmt.setInt(1, idProductLAI);
-			_stmt.setInt(2, idProductFEDD);
-			_stmt.executeUpdate();
-
-			/* 5 ++++++++++++++++++++++++++++++++++++ */
-			/* Partie insertion dans la table tester */
-			/* ------------------------------------- */
-			ordreInsertion = "INSERT INTO `testerBase`.`tester` (timestamp, state, name) "
-					+ "SELECT tfedd.timestamp, tfedd.state, tfedd.name "
-					+ "FROM `FEDDtesterBase`.`tester` tfedd, `FEDDtesterBase`.`testerReport` tr "
-					+ "WHERE tfedd.idTester = tr.idTester "
-					+ "AND tr. idProduct = ? AND tfedd.name NOT IN "
-					+ "(SELECT tlai.name FROM `testerBase`.`tester` tlai) "
-					+ "GROUP BY tfedd.name";
-			_stmt = c.prepareStatement(ordreInsertion);
+					+ "WHERE ps.idProduct = ?");
 			_stmt.setInt(1, idProductFEDD);
 			_stmt.executeUpdate();
+			System.out.println (_stmt);
 
-			/*
-			 * //////////////////////////////////////////////////////////////////
-			 * /
-			 * /////////////////////////////////////////////////////////////////
-			 * ///////////////////////////////////////////////////////////////
-			 */
-			/* 6 ++++++++++++++++++++++++++++++++++++++++++ */
-			/* Il faudra changer l'idTesterReportNext */
+			/* 4 +++++++++++++++++++++++++++++++++++++++++++ */
+			/* Partie insertion dans la table productComment */
+			/* --------------------------------------------- */
+			_stmt = c.prepareStatement("INSERT INTO `productBase`.`productComment` (timestamp, comment, idProduct) "
+					+ "SELECT pc.timestamp, pc.comment, "+idProductLAI
+					+ " FROM `FEDDproductBase`.`productComment` pc "
+					+ "WHERE pc.idproduct = ? ");
+			_stmt.setInt(1, idProductFEDD);
+			_stmt.executeUpdate();
+			System.out.println (_stmt);
+
+			/* 5 +++++++++++++++++++++++++++++++++++ */
+			/* Partie insertion dans la table tester */ //JB : s il n existe pas deja dans la base LAI 
+			/* ------------------------------------- */
+			_stmt = c.prepareStatement("INSERT INTO `testerBase`.`tester` (timestamp, state, name) "
+					+ "SELECT ft.timestamp, ft.state, ft.name "
+					+ "FROM `FEDDtesterBase`.`tester` ft, `FEDDtesterBase`.`testerReport` ftr "
+					+ "WHERE ft.idTester = ftr.idTester "
+					+ "  AND ftr. idProduct = ? "
+					+ "  AND ft.name NOT IN (SELECT name FROM `testerBase`.`tester`) "
+					+ "GROUP BY ft.name");
+			_stmt.setInt(1, idProductFEDD);
+			_stmt.executeUpdate();
+			System.out.println (_stmt);
+
+			/* 6 +++++++++++++++++++++++++++++++++++++++++ */
 			/* Partie insertion dans la table testerReport */
 			/* ------------------------------------------- */
+			/* Il faudra changer l'idTesterReportNext */
 
-			/*
-			 * Ajout de colonnes dans les tables testerReport et
-			 * ProductionFailureReport pour conserver le lien entre les
-			 * enregistrement de FEDD et de LAI. Ces colonnes une fois les
-			 * donnÃ©es enregistrÃ©es chez LAI seront supprimÃ©es
-			 */
-			
-			String modifTempTable = "";
-			if (this.ColumnAlreadyExist("testerBase", "testerReport", "idTesterReportFEDD")) {
-				modifTempTable = "ALTER TABLE `testerBase`.`testerReport` ADD COLUMN idTesterReportFEDD int(10)";
-				_stmt = c.prepareStatement(modifTempTable);
-				_stmt.executeUpdate();
-			}
-			if (this.ColumnAlreadyExist("productBase", "ProductionFailureReport", "idProductionFailureReportFEDD")) {
-				modifTempTable = "ALTER TABLE `productBase`.`ProductionFailureReport` ADD COLUMN idProductionFailureReportFEDD int(10)";
-				_stmt = c.prepareStatement(modifTempTable);
-				_stmt.executeUpdate();
-			}
-			if (this.ColumnAlreadyExist("productBase", "failure", "idFailureFEDD")) {
-				modifTempTable = "ALTER TABLE `productBase`.`failure` ADD COLUMN idFailureFEDD int(10)";
-				_stmt = c.prepareStatement(modifTempTable);
-				_stmt.executeUpdate();
-			}
-
-			ordreSelect = "SELECT tr.timestamp, tr.state, tr.date, tr.testVersion, tr.result, tr.consoUmini, tr.consoUnomi, "
+/*			
+			ordreInsertion = "INSERT INTO `testerBase`.TesterReport "
+					+ "(timestamp, state, date, testVersion, result, consoUmini, consoUnomi, "
+					+ "consoUmaxi, idTestType, idTester, operatorCode, idProduct, idTesterReportNext, idTesterReportFEDD) "
+					+ "SELECT tr.timestamp, tr.state, tr.date, tr.testVersion, tr.result, tr.consoUmini, tr.consoUnomi, "
 					+ "tr.consoUmaxi, tr.idTestType, tlai.idTester, tr.operatorCode, ?, tr.idTesterReportNext, tr.idTesterReport "
 					+ "FROM `FEDDtesterBase`.`testerReport` tr, `FEDDtesterBase`.`tester` tfedd, `testerBase`.`tester` tlai "
 					+ "WHERE tr.idTester = tfedd.idTester AND tfedd.name = tlai.name AND tr.idProduct = ? "
@@ -1163,202 +1155,146 @@ public class ProductDaoImpl extends GenericDao implements ProductDao {
 					+ "tr2.consoUmaxi, tr2.idTestType, 0, tr2.operatorCode, ?, tr2.idTesterReportNext, tr2.idTesterReport "
 					+ "FROM `FEDDtesterBase`.`testerReport` tr2 "
 					+ "WHERE tr2.idTester = 0 AND tr2.idProduct = ? ";
-			ordreInsertion = "INSERT INTO `testerBase`.TesterReport "
-					+ "(timestamp, state, date, testVersion, result, consoUmini, consoUnomi, "
+*/
+			// TODO : � faire confirmer par Stephan
+			_stmt = c.prepareStatement("INSERT INTO `testerBase`.TesterReport (timestamp, state, date, testVersion, result, consoUmini, consoUnomi, "
 					+ "consoUmaxi, idTestType, idTester, operatorCode, idProduct, idTesterReportNext, idTesterReportFEDD) "
-					+ ordreSelect;
-
-			_stmt = c.prepareStatement(ordreInsertion);
-			_stmt.setInt(1, idProductLAI);
-			_stmt.setInt(2, idProductFEDD);
-			_stmt.setInt(3, idProductLAI);
-			_stmt.setInt(4, idProductFEDD);
+					+ "SELECT ftr.timestamp, ftr.state, ftr.date, ftr.testVersion, ftr.result, ftr.consoUmini, ftr.consoUnomi, "
+					+ "ftr.consoUmaxi, ftr.idTestType, tlai.idTester, ftr.operatorCode, "+idProductLAI+", ftr.idTesterReportNext, ftr.idTesterReport "
+					+ "FROM `FEDDtesterBase`.`testerReport` ftr, `FEDDtesterBase`.`tester` ft, `testerBase`.`tester` tlai "
+					+ "WHERE ftr.idTester = ft.idTester AND ft.name = tlai.name AND ftr.idProduct = ? ");
+			_stmt.setInt(1, idProductFEDD);
 			_stmt.executeUpdate();
+			System.out.println (_stmt);
 
-			_stmt = c.prepareStatement(
-							"SELECT tr1.idTesterReport, tr2.idTesterReport "
-									+ "FROM `testerBase`.`testerReport` tr1, `testerBase`.`testerReport` tr2 "
-									+ "WHERE tr1.idTesterReportNext = tr2.idTesterReportFEDD "
-									+ "AND tr1.idTesterReportNext IS NOT NULL");
+			// JB : mise a jour de la relation idTesterReportNext avec idTesterReport apres transcodification de INSERT
+			_stmt = c.prepareStatement("SELECT tr1.idTesterReport, tr2.idTesterReport "
+					+ "FROM `testerBase`.`testerReport` tr1, `testerBase`.`testerReport` tr2 "
+					+ "WHERE tr1.idTesterReportNext = tr2.idTesterReportFEDD "
+					+ "AND tr1.idTesterReportNext IS NOT NULL");
 			_rs = _stmt.executeQuery();
+
 			while (_rs.next()) {
 				int record = _rs.getInt(1);
 				int recordNext = _rs.getInt(2);
 
-				/*
-				 * _stmt = this.cnxProduct.getCnx().prepareStatement(
-				 * "SELECT idTesterReport FROM `testerBase`.testerReport WHERE idTesterReport = ? "
-				 * ); _rs = _stmt.executeQuery();
-				 */
-
-				String ordreUpdate = "UPDATE `testerBase`.`testerReport` SET idTesterReportNext = ? "
-						+ "WHERE idTesterReport = ?";
-				_stmt = c.prepareStatement(ordreUpdate);
+				_stmt = c.prepareStatement("UPDATE `testerBase`.`testerReport` SET idTesterReportNext = ? WHERE idTesterReport = ?");
 				_stmt.setInt(1, recordNext);
 				_stmt.setInt(2, record);
 				_stmt.executeUpdate();
+				System.out.println (_stmt);
 			}
 
-			/* /////////////////////////////////////////////////////////////// */
-
 			/* 7 +++++++++++++++++++++++++++++++++++ */
-			/*
-			 * Partie laissÃ©e en stand by car non testÃ©e faute de
-			 * donnÃ©es.
-			 */
 			/* Partie insertion dans la table defect */
 			/* ------------------------------------- */
-			ordreInsertion = "INSERT INTO `testerBase`.`defect` "
-					+ "(timestamp, state, sequence, testName, function, value, idTesterReport) "
-					+ "SELECT dFEDD.timestamp, dFEDD.state, dFEDD.sequence, dFEDD.testName, "
-					+ "dFEDD.function, dFEDD.value, tr.idTesterReport "
-					+ "FROM `testerBase`.`testerReport` tr, `FEDDtesterBase`.`defect` dFEDD "
-					+ "WHERE tr.idproduct = ? "
-					+ "AND tr.idTesterReportFEDD = dFEDD.idTesterReport ";
-			_stmt = c.prepareStatement(ordreInsertion);
+			_stmt = c.prepareStatement("INSERT INTO `testerBase`.`defect` (timestamp, state, sequence, testName, function, value, idTesterReport) "
+					+ "SELECT fd.timestamp, fd.state, fd.sequence, fd.testName, fd.function, fd.value, tr.idTesterReport "
+					+ "FROM `FEDDtesterBase`.`defect` fd, `testerBase`.`testerReport` tr "
+					+ "WHERE fd.idTesterReport = tr.idTesterReportFEDD "
+					+ "AND tr.idproduct = ? ");
 			_stmt.setInt(1, idProductLAI);
 			_stmt.executeUpdate();
+			System.out.println (_stmt);
 
-			/* /////////////////////////////////////////////////////////////// */
-
-			/* 8 ++++++++++++++++++++++++++++++++++++++++++ */
+			/* 8 ++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 			/* Partie insertion dans la table ProductionFailureReport */
-			/* -------------------------------------------- */
-			ordreInsertion = "INSERT INTO productionFailureReport "
-					+ "(timestamp, state, registrationDate, repairDate, "
-					+ "failureCode, idProduct, idTesterReport, idProductionFailureReportFEDD) "
-					+ "SELECT frFEDD.timestamp, frFEDD.state, frFEDD.registrationDate, frFEDD.repairDate, "
-					+ "frFEDD.failureCode, ?, trLAI.idTesterReport, frFEDD.idProductionFailureReport "
-					+ "FROM `FEDDproductBase`.`productionFailureReport` frFEDD, `testerBase`.`testerReport` trLAI "
-					+ "WHERE frFEDD.idTesterReport = trLAI.idTesterReportFEDD ";
-			_stmt = c.prepareStatement(ordreInsertion);
+			/* ------------------------------------------------------ */
+			_stmt = c.prepareStatement("INSERT INTO productionFailureReport "
+					+ "(timestamp, state, registrationDate, repairDate, failureCode, idProduct, idTesterReport, idProductionFailureReportFEDD) "
+					+ "SELECT fpfr.timestamp, fpfr.state, fpfr.registrationDate, fpfr.repairDate, "
+					+ "fpfr.failureCode, ?, tr.idTesterReport, fpfr.idProductionFailureReport "
+					+ "FROM `FEDDproductBase`.`productionFailureReport` fpfr, `testerBase`.`testerReport` tr "
+					+ "WHERE fpfr.idTesterReport = tr.idTesterReportFEDD ");
 			_stmt.setInt(1, idProductLAI);
-			// _stmt.setInt(2, idProductFEDD);
 			_stmt.executeUpdate();
-
-			/* /////////////////////////////////////////////////////////////// */
+			System.out.println (_stmt);
 
 			/* 9 ++++++++++++++++++++++++++++++++++++++++++++ */
-			/*
-			 * Partie laissÃ©e en stand by car non testÃ©e faute de
-			 * donnÃ©es.
-			 */
 			/* Partie insertion dans la table customerComment */
 			/* ---------------------------------------------- */
-			ordreInsertion = "INSERT INTO `productBase`.`customerComment` "
-					+ "(timestamp, comment, idProductionFailureReport) "
-					+ "SELECT cc.timestamp, cc.comment, fr.idProductionFailureReport "
-					+ "FROM `productBase`.`productionFailureReport` fr, `FEDDproductBase`.`customerComment` cc "
-					+ "WHERE fr.idproduct = ? "
-					+ "AND fr.idProductionFailureReportFEDD = cc.idProductionFailureReport ";
-			_stmt = c.prepareStatement(ordreInsertion);
+			_stmt = c.prepareStatement("INSERT INTO `productBase`.`customerComment` (timestamp, comment, idProductionFailureReport) "
+					+ "SELECT fcc.timestamp, fcc.comment, pfr.idProductionFailureReport "
+					+ "FROM `FEDDproductBase`.`customerComment` fcc, `productBase`.`productionFailureReport` pfr "
+					+ "WHERE fcc.idProductionFailureReport = pfr.idProductionFailureReportFEDD "
+					+ "AND pfr.idproduct = ? ");
 			_stmt.setInt(1, idProductLAI);
 			_stmt.executeUpdate();
-
-			/* /////////////////////////////////////////////////////////////// */
+			System.out.println (_stmt);
 
 			/* 10 ++++++++++++++++++++++++++++++++++++++++++++++++ */
-			/*
-			 * Partie laissÃ©e en stand by car non testÃ©e faute de
-			 * donnÃ©es.
-			 */
 			/* Partie insertion dans la table failureReportComment */
 			/* --------------------------------------------------- */
-			ordreInsertion = "INSERT INTO `productBase`.`failureReportComment` "
-					+ "(timestamp, comment, commentDate, idProductionFailureReport) "
-					+ "SELECT frc.timestamp, frc.comment, frc.commentDate, fr.idProductionFailureReport "
-					+ "FROM `productBase`.`productionFailureReport` fr, `FEDDproductBase`.`failureReportComment` frc "
-					+ "WHERE fr.idproduct = ? "
-					+ "AND fr.idProductionFailureReportFEDD = frc.idProductionFailureReport ";
-			_stmt = c.prepareStatement(ordreInsertion);
+			_stmt = c.prepareStatement("INSERT INTO `productBase`.`failureReportComment` (timestamp, comment, commentDate, idProductionFailureReport) "
+					+ "SELECT ffrc.timestamp, ffrc.comment, ffrc.commentDate, pfr.idProductionFailureReport "
+					+ "FROM `FEDDproductBase`.`failureReportComment` ffrc, `productBase`.`productionFailureReport` pfr  "
+					+ "WHERE ffrc.idProductionFailureReport = pfr.idProductionFailureReportFEDD "
+					+ "AND pfr.idproduct = ? ");
 			_stmt.setInt(1, idProductLAI);
 			_stmt.executeUpdate();
+			System.out.println (_stmt);
 
-			/* /////////////////////////////////////////////////////////////// */
-
-			/* 10 bis ++++++++++++++++++++++++++++++++ */
-			/*
-			 * Partie laissÃ©e en stand by car non testÃ©e faute de
-			 * donnÃ©es.
-			 */
+			/* 11 ++++++++++++++++++++++++++++++++ */
 			/* Partie insertion dans la table operator */
 			/* --------------------------------------- */
-			ordreInsertion = "INSERT INTO `operatorBase`.`operator` "
-					+ "(timestamp, state, code, lastName, firstName) "
-					+ "SELECT ofedd.timestamp, ofedd.state, ofedd.code, ofedd.lastName, ofedd.firstName "
-					+ "FROM `FEDDoperatorBase`.`operator` ofedd, `FEDDproductBase`.`failure` f "
-					+ "WHERE ofedd.idOperator = f.idOperator "
-					+ "AND f. idProduct = ? AND (ofedd.code, ofedd.firstName, ofedd.lastName) NOT IN "
-					+ "(SELECT olai.code, olai.firstName, olai.lastName FROM `operatorBase`.`operator` olai) "
-					+ "GROUP BY ofedd.code, ofedd.firstName, ofedd.lastName";
-			_stmt = c.prepareStatement(ordreInsertion);
+			_stmt = c.prepareStatement("INSERT INTO `operatorBase`.`operator` (timestamp, state, code, lastName, firstName) "
+					+ "SELECT fo.timestamp, fo.state, fo.code, fo.lastName, fo.firstName "
+					+ "FROM `FEDDoperatorBase`.`operator` fo, `FEDDproductBase`.`failure` ff "
+					+ "WHERE fo.idOperator = ff.idOperator "
+					+ "AND ff. idProduct = ? "
+					+ "AND (fo.code, fo.firstName, fo.lastName) NOT IN (SELECT o.code, o.firstName, o.lastName FROM `operatorBase`.`operator` o) "
+					+ "GROUP BY 3, 4, 5 ");
 			_stmt.setInt(1, idProductFEDD);
 			_stmt.executeUpdate();
+			System.out.println (_stmt);
 
-			/* /////////////////////////////////////////////////////////////// */
-
-			/* 11 +++++++++++++++++++++++++++++++++++ */
-			/*
-			 * Partie laissÃ©e en stand by car non testÃ©e faute de
-			 * donnÃ©es.
-			 */
+			/* 12 +++++++++++++++++++++++++++++++++++ */
 			/* Partie insertion dans la table failure */
 			/* -------------------------------------- */
-			ordreInsertion = "INSERT INTO `productBase`.`failure` "
+			_stmt = c.prepareStatement("INSERT INTO `productBase`.`failure` "
 					+ "(timestamp, state, diagnosisDate, failureCause, cardFace, manufacturingTechnique, failureCode, "
 					+ "imputationCode, dismantleCard, idOperator, idProduct, idProductionFailureReport, idFailureFEDD) "
-					+ "SELECT fFEDD.timestamp, fFEDD.state, fFEDD.diagnosisDate, fFEDD.failureCause, fFEDD.cardFace, "
-					+ "fFEDD.manufacturingTechnique, fFEDD.failureCode, fFEDD.imputationCode, fFEDD.dismantleCard, "
-					+ "olai.idOperator, ?, fr.idProductionFailureReport, fFEDD.idFailure "
-					+ "FROM `productBase`.`productionFailureReport` fr, `FEDDproductBase`.`failure` fFEDD, "
-					+ " `FEDDoperatorBase`.`operator` ofedd, `operatorBase`.`operator` olai "
-					+ "WHERE fFEDD.idOperator = ofedd.idOperator "
-					+ "AND (ofedd.code = olai.code AND ofedd.firstName = olai.firstName AND ofedd.lastName = olai.lastName) "
-					+ "AND fFEDD.idProduct = ? "
-					+ "AND fr.idproduct = ? "
-					+ "AND fr.idProductionFailureReportFEDD = fFEDD.idProductionFailureReport ";
-			_stmt = c.prepareStatement(ordreInsertion);
+					+ "SELECT ff.timestamp, ff.state, ff.diagnosisDate, ff.failureCause, ff.cardFace, ff.manufacturingTechnique, ff.failureCode, "
+					+ "ff.imputationCode, ff.dismantleCard, o.idOperator, ?, pfr.idProductionFailureReport, ff.idFailure "
+					+ "FROM `FEDDproductBase`.`failure` ff, `productBase`.`productionFailureReport` pfr, "
+					+ " `FEDDoperatorBase`.`operator` fo, `operatorBase`.`operator` o "
+					+ "WHERE ff.idOperator = fo.idOperator "
+					+ "AND (fo.code = o.code AND fo.firstName = o.firstName AND fo.lastName = o.lastName) "
+					+ "AND pfr.idProductionFailureReportFEDD = ff.idProductionFailureReport "
+					+ "AND ff.idProduct = ? "
+					+ "AND pfr.idProduct = ? ");
 			_stmt.setInt(1, idProductLAI);
 			_stmt.setInt(2, idProductFEDD);
 			_stmt.setInt(3, idProductLAI);
 			_stmt.executeUpdate();
+			System.out.println (_stmt);
 
-			/* /////////////////////////////////////////////////////////////// */
-
-			/* 12 ++++++++++++++++++++++++++++++++++++++++++ */
-			/*
-			 * Partie laissÃ©e en stand by car non testÃ©e faute de
-			 * donnÃ©es.
-			 */
+			/* 13 ++++++++++++++++++++++++++++++++++++++++++ */
 			/* Partie insertion dans la table elementChanged */
 			/* --------------------------------------------- */
-			ordreInsertion = "INSERT INTO `productBase`.`elementChanged` "
-					+ "(timestamp, topoRef, idFailure) "
-					+ "SELECT ec.timestamp, ec.topoRef, f.idFailure "
-					+ "FROM `productBase`.`failure` f, `FEDDproductBase`.`elementChanged` ec "
-					+ "WHERE f.idproduct = ? "
-					+ "AND f.idFailureFEDD = ec.idFailure ";
-			_stmt = c.prepareStatement(ordreInsertion);
+			_stmt = c.prepareStatement("INSERT INTO `productBase`.`elementChanged` (timestamp, topoRef, idFailure) "
+					+ "SELECT fec.timestamp, fec.topoRef, f.idFailure "
+					+ "FROM `FEDDproductBase`.`elementChanged` fec, `productBase`.`failure` f "
+					+ "WHERE fec.idFailure = f.idFailureFEDD "
+					+ "AND f.idProduct = ? ");
 			_stmt.setInt(1, idProductLAI);
 			_stmt.executeUpdate();
+			System.out.println (_stmt);
 
-			/* /////////////////////////////////////////////////////////////// */
-
-			/* 13 +++++++++++++++++++++++++++++++++++++++++++ */
+			/* 14 +++++++++++++++++++++++++++++++++++++++++++ */
 			/* Partie insertion dans la table productDocument */
 			/* ---------------------------------------------- */
-			ordreInsertion = "INSERT INTO `productBase`.`productDocument` "
-					+ "(timestamp, state, title, link, idProductDocumentType, idProduct) "
-					+ "SELECT pd.timestamp, pd.state, pd.title, pd.link, pd.idProductDocumentType, "
-					+ idProductLAI + " "
-					+ "FROM `FEDDproductBase`.`productDocument` pd "
-					+ "WHERE pd.idproduct = ? ";
-			_stmt = c.prepareStatement(ordreInsertion);
-			_stmt.setInt(1, idProductFEDD);
+			_stmt = c.prepareStatement("INSERT INTO `productBase`.`productDocument` (timestamp, state, title, link, idProductDocumentType, idProduct) "
+					+ "SELECT fpd.timestamp, fpd.state, fpd.title, fpd.link, fpd.idProductDocumentType, ? "
+					+ "FROM `FEDDproductBase`.`productDocument` fpd "
+					+ "WHERE fpd.idproduct = ? ");
+			_stmt.setInt(1, idProductLAI);
+			_stmt.setInt(2, idProductFEDD);
 			_stmt.executeUpdate();
+			System.out.println (_stmt);
 
-			/* /////////////////////////////////////////////////////////////// */
-
+			
+			// suppression des colonnes temporaires
 			modifTempTable = "ALTER TABLE `productBase`.`failure` DROP COLUMN idFailureFEDD";
 			_stmt = c.prepareStatement(modifTempTable);
 			_stmt.executeUpdate();
@@ -1369,18 +1305,12 @@ public class ProductDaoImpl extends GenericDao implements ProductDao {
 			_stmt = c.prepareStatement(modifTempTable);
 			_stmt.executeUpdate();
 
-			/*
-			 * //////////////////////////////////////////////////////////////////
-			 * /
-			 * /////////////////////////////////////////////////////////////////
-			 * ///////////////////////////////////////////////////////////////
-			 */
 
-			// Retrieve product data
-			_stmt = c.prepareStatement("SELECT * FROM product" + " WHERE (idProduct=?)");
+			// Retrieve product data // JB : pourquoi ?
+			_stmt = c.prepareStatement("SELECT * FROM product WHERE (idProduct=?)");
 			_stmt.setInt(1, idProductLAI);
-
 			_rs = _stmt.executeQuery();
+
 			if (_rs.next()) {
 				_product = this.getProduct(_rs);
 			} else {
@@ -1393,7 +1323,6 @@ public class ProductDaoImpl extends GenericDao implements ProductDao {
 			close(_stmt);
 			close(c);
 		}
-
 		return _product;
 	}
 
@@ -1426,7 +1355,6 @@ public class ProductDaoImpl extends GenericDao implements ProductDao {
 			close(_stmt);
 			close(c);
 		}
-
 		return retour;
 	}
 }

@@ -14,7 +14,7 @@
             </f:facet>
             
             <p:commandButton value="Afficher Produits OK" action="#{gestSaveProductBean.displayProduct}" update=":form tab:productSearched" process="@form" />
-            <p:commandButton value="Enregistrement Selection" action="#{gestSaveProductBean.saveProduct}" />
+            <p:commandButton value="Enregistrement Selection" action="#{gestSaveProductBean.saveProduct}" update="tab:productSearched" />
 
             <h:form id="tab" rendered="#{gestSaveProductBean.result}">
                 <p:contextMenu for="productSearched">
@@ -218,9 +218,9 @@
 -->
                     </p:tabView>
 
-<!-- mis en commentaire par JB
+<!-- mis en commentaire par JB-->
                     <p:commandButton value="Modifier" action="#{gestSearchProduct.modifyProduct}" update="@form" />
--->
+
                 </p:dialog>
             </h:form>
 
