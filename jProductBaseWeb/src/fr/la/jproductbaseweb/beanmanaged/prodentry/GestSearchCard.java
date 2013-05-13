@@ -63,7 +63,8 @@ public class GestSearchCard extends GestFormSearchAbstract<Product> {
     public void modifyProduct(ActionEvent event) {
         CommandButton _commandButton = (CommandButton) event.getSource();
         Dialog _dialog = getDialogToButton(_commandButton);
-        CardModifyForm _crdModForm = new CardModifyForm(this.serialNumber,
+        @SuppressWarnings("unused")
+		CardModifyForm _crdModForm = new CardModifyForm(this.serialNumber,
                 this.dateCode, this.macAdress, this.supplierCode,
                 this.state);
         FacesContext context = FacesContext.getCurrentInstance();

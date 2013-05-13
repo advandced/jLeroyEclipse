@@ -1,6 +1,5 @@
 package fr.la.jproductbaseweb.beanmanaged.saventry;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import javax.faces.event.ActionEvent;

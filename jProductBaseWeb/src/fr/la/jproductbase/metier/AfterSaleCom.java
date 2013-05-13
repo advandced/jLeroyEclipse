@@ -1,10 +1,6 @@
 package fr.la.jproductbase.metier;
 
-import fr.la.configfilereader.ConfigFileReaderException;
-import fr.la.jproductbase.service.ServiceInterface;
-import java.io.IOException;
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Date;
 

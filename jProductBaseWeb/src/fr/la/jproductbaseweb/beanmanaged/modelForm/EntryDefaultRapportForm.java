@@ -4,7 +4,6 @@ import java.util.Date;
 
 import fr.la.jproductbase.metier.Product;
 import fr.la.jproductbase.service.ServiceInterface;
-import fr.la.jproductbaseweb.beanmanaged.exception.ApparentCauseException;
 import fr.la.jproductbaseweb.beanmanaged.exception.EntryDefaultRapportException;
 import java.io.Serializable;
 

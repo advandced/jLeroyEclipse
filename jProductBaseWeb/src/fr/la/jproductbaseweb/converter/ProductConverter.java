@@ -1,7 +1,5 @@
 package fr.la.jproductbaseweb.converter;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -11,7 +9,6 @@ import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
 import javax.faces.convert.FacesConverter;
 
-import fr.la.configfilereader.ConfigFileReaderException;
 import fr.la.jproductbase.metier.Product;
 import fr.la.jproductbase.metier.ProductType;
 import fr.la.jproductbase.service.ServiceInterface;

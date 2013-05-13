@@ -1,17 +1,15 @@
 package fr.la.jproductbaseweb.beanmanaged.modeltable;
 
-import fr.la.configfilereader.ConfigFileReaderException;
-import fr.la.jproductbase.metier.Product;
-import fr.la.jproductbase.service.ServiceInterface;
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
+
+import fr.la.jproductbase.metier.Product;
+import fr.la.jproductbase.service.ServiceInterface;
 
 public class ProductLazyList extends LazyDataModel<Product> {
 

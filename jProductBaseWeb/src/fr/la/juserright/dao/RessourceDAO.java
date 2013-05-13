@@ -1,10 +1,5 @@
 package fr.la.juserright.dao;
 
-import fr.la.jproductbase.dao.GenericDao;
-import fr.la.juserright.metier.Autorisation;
-import fr.la.juserright.metier.Ressource;
-import fr.la.juserright.metier.Ressource_Ressource;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,7 +7,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import javax.naming.NamingException;
+
+import fr.la.jproductbase.dao.GenericDao;
+import fr.la.juserright.metier.Autorisation;
+import fr.la.juserright.metier.Ressource;
+import fr.la.juserright.metier.Ressource_Ressource;
 
 public class RessourceDAO extends GenericDao implements ModelDAO<Ressource> {
 

@@ -1,15 +1,13 @@
 package fr.la.jproductbaseweb.beanmanaged.param;
 
-import java.sql.SQLException;
+import java.io.Serializable;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.naming.NamingException;
 
 import fr.la.jproductbase.metier.TestType;
 import fr.la.jproductbaseweb.beanmanaged.exception.TestTypeException;
 import fr.la.jproductbaseweb.beanmanaged.modelForm.TestTypeForm;
-import java.io.Serializable;
 
 @ManagedBean(name = "gestTypeTestBean")
 @SessionScoped

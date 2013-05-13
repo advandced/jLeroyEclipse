@@ -1,6 +1,5 @@
 package fr.la.jproductbaseweb.converter;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -11,7 +10,6 @@ import javax.faces.convert.ConverterException;
 import javax.faces.convert.FacesConverter;
 
 import fr.la.jproductbase.metier.ApparentCause;
-
 import fr.la.jproductbase.service.ServiceInterface;
 
 @FacesConverter(value = "apparentCauseLAIConverter")

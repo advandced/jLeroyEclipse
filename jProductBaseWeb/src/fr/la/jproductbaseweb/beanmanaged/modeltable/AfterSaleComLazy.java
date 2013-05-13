@@ -2,7 +2,6 @@ package fr.la.jproductbaseweb.beanmanaged.modeltable;
 
 import fr.la.jproductbase.metier.AfterSaleCom;
 import fr.la.jproductbase.service.ServiceInterface;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import org.primefaces.model.LazyDataModel;

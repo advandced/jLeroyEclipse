@@ -575,6 +575,7 @@ public class GestRapportDefaultsBean extends
 			cptFailure++;
 		}
 
+		@SuppressWarnings("unused")
 		EntryDefaultRapportForm _entryDefautlForm = new EntryDefaultRapportForm(
 				this.selectedObject.getFailureReportComment().getComment(),
 				this.selectedObject.getRegistrationDate(),

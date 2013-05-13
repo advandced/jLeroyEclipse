@@ -4,13 +4,11 @@
  */
 package fr.la.jproductbaseweb.beanmanaged.modelForm;
 
+import java.io.Serializable;
+
 import fr.la.jproductbase.metier.ProductConfModel;
 import fr.la.jproductbase.service.ServiceInterface;
 import fr.la.jproductbaseweb.beanmanaged.exception.ProductConfModelFormException;
-import java.io.Serializable;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *

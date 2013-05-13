@@ -2,10 +2,7 @@ package fr.la.jproductbase.metier;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.List;
-
 import fr.la.configfilereader.ConfigFileReaderException;
-import fr.la.jproductbase.service.ServiceInterface;
 import java.io.Serializable;
 
 public class ProductTest implements Serializable {

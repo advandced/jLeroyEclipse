@@ -32,7 +32,6 @@ import fr.la.configfilereader.ConfigFileReaderException;
 import fr.la.importdyntesteurdata.ImportDynTesteurData;
 import fr.la.jproductbase.dao.ProductDaoXml;
 import fr.la.jproductbase.metier.FilesTools;
-import fr.la.jproductbase.metier.JProductBaseException;
 import fr.la.jproductbase.metier.JProductBaseParameters;
 import fr.la.jproductbase.metier.LabviewTesterReport;
 import fr.la.jproductbase.metier.PreTesterReport;

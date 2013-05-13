@@ -1,8 +1,6 @@
 package fr.la.jproductbaseweb.beanmanaged.saventry;
 
-import java.io.IOException;
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -30,7 +28,6 @@ import org.primefaces.event.RowEditEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TabChangeEvent;
 
-import fr.la.configfilereader.ConfigFileReaderException;
 import fr.la.jproductbase.metier.AfterSaleReport;
 import fr.la.jproductbase.metier.ApparentCause;
 import fr.la.jproductbase.metier.ApparentCauseCustomer;

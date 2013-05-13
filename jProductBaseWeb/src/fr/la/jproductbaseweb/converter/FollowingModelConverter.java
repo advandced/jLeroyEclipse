@@ -1,17 +1,16 @@
 package fr.la.jproductbaseweb.converter;
 
-import fr.la.configfilereader.ConfigFileReaderException;
-import fr.la.jproductbase.metier.FollowingFormModel;
-import fr.la.jproductbase.service.ServiceInterface;
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
 import javax.faces.convert.FacesConverter;
+
+import fr.la.jproductbase.metier.FollowingFormModel;
+import fr.la.jproductbase.service.ServiceInterface;
 
 @FacesConverter(value = "followingFormModelConverter")
 public class FollowingModelConverter implements Converter {

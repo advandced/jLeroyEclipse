@@ -1,7 +1,5 @@
 package fr.la.jproductbaseweb.beanmanaged.param;
 
-import java.sql.SQLException;
-
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 import javax.naming.NamingException;

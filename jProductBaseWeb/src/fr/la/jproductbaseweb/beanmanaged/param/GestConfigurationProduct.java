@@ -84,6 +84,7 @@ public class GestConfigurationProduct extends GestFormAbstract<ProductConf> {
 
     private void refresh() {
         this.objectList = this.moduleGolbal.getProductConfs();
+		@SuppressWarnings("unused")
 		ProductConfModelConverter _productConfModel = new ProductConfModelConverter();
         ConfigurationProductFamiliyConverter _configurationProductFamily = new ConfigurationProductFamiliyConverter();
         this.productConfModelList = moduleGolbal.getActiveProductConfModels();

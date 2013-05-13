@@ -1,6 +1,5 @@
 package fr.la.jproductbaseweb.beanmanaged.modelForm;
 
-import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 

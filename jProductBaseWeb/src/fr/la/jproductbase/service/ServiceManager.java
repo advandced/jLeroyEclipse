@@ -42,11 +42,11 @@ public class ServiceManager {
 		container.as(Characteristics.LOCK).addComponent(service);
 	}
 
-	public void registerService(Object id,Class classImpl,Parameter ... parameters) {
+	public void registerService(Object id,@SuppressWarnings("rawtypes") Class classImpl,Parameter ... parameters) {
 		container.as(Characteristics.LOCK).addComponent(id, classImpl,parameters);
 	}
 
-	public void registerLocalService(Object id,Class classImpl,Parameter ... parameters) {
+	public void registerLocalService(Object id,@SuppressWarnings("rawtypes") Class classImpl,Parameter ... parameters) {
 		container.as(Characteristics.LOCK).addComponent(getLocalName(id), classImpl,parameters);
 	}
 
@@ -54,7 +54,7 @@ public class ServiceManager {
 		container.as(Characteristics.LOCK, Characteristics.CACHE).addComponent(service);
 	}
 
-	public void registerServiceAsUnique(Object id, Class classImpl, Parameter ... parameters) {
+	public void registerServiceAsUnique(Object id, @SuppressWarnings("rawtypes") Class classImpl, Parameter ... parameters) {
 		container.as(Characteristics.LOCK ,Characteristics.CACHE).addComponent(id, classImpl,parameters);
 	}
 
@@ -62,7 +62,7 @@ public class ServiceManager {
 		container.as(Characteristics.LOCK, Characteristics.CACHE).addComponent(getLocalName(id));
 	}
 
-	public void registerLocalServiceAsUnique(Object id, Class classImpl, Parameter ... parameters) {
+	public void registerLocalServiceAsUnique(Object id, @SuppressWarnings("rawtypes") Class classImpl, Parameter ... parameters) {
 		container.as(Characteristics.LOCK, Characteristics.CACHE).addComponent(getLocalName(id), classImpl,parameters);
 	}
 

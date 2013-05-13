@@ -1,6 +1,5 @@
 package fr.la.jproductbaseweb.beanmanaged.modelForm;
 
-import fr.la.jproductbaseweb.beanmanaged.exception.SoftwareException;
 import java.io.Serializable;
 
 public class SoftwareForm implements Serializable {

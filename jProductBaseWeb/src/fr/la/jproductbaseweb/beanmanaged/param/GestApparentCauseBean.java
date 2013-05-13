@@ -1,6 +1,6 @@
 package fr.la.jproductbaseweb.beanmanaged.param;
 
-import java.sql.SQLException;
+import java.io.Serializable;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -20,7 +20,6 @@ import fr.la.jproductbase.service.ServiceInterface;
 import fr.la.jproductbaseweb.beanmanaged.exception.ApparentCauseException;
 import fr.la.jproductbaseweb.beanmanaged.modelForm.ApparentCauseForm;
 import fr.la.jproductbaseweb.converter.ApparentCauseClientConverter;
-import java.io.Serializable;
 
 @ManagedBean(name = "gestApparentCauseBean")
 @ApplicationScoped

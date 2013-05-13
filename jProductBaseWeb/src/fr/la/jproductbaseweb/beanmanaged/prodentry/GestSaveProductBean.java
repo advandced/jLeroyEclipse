@@ -1,18 +1,12 @@
 package fr.la.jproductbaseweb.beanmanaged.prodentry;
 
-import java.io.IOException;
 import java.sql.Date;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.naming.NamingException;
 
-import fr.la.configfilereader.ConfigFileReaderException;
-import fr.la.jproductbase.metier.JProductBaseException;
 import fr.la.jproductbase.metier.Product;
 import fr.la.jproductbase.service.ServiceInterface;
 import fr.la.jproductbaseweb.beanmanaged.ProductBean;

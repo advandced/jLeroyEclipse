@@ -1,11 +1,9 @@
 package fr.la.jproductbaseweb.beanmanaged.modelForm;
 
+import java.io.Serializable;
+
 import fr.la.jproductbase.metier.AfterSaleCom;
 import fr.la.jproductbase.service.ServiceInterface;
-import fr.la.jproductbaseweb.beanmanaged.exception.ExpedSAVException;
-import java.io.Serializable;
-import java.sql.SQLException;
-import javax.naming.NamingException;
 
 public class ExpedSAVForm implements Serializable {
 

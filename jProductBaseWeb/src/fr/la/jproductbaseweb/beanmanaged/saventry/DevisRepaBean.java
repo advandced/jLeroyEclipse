@@ -1,7 +1,5 @@
 package fr.la.jproductbaseweb.beanmanaged.saventry;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +8,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
-import fr.la.configfilereader.ConfigFileReaderException;
 import fr.la.jproductbase.metier.AfterSaleCom;
 import fr.la.jproductbase.metier.AfterSaleReport;
 import fr.la.jproductbase.service.ServiceInterface;

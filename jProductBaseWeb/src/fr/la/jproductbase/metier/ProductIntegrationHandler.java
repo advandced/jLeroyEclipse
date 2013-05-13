@@ -1,29 +1,33 @@
 package fr.la.jproductbase.metier;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 
-import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
-
-import fr.la.jproductbase.service.ServiceInterface;
-import java.io.Serializable;
 
 public class ProductIntegrationHandler extends DefaultHandler implements Serializable {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	@SuppressWarnings("unused")
 	private Product product;
 	// Component
+	@SuppressWarnings("unused")
 	private String reference;
+	@SuppressWarnings("unused")
 	private String majorIndex;
+	@SuppressWarnings("unused")
 	private String minorIndex;
+	@SuppressWarnings("unused")
 	private String datecode;
+	@SuppressWarnings("unused")
 	private String serialNumber;
+	@SuppressWarnings("unused")
 	private String providerCode;
-	// Software
+	@SuppressWarnings("unused")
 	private String name;
+	@SuppressWarnings("unused")
 	private String version;
 
 	// buffer nous permettant de récupérer les données

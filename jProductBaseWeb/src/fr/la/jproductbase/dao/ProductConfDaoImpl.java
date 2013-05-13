@@ -702,7 +702,6 @@ public class ProductConfDaoImpl extends GenericDao implements ProductConfDao {
 		return _productConf;
 	}
 
-	@SuppressWarnings("unused")
 	@Override
 	public void updateProductConf(ProductConf productConf, String reference,
 			String majorIndex, String minorIndex,
@@ -809,6 +808,7 @@ public class ProductConfDaoImpl extends GenericDao implements ProductConfDao {
 		
 		String rqt = rqt1 + rqt2;
 		
+		@SuppressWarnings("unused")
 		int i = 0;
 		try {
 			c = this.cnxProduct.getCnx();

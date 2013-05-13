@@ -60,6 +60,7 @@ public class ValidControlBean {
 	}
 
 	public void Enregistrer() {
+		@SuppressWarnings("unused")
 		ValidControlForm _ValidControlForm = new ValidControlForm(this.selectedAfterSaleReport);
 		this.refresh();
 	}

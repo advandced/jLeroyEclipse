@@ -1,15 +1,10 @@
 package fr.la.jproductbaseweb.beanmanaged.saventry;
 
-import java.io.IOException;
-import java.sql.SQLException;
-import java.text.ParseException;
-
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import org.primefaces.context.RequestContext;
 
-import fr.la.configfilereader.ConfigFileReaderException;
 import fr.la.jproductbase.metier.AfterSaleCom;
 import fr.la.jproductbaseweb.beanmanaged.modelForm.RecapComForm;
 import fr.la.jproductbaseweb.beanmanaged.modeltable.AfterSaleComLazy;
