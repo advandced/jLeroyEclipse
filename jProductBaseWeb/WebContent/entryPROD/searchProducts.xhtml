@@ -17,12 +17,15 @@
                 <p:menuitem value="Detail" icon="ui-icon-search"
                             action="#{gestSearchProduct.detailAction}"
                             oncomplete="productDialog.show()" process="@form"
-                            update=":formDial"></p:menuitem>
+                            update=":formDial" >
+                </p:menuitem>
             </p:contextMenu>
 
             <h:form id="tab">
-                <p:dataTable id="productSearched" var="product" style="margin-top: 5px;"
-                             value="#{gestSearchProduct.products}" rowKey="#{product.idProduct}"
+                <p:dataTable id="productSearched" 
+                             var="product"
+                             value="#{gestSearchProduct.products}"
+                             rowKey="#{product.idProduct}"
                              selection="#{gestSearchProduct.selectedObject}"
                              selectionMode="single" paginator="true" rows="50"
                              paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
@@ -75,10 +78,9 @@
                 </p:dataTable>
             </h:form>
         </h:form>
+        
         <h:form id="formDial">
-            <p:dialog id="dialProd"
-                      onHide="tabViewSoft.select(0)" onShow="tabViewCard.select(0)"
-                      widgetVar="productDialog">
+            <p:dialog id="dialProd" onHide="tabViewSoft.select(0)" onShow="tabViewCard.select(0)" widgetVar="productDialog">
 
                 <p:panelGrid id="display">
                     <f:facet name="header">

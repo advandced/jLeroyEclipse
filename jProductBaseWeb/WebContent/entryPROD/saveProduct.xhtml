@@ -7,30 +7,33 @@
 
     <ui:define name="content">
         <h:form id="form">
-            <p:growl id="messages" />
+            <p:growl id="messages" showDetail="true" sticky="true" />
 
-            <f:facet name="header">
+            <!-- JB : je vois pas l interet de ce facet  <f:facet name="header">
                 <h:outputText value="FORMULAIRE DE RECHERCHE DE PRODUITS" />
-            </f:facet>
+            </f:facet> -->
             
             <p:commandButton value="Afficher Produits OK" action="#{gestSaveProductBean.displayProduct}" update=":form tab:productSearched" process="@form" />
             <p:commandButton value="Enregistrement Selection" action="#{gestSaveProductBean.saveProduct}" update="tab:productSearched" />
 
-            <h:form id="tab" rendered="#{gestSaveProductBean.result}">
-                <p:contextMenu for="productSearched">
-                    <p:menuitem value="Detail" icon="ui-icon-search"
-                                action="#{gestSearchProduct.detailAction}"
-                                oncomplete="productDetail.show()" process="@form"
-                                update=":form:formDial">
-                    </p:menuitem>
-                </p:contextMenu>
+            <p:contextMenu for="tab:productSearched">
+                <p:menuitem value="Detail" icon="ui-icon-search"
+                            action="#{gestSearchProduct.detailFedd}"
+                            oncomplete="productDetail.show()" process="@form"
+                            update=":form:formDial">
+                </p:menuitem>
+            </p:contextMenu>
 
+            <h:form id="tab" rendered="#{gestSaveProductBean.result}">
                 <p:dataTable id="productSearched" 
                              var="product"
-                             value="#{gestSaveProductBean.productBeanList}">
+                             value="#{gestSaveProductBean.productBeanList}"
+                             rowKey="#{product.idProduct}"
+                             selection="#{gestSearchProduct.selectedObject}"
+                             selectionMode="single">
 
-                    <f:facet name="header" >
-                        <h:outputText value="ELEMENTS" />
+                    <f:facet name="header">
+                        <h:outputText value="Produits Transferables" />
                     </f:facet>
 
                     <p:column headerText="Selection">
@@ -60,12 +63,12 @@
             </h:form>
             
             <h:form id="formDial">
-                <p:dialog id="dialProd" widgetVar="productDetail" width="972" height="600">
+                <p:dialog id="dialProd" widgetVar="productDetail" width="990" height="600">
 
                     <p:panelGrid id="display">
                         <f:facet name="header">
                             <p:row>
-                                <p:column colspan="7">
+                                <p:column colspan="6">
                                     <h:outputText value="DETAILS" />
                                 </p:column>
                             </p:row>
@@ -95,16 +98,16 @@
                                 <h:outputText value="#{gestSearchProduct.configuration}" />
                             </p:column>
                             <p:column>
-                                <p:inputText value="#{gestSearchProduct.serialNumber}" />
+                                <h:outputText value="#{gestSearchProduct.serialNumber}" />
                             </p:column>
                             <p:column>
-                                <p:inputText value="#{gestSearchProduct.dateCode}" />
+                                <h:outputText value="#{gestSearchProduct.dateCode}" />
                             </p:column>
                             <p:column>
-                                <p:inputText value="#{gestSearchProduct.macAdress}" />
+                                <h:outputText value="#{gestSearchProduct.macAdress}" />
                             </p:column>
                             <p:column>
-                                <p:inputText value="#{gestSearchProduct.supplierCode}" />
+                                <h:outputText value="#{gestSearchProduct.supplierCode}" />
                             </p:column>
                             <p:column>
                                 <p:selectOneMenu value="#{gestSearchProduct.state}">
