@@ -25,6 +25,7 @@ public interface SoftwareDao {
 	 * @throws SQLException
 	 */
 	public List<Software> getSoftwares(Product product);
+	public List<Software> getFeddSoftwares(Product product);
 
 	/**
 	 * Recherche les logiciels d'une configuration produit de la base de

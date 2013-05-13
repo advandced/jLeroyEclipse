@@ -57,17 +57,13 @@ public class GestSearchProduct extends GestFormSearchAbstract<Product> implement
         this.productFamilies = new ArrayList<ProductFamily>();
         for (ProductFamily productFamily : _prodList) {
             if (productFamily.getProductType().getName().equals("Produit")) {
-
                 this.productFamilies.add(productFamily);
             }
-
         }
-
     }
 
     @Override
     public void detailAction() {
-        
         this.reference = getSelectedObject().getProductConf().getReference();
         this.serialNumber = getSelectedObject().getSerialNumber();
         this.macAdress = getSelectedObject().getMacAddress();
@@ -77,34 +73,56 @@ public class GestSearchProduct extends GestFormSearchAbstract<Product> implement
         this.configuration = this.reference + "~"
                 + getSelectedObject().getProductConf().getMajorIndex() + "~"
                 + getSelectedObject().getProductConf().getMinorIndex();
-
         this.elementList = moduleGlobale.getProductComponents(this.selectedObject);
-        getElementCard();
+        //getElementCard();
         this.softwareList = this.selectedObject.getProductSoftwares();
-        getSoftwareElement();
+        //getSoftwareElement();
         this.productDocumentSelected = moduleGlobale.getProductDocuments(getSelectedObject());
+		System.out.println (this.reference);
+		System.out.println (this.serialNumber);
+		System.out.println (this.macAdress);
+		System.out.println (this.dateCode);
+		System.out.println (this.supplierCode);
+		System.out.println (this.state);
+		System.out.println (this.configuration);
+		System.out.println (this.elementList);
+		System.out.println (this.softwareList);
+		System.out.println (this.productDocumentSelected);
+    }
 
-
+    @Override
+    public void detailFedd() {
+        this.reference = getSelectedObject().getProductConf().getReference();
+        this.serialNumber = getSelectedObject().getSerialNumber();
+        this.macAdress = getSelectedObject().getMacAddress();
+        this.dateCode = getSelectedObject().getDatecode();
+        this.supplierCode = getSelectedObject().getProviderCode();
+        this.state = getSelectedObject().getState();
+        this.configuration = this.reference + "~"
+                + getSelectedObject().getProductConf().getMajorIndex() + "~"
+                + getSelectedObject().getProductConf().getMinorIndex();
+        this.elementList = moduleGlobale.getFeddProductComponents(this.selectedObject);
+        //getElementCard();
+        this.softwareList = this.selectedObject.getFeddProductSoftwares();
+        //getSoftwareElement();
+        //this.productDocumentSelected = moduleGlobale.getProductDocuments(getSelectedObject());
+		System.out.println (this.elementList);
+		System.out.println (this.softwareList);
+		//System.out.println (this.softwareList);
+		//System.out.println (this.productDocumentSelected);
     }
 
     private void getSoftwareElement() {
         this.softwareElementList = new ArrayList<SoftwareBean>();
-        List<Software> _softwareElementList = this.moduleGlobale
-                .getActiveSoftwares();
+        List<Software> _softwareElementList = this.moduleGlobale.getActiveSoftwares();
 
         for (Software soft : _softwareElementList) {
             SoftwareBean _softwareBean = new SoftwareBean();
             if (getSelectedObject() != null) {
-                for (Software softwareInProductConf : this.selectedObject
-                        .getProductSoftwares()) {
-
-                    if (softwareInProductConf.getIdSoftware() == soft
-                            .getIdSoftware()) {
-
+                for (Software softwareInProductConf : this.selectedObject.getProductSoftwares()) {
+                    if (softwareInProductConf.getIdSoftware() == soft.getIdSoftware()) {
                         _softwareBean.setSelectedSoftware(true);
-
                     }
-
                 }
             }
             _softwareBean.setIdSoftware(soft.getIdSoftware());
@@ -114,9 +132,7 @@ public class GestSearchProduct extends GestFormSearchAbstract<Product> implement
 
             System.out.println(_softwareBean);
             this.softwareElementList.add(_softwareBean);
-
         }
-
     }
 
     private void getElementCard() {
@@ -126,26 +142,18 @@ public class GestSearchProduct extends GestFormSearchAbstract<Product> implement
 
         for (Product productCard : _productList) {
             CardElementBean _elementBean = new CardElementBean();
-
             for (Product prodConf : moduleGlobale.getProductComponents(this.selectedObject) ) {
-
-                if (prodConf.getProductConf().getIdProductConf() == productCard
-                        .getProductConf().getIdProductConf()) {
+                if (prodConf.getProductConf().getIdProductConf() == productCard.getProductConf().getIdProductConf()) {
                     _elementBean.setSelectedElement(true);
-
                 }
-
             }
-
             _elementBean.setIdProduct(productCard.getIdProduct());
             _elementBean.setProductConf(productCard.getProductConf());
             _elementBean.setSerialNumber(productCard.getSerialNumber());
             _elementBean.setDatecode(productCard.getDatecode());
-            System.out.println(_elementBean);
+            System.out.println("carte : " + _elementBean);
             this.cardElementList.add(_elementBean);
-
         }
-
     }
 
     public void selectCheckBox() {

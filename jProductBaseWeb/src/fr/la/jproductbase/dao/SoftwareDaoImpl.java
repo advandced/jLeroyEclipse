@@ -56,6 +56,36 @@ public class SoftwareDaoImpl extends GenericDao implements SoftwareDao {
         return _softwares;
     }
 
+
+	// JB : requete pour chercher les logiciels des produits FEDD avant leur transfert
+	public List<Software> getFeddSoftwares(Product product) {
+        List<Software> _softwares = new ArrayList<Software>();
+        Connection c = null;
+        PreparedStatement _stmt = null;
+        ResultSet _rs = null;
+
+        try {
+            int _idProduct = product.getIdProduct();
+            c = this.cnxProduct.getCnx();
+            _stmt = c.prepareStatement(
+                    "SELECT * FROM FEDDproductBase.software "
+                    + " WHERE (software.idSoftware IN"
+                    + " (SELECT idSoftware FROM FEDDproductBase.product_software"
+                    + " WHERE product_software.idProduct=?))");
+            _stmt.setInt(1, _idProduct);
+            _rs = _stmt.executeQuery();
+
+            while (_rs.next()) {
+                Software _software = this.getSoftware(_rs);
+                _softwares.add(_software);
+                product.addSoftware(_software);
+            }
+		}
+        catch (SQLException e) {handleDAOException(e);}
+        finally {close(_rs); close(_stmt); close(c);}
+        return _softwares;
+	}
+
     @Override
     public List<Software> getSoftwares(ProductConf productConf) {
         List<Software> _softwares = new ArrayList<Software>();

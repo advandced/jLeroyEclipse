@@ -261,17 +261,22 @@ public interface ProductDao {
     public void removeProductComponent(Product product, Product productComponent);
 
     /**
-     * Recherche les composants d'un produit de la base de donn&eacute;es.
-     *
+     * Recherche les composants d'un produit de la base de donnees.
      * @param product Produit auquel appartiennent les composants.
-     *
      * @return Composants du produit.
-     *
      * @throws SQLException
      */
     public List<Product> getProductComponents(Product product);
-
+ 
     /**
+     * Recherche les composants d'un produit de la base de donnees de FEDD.
+     * @param product Produit FEDD auquel appartiennent les composants.
+     * @return Composants du produit FEDD.
+     * @throws SQLException
+     */
+ 	public List<Product> getFeddProductComponents(Product selectedObject);
+
+	/**
      * Recherche les produits devant faire l'objet d'une demande de
      * d&eacute;rogation.
      *
@@ -313,4 +318,5 @@ public interface ProductDao {
     public List<Product> getProductWithMother(int startingAt, int maxPerPage, Map<String, String> filters);
     
     public Product getProductWithProductConfRef(String reference);
+
 }

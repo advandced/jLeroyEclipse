@@ -725,7 +725,7 @@ public class ServiceInterface implements Serializable {
     }
 
     /**
-     * Recherche les composants d'un produit de la base de donn&eacute;es.
+     * Recherche les composants d'un produit de la base de donnees.
      *
      * @param product Produit auquel appartiennent les composants.
      *
@@ -735,8 +735,15 @@ public class ServiceInterface implements Serializable {
      */
     public List<Product> getProductComponents(Product product) {
     	ProductModule _productModule = (ProductModule) sm.getService(ProductModule.class);
+		System.out.println (_productModule);
+		System.out.println (_productModule.getProductComponents(product));
         return _productModule.getProductComponents(product);
     }
+
+	public List<Product> getFeddProductComponents(Product selectedObject) {
+    	ProductModule _productModule = (ProductModule) sm.getService(ProductModule.class);
+        return _productModule.getFeddProductComponents(selectedObject);
+	}
 
     /**
      * Recherche les produits de la base de donn&eacute;es en fonction du

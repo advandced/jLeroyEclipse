@@ -499,13 +499,24 @@ public class GestRapportDefaultsBean extends
 
 	@Override
 	public void detailAction() {
-		// TODO Auto-generated method stub
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 		InputTextarea _inputTextArea = (InputTextarea) facesContext
 				.getViewRoot().findComponent("formDial:failureReportComment");
 
 		if (this.selectedObject.getFailureReportComment().getComment() == null) {
+			_inputTextArea.setDisabled(false);
+		} else {
+			_inputTextArea.setDisabled(true);
+		}
+	}
 
+	@Override
+	public void detailFedd() {
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+		InputTextarea _inputTextArea = (InputTextarea) facesContext
+				.getViewRoot().findComponent("formDial:failureReportComment");
+
+		if (this.selectedObject.getFailureReportComment().getComment() == null) {
 			_inputTextArea.setDisabled(false);
 		} else {
 			_inputTextArea.setDisabled(true);
@@ -575,7 +586,6 @@ public class GestRapportDefaultsBean extends
 			cptFailure++;
 		}
 
-		@SuppressWarnings("unused")
 		EntryDefaultRapportForm _entryDefautlForm = new EntryDefaultRapportForm(
 				this.selectedObject.getFailureReportComment().getComment(),
 				this.selectedObject.getRegistrationDate(),

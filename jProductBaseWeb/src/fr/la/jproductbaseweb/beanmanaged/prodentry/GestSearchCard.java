@@ -41,6 +41,19 @@ public class GestSearchCard extends GestFormSearchAbstract<Product> {
     }
 
     @Override
+    public void detailFedd() {
+        this.reference = getSelectedObject().getProductConf().getReference();
+        this.serialNumber = getSelectedObject().getSerialNumber();
+        this.macAdress = getSelectedObject().getMacAddress();
+        this.dateCode = getSelectedObject().getDatecode();
+        this.supplierCode = getSelectedObject().getProviderCode();
+        this.state = getSelectedObject().getState();
+        this.configuration = this.reference + "~"
+                + getSelectedObject().getProductConf().getMajorIndex() + "~"
+                + getSelectedObject().getProductConf().getMinorIndex();
+    }
+
+    @Override
     public void getFamiliesListProduct() {
         // TODO Auto-generated method stub
         List<ProductFamily> _prodList = new ArrayList<ProductFamily>();
@@ -63,8 +76,7 @@ public class GestSearchCard extends GestFormSearchAbstract<Product> {
     public void modifyProduct(ActionEvent event) {
         CommandButton _commandButton = (CommandButton) event.getSource();
         Dialog _dialog = getDialogToButton(_commandButton);
-        @SuppressWarnings("unused")
-		CardModifyForm _crdModForm = new CardModifyForm(this.serialNumber,
+        CardModifyForm _crdModForm = new CardModifyForm(this.serialNumber,
                 this.dateCode, this.macAdress, this.supplierCode,
                 this.state);
         FacesContext context = FacesContext.getCurrentInstance();

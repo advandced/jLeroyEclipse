@@ -826,10 +826,6 @@ public class ProductDaoImpl extends GenericDao implements ProductDao {
 	@Override
 	public List<Product> getProductComponents(Product product) {
 		List<Product> _productComponents = new ArrayList<Product>();
-
-		if (product == null) 
-			throw new IllegalArgumentException();
-
 		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
@@ -848,14 +844,36 @@ public class ProductDaoImpl extends GenericDao implements ProductDao {
 				Product _productComponent = this.getProduct(_rs);
 				_productComponents.add(_productComponent);
 			}
-		} catch (SQLException e) {
-			handleDAOException(e);
-		} finally {
-			close(_rs);
-			close(_stmt);
-			close(c);
 		}
+		catch (SQLException e) {handleDAOException(e);}
+		finally {close(_rs); close(_stmt); close(c);}
+		return _productComponents;
+	}
 
+	@Override
+	public List<Product> getFeddProductComponents(Product selectedObject) {
+		List<Product> _productComponents = new ArrayList<Product>();
+		Connection c = null;
+		PreparedStatement _stmt = null;
+		ResultSet _rs = null;
+
+		try {
+			c = this.cnxProduct.getCnx();
+			_stmt = c.prepareStatement(
+							"SELECT * FROM FEDDproductBase.product "
+									+ " WHERE (product.idProduct IN"
+									+ " (SELECT idProductComponent FROM FEDDproductBase.product_product"
+									+ " WHERE product_product.idProduct=?))");
+			_stmt.setInt(1, selectedObject.getIdProduct());
+			_rs = _stmt.executeQuery();
+
+			while (_rs.next()) {
+				Product _productComponent = this.getProduct(_rs);
+				_productComponents.add(_productComponent);
+			}
+		}
+		catch (SQLException e) {handleDAOException(e);}
+		finally {close(_rs); close(_stmt); close(c);}
 		return _productComponents;
 	}
 

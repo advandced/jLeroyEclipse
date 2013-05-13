@@ -16,6 +16,9 @@ public class GestFormDefaultsBean<T> extends GestFormSearchAbstract<ProductionFa
 	public void detailAction() {}
 
 	@Override
+	public void detailFedd() {}
+
+	@Override
 	public void getFamiliesListProduct() throws SQLException {}
 
 	@Override

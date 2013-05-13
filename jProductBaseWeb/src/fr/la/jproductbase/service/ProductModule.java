@@ -565,8 +565,13 @@ public class ProductModule {
     }
 
     public List<Product> getProductComponents(Product product) {
+		System.out.println (_productDao.getProductComponents(product));
         return _productDao.getProductComponents(product);
     }
+
+	public List<Product> getFeddProductComponents(Product selectedObject) {
+        return _productDao.getFeddProductComponents(selectedObject);
+	}
 
     public List<Product> getProductsDispensationNeeded() {
         return _productDao.getProductsDispensationNeeded();
@@ -587,6 +592,10 @@ public class ProductModule {
      */
     public List<Software> getProductSoftwares(Product product) {
         return _softwareDao.getSoftwares(product);
+    }
+
+    public List<Software> getFeddProductSoftwares(Product product) {
+        return _softwareDao.getFeddSoftwares(product);
     }
 
     /*

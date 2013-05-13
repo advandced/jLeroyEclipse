@@ -2,6 +2,7 @@ package fr.la.jproductbase.metier;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.List;
 import javax.naming.NamingException;
 
 import fr.la.configfilereader.ConfigFileReaderException;
+import fr.la.jproductbase.service.ServiceInterface;
 
 /**
  * Classe m&eacute;tier de produit.
@@ -33,10 +35,11 @@ public class Product implements Serializable {
 
 
 	protected List<Software> productSoftwares = new ArrayList<Software>();
+	protected List<Software> feddProductSoftwares = new ArrayList<Software>();
     private Product mother;
 
 	/**
-	 * Cr&eacute;er un produit.
+	 * Creer un produit.
 	 * 
 	 * @param idProduct
 	 *            Identifiant du produit.
@@ -45,7 +48,7 @@ public class Product implements Serializable {
 	 * @param state
 	 *            Etat de l'enregistrement.
 	 * @param serialNumber
-	 *            Num&eacute;ro de s&eacute;rie du produit.
+	 *            Numero de serie du produit.
 	 * @param datecode
 	 *            Datecode du produit.
 	 * @param macAddress
@@ -247,6 +250,10 @@ public class Product implements Serializable {
 		return productSoftwares;
 	}
 
+	public List<Software> getFeddProductSoftwares() {
+		return feddProductSoftwares;
+	}
+	
 	/**
 	 * @param productSoftwares
 	 *            the productSoftwares to set
@@ -382,5 +389,4 @@ public class Product implements Serializable {
 	public List<Product> getProductComponents() {
 		return productComponents;
 	}
-	
 }
