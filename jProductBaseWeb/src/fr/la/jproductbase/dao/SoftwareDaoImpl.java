@@ -42,7 +42,7 @@ public class SoftwareDaoImpl extends GenericDao implements SoftwareDao {
                 Software _software = this.getSoftware(_rs);
                 _softwares.add(_software);
 
-                // Update product object
+                // Update product object 
                 product.addSoftware(_software);
             }
 		} catch (SQLException e) {

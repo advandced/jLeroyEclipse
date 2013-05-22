@@ -594,10 +594,6 @@ public class ProductModule {
         return _softwareDao.getSoftwares(product);
     }
 
-    public List<Software> getFeddProductSoftwares(Product product) {
-        return _softwareDao.getFeddSoftwares(product);
-    }
-
     /*
      * Suppression du lien entre un produit et un logiciel
      */

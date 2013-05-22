@@ -61,8 +61,6 @@ public abstract class GestFormSearchAbstract<T> {
 
     public abstract void detailAction();
 
-    public abstract void detailFedd();
-
     public abstract void getFamiliesListProduct() throws SQLException;
 
     public abstract void searchProduct();

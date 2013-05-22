@@ -35,7 +35,6 @@ public class Product implements Serializable {
 
 
 	protected List<Software> productSoftwares = new ArrayList<Software>();
-	protected List<Software> feddProductSoftwares = new ArrayList<Software>();
     private Product mother;
 
 	/**
@@ -250,10 +249,6 @@ public class Product implements Serializable {
 		return productSoftwares;
 	}
 
-	public List<Software> getFeddProductSoftwares() {
-		return feddProductSoftwares;
-	}
-	
 	/**
 	 * @param productSoftwares
 	 *            the productSoftwares to set

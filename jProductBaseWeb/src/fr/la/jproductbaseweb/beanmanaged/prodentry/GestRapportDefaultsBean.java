@@ -510,19 +510,6 @@ public class GestRapportDefaultsBean extends
 		}
 	}
 
-	@Override
-	public void detailFedd() {
-		FacesContext facesContext = FacesContext.getCurrentInstance();
-		InputTextarea _inputTextArea = (InputTextarea) facesContext
-				.getViewRoot().findComponent("formDial:failureReportComment");
-
-		if (this.selectedObject.getFailureReportComment().getComment() == null) {
-			_inputTextArea.setDisabled(false);
-		} else {
-			_inputTextArea.setDisabled(true);
-		}
-	}
-
 	public void test(AjaxBehaviorEvent event) {
 		System.out.println("595 test" + event.getSource());
 		InputTextarea _inputTextarea = (InputTextarea) event.getSource();

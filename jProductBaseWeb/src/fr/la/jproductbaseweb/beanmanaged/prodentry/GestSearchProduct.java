@@ -74,9 +74,9 @@ public class GestSearchProduct extends GestFormSearchAbstract<Product> implement
                 + getSelectedObject().getProductConf().getMajorIndex() + "~"
                 + getSelectedObject().getProductConf().getMinorIndex();
         this.elementList = moduleGlobale.getProductComponents(this.selectedObject);
-        //getElementCard();
+        getElementCard();
         this.softwareList = this.selectedObject.getProductSoftwares();
-        //getSoftwareElement();
+        getSoftwareElement();
         this.productDocumentSelected = moduleGlobale.getProductDocuments(getSelectedObject());
 		System.out.println (this.reference);
 		System.out.println (this.serialNumber);
@@ -90,7 +90,6 @@ public class GestSearchProduct extends GestFormSearchAbstract<Product> implement
 		System.out.println (this.productDocumentSelected);
     }
 
-    @Override
     public void detailFedd() {
         this.reference = getSelectedObject().getProductConf().getReference();
         this.serialNumber = getSelectedObject().getSerialNumber();
@@ -102,14 +101,7 @@ public class GestSearchProduct extends GestFormSearchAbstract<Product> implement
                 + getSelectedObject().getProductConf().getMajorIndex() + "~"
                 + getSelectedObject().getProductConf().getMinorIndex();
         this.elementList = moduleGlobale.getFeddProductComponents(this.selectedObject);
-        //getElementCard();
-        this.softwareList = this.selectedObject.getFeddProductSoftwares();
-        //getSoftwareElement();
-        //this.productDocumentSelected = moduleGlobale.getProductDocuments(getSelectedObject());
 		System.out.println (this.elementList);
-		System.out.println (this.softwareList);
-		//System.out.println (this.softwareList);
-		//System.out.println (this.productDocumentSelected);
     }
 
     private void getSoftwareElement() {

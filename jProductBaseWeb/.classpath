@@ -7,96 +7,24 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jst.server.core.container/org.eclipse.jst.server.tomcat.runtimeTarget/Apache Tomcat v7.0"/>
-	<classpathentry kind="lib" path="C:/Users/Projet Android/git/jLeroyEclipse/jProductBaseWeb/WebContent/WEB-INF/lib/commons-beanutils-1.8.3.jar">
-		<attributes>
-			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/Projet Android/git/jLeroyEclipse/jProductBaseWeb/WebContent/WEB-INF/lib/commons-collections-3.2.1.jar">
-		<attributes>
-			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/Projet Android/git/jLeroyEclipse/jProductBaseWeb/WebContent/WEB-INF/lib/commons-digester-1.7.jar">
-		<attributes>
-			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/Projet Android/git/jLeroyEclipse/jProductBaseWeb/WebContent/WEB-INF/lib/commons-logging-1.1.2.jar">
-		<attributes>
-			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/Projet Android/git/jLeroyEclipse/jProductBaseWeb/WebContent/WEB-INF/lib/commons-logging-api-1.1.2.jar">
-		<attributes>
-			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/Projet Android/git/jLeroyEclipse/jProductBaseWeb/WebContent/WEB-INF/lib/configFileReader.jar">
-		<attributes>
-			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/Projet Android/git/jLeroyEclipse/jProductBaseWeb/WebContent/WEB-INF/lib/importDynTesteurData.jar">
-		<attributes>
-			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/Projet Android/git/jLeroyEclipse/jProductBaseWeb/WebContent/WEB-INF/lib/iText-2.1.7.jar">
-		<attributes>
-			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/Projet Android/git/jLeroyEclipse/jProductBaseWeb/WebContent/WEB-INF/lib/jasperreports-4.7.0.jar">
-		<attributes>
-			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/Projet Android/git/jLeroyEclipse/jProductBaseWeb/WebContent/WEB-INF/lib/jdom-1.1.2.jar">
-		<attributes>
-			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/Projet Android/git/jLeroyEclipse/jProductBaseWeb/WebContent/WEB-INF/lib/joda-time-2.1.jar">
-		<attributes>
-			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/Projet Android/git/jLeroyEclipse/jProductBaseWeb/WebContent/WEB-INF/lib/jsf-api-2.0.jar">
-		<attributes>
-			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/Projet Android/git/jLeroyEclipse/jProductBaseWeb/WebContent/WEB-INF/lib/jsf-impl-2.0.4.jar">
-		<attributes>
-			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/Projet Android/git/jLeroyEclipse/jProductBaseWeb/WebContent/WEB-INF/lib/mysql-connector-java-5.1.18-bin.jar">
-		<attributes>
-			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/Projet Android/git/jLeroyEclipse/jProductBaseWeb/WebContent/WEB-INF/lib/picocontainer-2.8.jar">
-		<attributes>
-			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/Projet Android/git/jLeroyEclipse/jProductBaseWeb/WebContent/WEB-INF/lib/poi-3.8-20120326.jar">
-		<attributes>
-			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/Projet Android/git/jLeroyEclipse/jProductBaseWeb/WebContent/WEB-INF/lib/primefaces-3.2.jar">
-		<attributes>
-			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/Projet Android/git/jLeroyEclipse/jProductBaseWeb/WebContent/WEB-INF/lib/xalan.jar">
-		<attributes>
-			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jre7"/>
+	<classpathentry kind="lib" path="C:/Users/JBL.L-A-I/git/jLeroyEclipse/jProductBaseWeb/WebContent/WEB-INF/lib/commons-beanutils-1.8.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/JBL.L-A-I/git/jLeroyEclipse/jProductBaseWeb/WebContent/WEB-INF/lib/commons-collections-3.2.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/JBL.L-A-I/git/jLeroyEclipse/jProductBaseWeb/WebContent/WEB-INF/lib/commons-digester-1.7.jar"/>
+	<classpathentry kind="lib" path="C:/Users/JBL.L-A-I/git/jLeroyEclipse/jProductBaseWeb/WebContent/WEB-INF/lib/commons-logging-1.1.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/JBL.L-A-I/git/jLeroyEclipse/jProductBaseWeb/WebContent/WEB-INF/lib/commons-logging-api-1.1.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/JBL.L-A-I/git/jLeroyEclipse/jProductBaseWeb/WebContent/WEB-INF/lib/configFileReader.jar"/>
+	<classpathentry kind="lib" path="C:/Users/JBL.L-A-I/git/jLeroyEclipse/jProductBaseWeb/WebContent/WEB-INF/lib/importDynTesteurData.jar"/>
+	<classpathentry kind="lib" path="C:/Users/JBL.L-A-I/git/jLeroyEclipse/jProductBaseWeb/WebContent/WEB-INF/lib/iText-2.1.7.jar"/>
+	<classpathentry kind="lib" path="C:/Users/JBL.L-A-I/git/jLeroyEclipse/jProductBaseWeb/WebContent/WEB-INF/lib/jasperreports-4.7.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/JBL.L-A-I/git/jLeroyEclipse/jProductBaseWeb/WebContent/WEB-INF/lib/jdom-1.1.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/JBL.L-A-I/git/jLeroyEclipse/jProductBaseWeb/WebContent/WEB-INF/lib/joda-time-2.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/JBL.L-A-I/git/jLeroyEclipse/jProductBaseWeb/WebContent/WEB-INF/lib/jsf-api-2.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/JBL.L-A-I/git/jLeroyEclipse/jProductBaseWeb/WebContent/WEB-INF/lib/jsf-impl-2.0.4.jar"/>
+	<classpathentry kind="lib" path="C:/Users/JBL.L-A-I/git/jLeroyEclipse/jProductBaseWeb/WebContent/WEB-INF/lib/mysql-connector-java-5.1.18-bin.jar"/>
+	<classpathentry kind="lib" path="C:/Users/JBL.L-A-I/git/jLeroyEclipse/jProductBaseWeb/WebContent/WEB-INF/lib/picocontainer-2.8.jar"/>
+	<classpathentry kind="lib" path="C:/Users/JBL.L-A-I/git/jLeroyEclipse/jProductBaseWeb/WebContent/WEB-INF/lib/poi-3.8-20120326.jar"/>
+	<classpathentry kind="lib" path="C:/Users/JBL.L-A-I/git/jLeroyEclipse/jProductBaseWeb/WebContent/WEB-INF/lib/primefaces-3.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/JBL.L-A-I/git/jLeroyEclipse/jProductBaseWeb/WebContent/WEB-INF/lib/xalan.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

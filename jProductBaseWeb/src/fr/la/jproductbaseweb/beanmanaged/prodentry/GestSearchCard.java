@@ -41,19 +41,6 @@ public class GestSearchCard extends GestFormSearchAbstract<Product> {
     }
 
     @Override
-    public void detailFedd() {
-        this.reference = getSelectedObject().getProductConf().getReference();
-        this.serialNumber = getSelectedObject().getSerialNumber();
-        this.macAdress = getSelectedObject().getMacAddress();
-        this.dateCode = getSelectedObject().getDatecode();
-        this.supplierCode = getSelectedObject().getProviderCode();
-        this.state = getSelectedObject().getState();
-        this.configuration = this.reference + "~"
-                + getSelectedObject().getProductConf().getMajorIndex() + "~"
-                + getSelectedObject().getProductConf().getMinorIndex();
-    }
-
-    @Override
     public void getFamiliesListProduct() {
         // TODO Auto-generated method stub
         List<ProductFamily> _prodList = new ArrayList<ProductFamily>();

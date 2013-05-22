@@ -9,10 +9,9 @@ import fr.la.jproductbase.metier.Software;
 
 /**
  * Interface dao de logiciel.
- * 
  * @author stc
- * 
  */
+
 public interface SoftwareDao {
 	/**
 	 * Recherche les logiciels d'un produit de la base de donn&eacute;es.

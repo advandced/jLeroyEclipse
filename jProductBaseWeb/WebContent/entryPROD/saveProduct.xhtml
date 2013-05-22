@@ -9,10 +9,6 @@
         <h:form id="form">
             <p:growl id="messages" showDetail="true" sticky="true" />
 
-            <!-- JB : je vois pas l interet de ce facet  <f:facet name="header">
-                <h:outputText value="FORMULAIRE DE RECHERCHE DE PRODUITS" />
-            </f:facet> -->
-            
             <p:commandButton value="Afficher Produits OK" action="#{gestSaveProductBean.displayProduct}" update=":form tab:productSearched" process="@form" />
             <p:commandButton value="Enregistrement Selection" action="#{gestSaveProductBean.saveProduct}" update="tab:productSearched" />
 
@@ -142,87 +138,7 @@
                                 </p:column>
                             </p:dataTable>
                         </p:tab>
-<!-- mis en commentaire par JB
-                        <p:tab id="tabList" title="Liste des Cartes">
-                            <p:dataTable value="#{gestSearchProduct.cardElementList}"
-                                         var="card" rowKey="#{card.idProduct}"
-                                         sselection="#{gestSearchProduct.selectedCardElement}"
-                                         selectionMode="single">
-                                <p:column headerText="SELECTION">
-                                    <p:selectBooleanCheckbox value="#{card.selectedElement}">
-                                        <p:ajax listener="#{gestSearchProduct.selectCheckBox}" />
-                                    </p:selectBooleanCheckbox>
-                                </p:column>
-                                <p:column headerText="Reference">
-                                    <h:outputText value="#{card.productConf.reference}" />
-                                </p:column>
-                                <p:column headerText="Indice majeur">
-                                    <h:outputText value="#{card.productConf.majorIndex}" />
-                                </p:column>
-                                <p:column headerText="Indice mineur">
-                                    <h:outputText value="#{card.productConf.minorIndex}" />
-                                </p:column>
-                                <p:column headerText="Identifiable">
-                                    <h:outputText value="#{card.productConf.identifiable}" />
-                                </p:column>
-                                <p:column headerText="Numero de serie">
-                                    <h:outputText value="#{card.serialNumber}" />
-                                </p:column>
-                                <p:column headerText="Date code">
-                                    <h:outputText value="#{card.datecode}" />
-                                </p:column>
-                            </p:dataTable>
-                        </p:tab>
--->
                     </p:tabView>
-
-                    <p:tabView id="tabViewSoft">
-                        <p:ajax event="tabChange" process="@this" update="tabViewSoft" />
-                        <p:tab id="tabView" title="Logiciels installes">
-                            <p:dataTable value="#{gestSearchProduct.softwareList}" var="software">
-                                <f:facet name="header">
-                                    <p:row>
-                                        <p:column>
-                                            <h:outputText value="Logiciels" />
-                                        </p:column>
-                                    </p:row>
-                                </f:facet>
-                                <p:column headerText="Nom">
-                                    <h:outputText value="#{software.name}" />
-                                </p:column>
-                                <p:column headerText="version">
-                                    <h:outputText value="#{software.version}" />
-                                </p:column>
-                            </p:dataTable>
-                        </p:tab>
-<!-- mis en commentaire par JB
-                        <p:tab id="tabList" title="Liste des logiciels">
-                            <p:dataTable value="#{gestSearchProduct.softwareElementList}" var="softwareElement">
-                                <f:facet name="header">
-                                    <p:row>
-                                        <p:column>
-                                            <h:outputText value="LOGICIELS" />
-                                        </p:column>
-                                    </p:row>
-                                </f:facet>
-                                <p:column headerText="SELECTION">
-                                    <p:selectBooleanCheckbox value="#{softwareElement.selectedSoftware}">
-                                        <p:ajax listener="#{gestSearchProduct.selectSoftCheckBox}" />
-                                    </p:selectBooleanCheckbox>
-                                </p:column>
-                                <p:column headerText="Nom">
-                                    <h:outputText value="#{softwareElement.name}" />
-                                </p:column>
-                                <p:column headerText="Version">
-                                    <h:outputText value="#{softwareElement.version}" />
-                                </p:column>
-                            </p:dataTable>
-                        </p:tab>
--->
-                    </p:tabView>
-
-<!-- mis en commentaire par JB-->
-                    <p:commandButton value="Modifier" action="#{gestSearchProduct.modifyProduct}" update="@form" />
 
                 </p:dialog>
             </h:form>
