@@ -17,15 +17,12 @@ import fr.la.jproductbase.metier.ProductType;
 public class ProductDaoImpl extends GenericDao implements ProductDao {
 
 	ConnectionProduct cnxProduct;
-	ConnectionInfoSchema cnxInfoSchema;
 
 	ProductConfDao _productConfDao;
 	SoftwareDao _softwareDao;
 	
 	public ProductDaoImpl(ConnectionProduct cnxProduct, ConnectionInfoSchema cnxInfoSchema, ProductConfDao productConfDao, SoftwareDao softwareDao) {
 		this.cnxProduct = cnxProduct;
-		this.cnxInfoSchema = cnxInfoSchema;
-		
 		_productConfDao = productConfDao;
 		_softwareDao = softwareDao;
 	}
@@ -39,23 +36,16 @@ public class ProductDaoImpl extends GenericDao implements ProductDao {
 
 		try {
 			c = this.cnxProduct.getCnx();
-			_stmt = c.prepareStatement(
-					"SELECT * FROM product WHERE idProduct=?");
+			_stmt = c.prepareStatement("SELECT * FROM product WHERE idProduct=?");
 			_stmt.setInt(1, idProduct);
 			_rs = _stmt.executeQuery();
 
 			if (_rs.next()) {
 				_product = this.getProduct(_rs);
 			} 
-			
-		} catch (SQLException e) {
-			handleDAOException(e);
-		} finally {
-			close(_rs);
-			close(_stmt);
-			close(c);
 		}
-
+		catch (SQLException e) {handleDAOException(e);}
+		finally {close(_rs);close(_stmt);close(c);}
 		return _product;
 	}
 
@@ -83,15 +73,9 @@ public class ProductDaoImpl extends GenericDao implements ProductDao {
 			if (_rs.next()) {
 				_product = this.getProduct(_rs);
 			} 
-			
-		} catch (SQLException e) {
-			handleDAOException(e);
-		} finally {
-			close(_rs);
-			close(_stmt);
-			close(c);
 		}
-
+		catch (SQLException e) {handleDAOException(e);}
+		finally {close(_rs);close(_stmt);close(c);}
 		return _product;
 	}
 
@@ -115,15 +99,9 @@ public class ProductDaoImpl extends GenericDao implements ProductDao {
 			if (_rs.next()) {
 				_product = this.getProduct(_rs);
 			}
-			
-		} catch (SQLException e) {
-			handleDAOException(e);
-		} finally {
-			close(_rs);
-			close(_stmt);
-			close(c);
 		}
-
+		catch (SQLException e) {handleDAOException(e);}
+		finally {close(_rs);close(_stmt);close(c);}
 		return _product;
 	}
 
@@ -146,14 +124,9 @@ public class ProductDaoImpl extends GenericDao implements ProductDao {
 			if (_rs.next()) {
 				_product = this.getProduct(_rs);
 			}		
-		} catch (SQLException e) {
-			handleDAOException(e);
-		} finally {
-			close(_rs);
-			close(_stmt);
-			close(c);
 		}
-
+		catch (SQLException e) {handleDAOException(e);}
+		finally {close(_rs);close(_stmt);close(c);}
 		return _product;
 	}
 
@@ -173,15 +146,9 @@ public class ProductDaoImpl extends GenericDao implements ProductDao {
 				Product _product = this.getProduct(_rs);
 				_products.add(_product);
 			}
-
-		} catch (SQLException e) {
-			handleDAOException(e);
-		} finally {
-			close(_rs);
-			close(_stmt);
-			close(c);
 		}
-
+		catch (SQLException e) {handleDAOException(e);}
+		finally {close(_rs);close(_stmt);close(c);}
 		return _products;
 	}
 
@@ -207,14 +174,9 @@ public class ProductDaoImpl extends GenericDao implements ProductDao {
 				Product _product = this.getProduct(_rs);
 				_products.add(_product);
 			}
-		} catch (SQLException e) {
-			handleDAOException(e);
-		} finally {
-			close(_rs);
-			close(_stmt);
-			close(c);
 		}
-
+		catch (SQLException e) {handleDAOException(e);}
+		finally {close(_rs);close(_stmt);close(c);}
 		return _products;
 	}
 
@@ -239,14 +201,9 @@ public class ProductDaoImpl extends GenericDao implements ProductDao {
 				Product _product = this.getProduct(_rs);
 				_products.add(_product);
 			}
-		} catch (SQLException e) {
-			handleDAOException(e);
-		} finally {
-			close(_rs);
-			close(_stmt);
-			close(c);
 		}
-
+		catch (SQLException e) {handleDAOException(e);}
+		finally {close(_rs);close(_stmt);close(c);}
 		return _products;
 	}
 
@@ -270,14 +227,9 @@ public class ProductDaoImpl extends GenericDao implements ProductDao {
 				Product _product = this.getProduct(_rs);
 				_products.add(_product);
 			}
-		} catch (SQLException e) {
-			handleDAOException(e);
-		} finally {
-			close(_rs);
-			close(_stmt);
-			close(c);
 		}
-
+		catch (SQLException e) {handleDAOException(e);}
+		finally {close(_rs);close(_stmt);close(c);}
 		return _products;
 	}
 
@@ -316,15 +268,9 @@ public class ProductDaoImpl extends GenericDao implements ProductDao {
 				Product _product = this.getProduct(_rs);
 				_products.add(_product);
 			}
-
-		} catch (SQLException e) {
-			handleDAOException(e);
-		} finally {
-			close(_rs);
-			close(_stmt);
-			close(c);
 		}
-
+		catch (SQLException e) {handleDAOException(e);}
+		finally {close(_rs);close(_stmt);close(c);}
 		return _products;
 	}
 
@@ -371,14 +317,9 @@ public class ProductDaoImpl extends GenericDao implements ProductDao {
 				Product _product = this.getProduct(_rs);
 				_products.add(_product);
 			}
-		} catch (SQLException e) {
-			handleDAOException(e);
-		} finally {
-			close(_rs);
-			close(_stmt);
-			close(c);
 		}
-
+		catch (SQLException e) {handleDAOException(e);}
+		finally {close(_rs);close(_stmt);close(c);}
 		return _products;
 	}
 
@@ -446,13 +387,9 @@ public class ProductDaoImpl extends GenericDao implements ProductDao {
 				Product _product = this.getProduct(_rs);
 				_products.add(_product);
 			}
-		} catch (SQLException e) {
-			handleDAOException(e);
-		} finally {
-			close(_rs);
-			close(_stmt);
-			close(c);
 		}
+		catch (SQLException e) {handleDAOException(e);}
+		finally {close(_rs);close(_stmt);close(c);}
 		return _products;
 	}
 
@@ -514,13 +451,9 @@ public class ProductDaoImpl extends GenericDao implements ProductDao {
 			while (_rs.next()) {
 				count = _rs.getInt(1);
 			}
-		} catch (SQLException e) {
-			handleDAOException(e);
-		} finally {
-			close(_rs);
-			close(_stmt);
-			close(c);
 		}
+		catch (SQLException e) {handleDAOException(e);}
+		finally {close(_rs);close(_stmt);close(c);}
 		return count;
 	}
 
@@ -542,14 +475,9 @@ public class ProductDaoImpl extends GenericDao implements ProductDao {
 				Product _product = this.getProduct(_rs);
 				_products.add(_product);
 			}
-		} catch (SQLException e) {
-			handleDAOException(e);
-		} finally {
-			close(_rs);
-			close(_stmt);
-			close(c);
 		}
-
+		catch (SQLException e) {handleDAOException(e);}
+		finally {close(_rs);close(_stmt);close(c);}
 		return _products;
 	}
 
@@ -636,14 +564,9 @@ public class ProductDaoImpl extends GenericDao implements ProductDao {
 				Product _product = this.getProduct(_rs);
 				_products.add(_product);
 			}
-		} catch (SQLException e) {
-			handleDAOException(e);
-		} finally {
-			close(_rs);
-			close(_stmt);
-			close(c);
 		}
-
+		catch (SQLException e) {handleDAOException(e);}
+		finally {close(_rs);close(_stmt);close(c);}
 		return _products;
 	}
 
@@ -686,15 +609,9 @@ public class ProductDaoImpl extends GenericDao implements ProductDao {
 			} else {
 				throw new IllegalStateException();
 			}
-		} catch (SQLException e) {
-			handleDAOException(e);
-		} finally {
-			close(_rs);
-			close(_stmt);
-			close(c);
 		}
-
-
+		catch (SQLException e) {handleDAOException(e);}
+		finally {close(_rs);close(_stmt);close(c);}
 		return _product;
 	}
 
@@ -716,6 +633,7 @@ public class ProductDaoImpl extends GenericDao implements ProductDao {
 			_stmt.setInt(5, product.getIdProduct());
 			_stmt.executeUpdate();
 
+			// TODO : JB : est-ce utile si ca ne renvoie rien ?
 			_stmt = c.prepareStatement(
 					"SELECT * FROM product" + " WHERE (idProduct=?)");
 			_stmt.setInt(1, product.getIdProduct());
@@ -726,14 +644,9 @@ public class ProductDaoImpl extends GenericDao implements ProductDao {
 			} else {
 				throw new IllegalStateException();
 			}
-
-		} catch (SQLException e) {
-			handleDAOException(e);
-		} finally {
-			close(_rs);
-			close(_stmt);
-			close(c);
 		}
+		catch (SQLException e) {handleDAOException(e);}
+		finally {close(_rs);close(_stmt);close(c);}
 	}
 
 	@Override
@@ -766,7 +679,7 @@ public class ProductDaoImpl extends GenericDao implements ProductDao {
 			_stmt.setInt(7, product.getIdProduct());
 			_stmt.executeUpdate();
 
-			// Update object
+			// TODO : JB : est-ce utile si ca ne renvoie rien ?
 			_stmt = c.prepareStatement(
 					"SELECT * FROM product" + " WHERE (idProduct=?)");
 			_stmt.setInt(1, product.getIdProduct());
@@ -777,14 +690,9 @@ public class ProductDaoImpl extends GenericDao implements ProductDao {
 			} else {
 				throw new IllegalStateException();
 			}
-
-		} catch (SQLException e) {
-			handleDAOException(e);
-		} finally {
-			close(_rs);
-			close(_stmt);
-			close(c);
 		}
+		catch (SQLException e) {handleDAOException(e);}
+		finally {close(_rs);close(_stmt);close(c);}
 	}
 
 	@Override
@@ -813,14 +721,9 @@ public class ProductDaoImpl extends GenericDao implements ProductDao {
 			} else {
 				throw new IllegalStateException();
 			}
-
-		} catch (SQLException e) {
-			handleDAOException(e);
-		} finally {
-			close(_rs);
-			close(_stmt);
-			close(c);
 		}
+		catch (SQLException e) {handleDAOException(e);}
+		finally {close(_rs);close(_stmt);close(c);}
 	}
 
 	@Override
@@ -905,13 +808,9 @@ public class ProductDaoImpl extends GenericDao implements ProductDao {
 			if (!_rs.next()) {
 				throw new IllegalStateException();
 			}
-		} catch (SQLException e) {
-			handleDAOException(e);
-		} finally {
-			close(_rs);
-			close(_stmt);
-			close(c);
 		}
+		catch (SQLException e) {handleDAOException(e);}
+		finally {close(_rs);close(_stmt);close(c);}
 	}
 
 	@Override
@@ -966,20 +865,16 @@ public class ProductDaoImpl extends GenericDao implements ProductDao {
 						_p.setMother(this.getProduct(_rs));
 					}
 				}
-			} catch (SQLException e) {
-				handleDAOException(e);
-			} finally {
-				close(_rs);
-				close(_stmt);
-				close(c);
 			}
+			catch (SQLException e) {handleDAOException(e);}
+			finally {close(_rs);close(_stmt);close(c);}
 		}
 		return _product;
 	}
 
 	@Override
 	public Product getProductWithProductConfRef(String reference) {
-		Product product = null;
+		Product _product = null;
 		Connection c = null;
 		PreparedStatement _stmt = null;
 		ResultSet _rs = null;
@@ -992,24 +887,18 @@ public class ProductDaoImpl extends GenericDao implements ProductDao {
 			_rs = _stmt.executeQuery();
 
 			if (_rs.next()) {
-				product = this.getProduct(_rs);
+				_product = this.getProduct(_rs);
 			}
-		} catch (SQLException e) {
-			handleDAOException(e);
-		} finally {
-			close(_rs);
-			close(_stmt);
-			close(c);
 		}
-		return product;
+		catch (SQLException e) {handleDAOException(e);}
+		finally {close(_rs);close(_stmt);close(c);}
+		return _product;
 	}
 
 	/*
+	 * Creer un produit a partir d'un enregistrement de la base de donnees.
 	 * 
-	 * Cr&eacute;er un produit &agrave; partir d'un enregistrement de la base de
-	 * donn&eacute;es.
-	 * 
-	 * @param rs Enregistrement de la base de donn&eacute;es.
+	 * @param rs Enregistrement de la base de donnees.
 	 * 
 	 * @return Produit.
 	 */
@@ -1052,26 +941,12 @@ public class ProductDaoImpl extends GenericDao implements ProductDao {
 			 * Ces colonnes une fois les donnees enregistrees chez LAI seront supprimees
 			 */
 			
-			String modifTempTable = "";
-			
-			if (!this.ColumnAlreadyExist("testerBase", "testerReport", "idTesterReportFEDD")) {
-				System.out.println ("je cree la colonne idTesterReportFEDD");
-				modifTempTable = "ALTER TABLE `testerBase`.`testerReport` ADD COLUMN idTesterReportFEDD int(10)";
-				_stmt = c.prepareStatement(modifTempTable);
-				_stmt.executeUpdate();
-			}
-			if (!this.ColumnAlreadyExist("productBase", "ProductionFailureReport", "idProductionFailureReportFEDD")) {
-				System.out.println ("je cree la colonne idProductionFailureReportFEDD");
-				modifTempTable = "ALTER TABLE `productBase`.`ProductionFailureReport` ADD COLUMN idProductionFailureReportFEDD int(10)";
-				_stmt = c.prepareStatement(modifTempTable);
-				_stmt.executeUpdate();
-			}
-			if (!this.ColumnAlreadyExist("productBase", "failure", "idFailureFEDD")) {
-				System.out.println ("je cree la colonne idFailureFEDD");
-				modifTempTable = "ALTER TABLE `productBase`.`failure` ADD COLUMN idFailureFEDD int(10)";
-				_stmt = c.prepareStatement(modifTempTable);
-				_stmt.executeUpdate();
-			}
+			_stmt = c.prepareStatement("initialisation de _stmt");
+			_stmt.executeUpdate("ALTER TABLE `testerBase`.`testerReport` ADD COLUMN idTesterReportFEDD int(10)");
+			_stmt.executeUpdate("ALTER TABLE `testerBase`.`testerReport` ADD COLUMN idTesterReportNextFEDD int(10)");
+			_stmt.executeUpdate("ALTER TABLE `productBase`.`ProductionFailureReport` ADD COLUMN idProductionFailureReportFEDD int(10)"); 
+			_stmt.executeUpdate("ALTER TABLE `testerBase`.`defect` ADD COLUMN idDefectFEDD int(10)"); 
+			_stmt.executeUpdate("ALTER TABLE `productBase`.`failure` ADD COLUMN idFailureFEDD int(10)");
 
 			/* 1 ++++++++++++++++++++++++++++++++++++ */
 			/* Partie insertion dans la table product */
@@ -1158,38 +1033,21 @@ public class ProductDaoImpl extends GenericDao implements ProductDao {
 			/* 6 +++++++++++++++++++++++++++++++++++++++++ */
 			/* Partie insertion dans la table testerReport */
 			/* ------------------------------------------- */
-			/* Il faudra changer l'idTesterReportNext */
-
-/*			
-			ordreInsertion = "INSERT INTO `testerBase`.TesterReport "
-					+ "(timestamp, state, date, testVersion, result, consoUmini, consoUnomi, "
-					+ "consoUmaxi, idTestType, idTester, operatorCode, idProduct, idTesterReportNext, idTesterReportFEDD) "
-					+ "SELECT tr.timestamp, tr.state, tr.date, tr.testVersion, tr.result, tr.consoUmini, tr.consoUnomi, "
-					+ "tr.consoUmaxi, tr.idTestType, tlai.idTester, tr.operatorCode, ?, tr.idTesterReportNext, tr.idTesterReport "
-					+ "FROM `FEDDtesterBase`.`testerReport` tr, `FEDDtesterBase`.`tester` tfedd, `testerBase`.`tester` tlai "
-					+ "WHERE tr.idTester = tfedd.idTester AND tfedd.name = tlai.name AND tr.idProduct = ? "
-					+ "UNION "
-					+ "SELECT tr2.timestamp, tr2.state, tr2.date, tr2.testVersion, tr2.result, tr2.consoUmini, tr2.consoUnomi, "
-					+ "tr2.consoUmaxi, tr2.idTestType, 0, tr2.operatorCode, ?, tr2.idTesterReportNext, tr2.idTesterReport "
-					+ "FROM `FEDDtesterBase`.`testerReport` tr2 "
-					+ "WHERE tr2.idTester = 0 AND tr2.idProduct = ? ";
-*/
-			// TODO : à faire confirmer par Stephan
 			_stmt = c.prepareStatement("INSERT INTO `testerBase`.TesterReport (timestamp, state, date, testVersion, result, consoUmini, consoUnomi, "
-					+ "consoUmaxi, idTestType, idTester, operatorCode, idProduct, idTesterReportNext, idTesterReportFEDD) "
-					+ "SELECT ftr.timestamp, ftr.state, ftr.date, ftr.testVersion, ftr.result, ftr.consoUmini, ftr.consoUnomi, "
-					+ "ftr.consoUmaxi, ftr.idTestType, tlai.idTester, ftr.operatorCode, "+idProductLAI+", ftr.idTesterReportNext, ftr.idTesterReport "
-					+ "FROM `FEDDtesterBase`.`testerReport` ftr, `FEDDtesterBase`.`tester` ft, `testerBase`.`tester` tlai "
-					+ "WHERE ftr.idTester = ft.idTester AND ft.name = tlai.name AND ftr.idProduct = ? ");
+					+ "consoUmaxi, idTestType, idTester, operatorCode, idProduct, idTesterReportNextFEDD, idTesterReportFEDD) "
+					+ "SELECT ftr.timestamp, ftr.state, ftr.date, ftr.testVersion, ftr.result, ftr.consoUmini, ftr.consoUnomi, ftr.consoUmaxi, ftr.idTestType, "
+					+ "IFNULL((SELECT tlai.idTester FROM `FEDDtesterBase`.`tester` ft, `testerBase`.`tester` tlai WHERE ftr.idTester = ft.idTester AND ft.name = tlai.name),0), "
+					+ "ftr.operatorCode, "+idProductLAI+", ftr.idTesterReportNext, ftr.idTesterReport "
+					+ "FROM `FEDDtesterBase`.`testerReport` ftr WHERE ftr.idProduct = ? ");
 			_stmt.setInt(1, idProductFEDD);
-			_stmt.executeUpdate();
 			System.out.println (_stmt);
+			_stmt.executeUpdate();
 
 			// JB : mise a jour de la relation idTesterReportNext avec idTesterReport apres transcodification de INSERT
 			_stmt = c.prepareStatement("SELECT tr1.idTesterReport, tr2.idTesterReport "
 					+ "FROM `testerBase`.`testerReport` tr1, `testerBase`.`testerReport` tr2 "
-					+ "WHERE tr1.idTesterReportNext = tr2.idTesterReportFEDD "
-					+ "AND tr1.idTesterReportNext IS NOT NULL");
+					+ "WHERE tr1.idTesterReportNextFEDD = tr2.idTesterReportFEDD "
+					+ "AND tr1.idTesterReportNextFEDD IS NOT NULL");
 			_rs = _stmt.executeQuery();
 
 			while (_rs.next()) {
@@ -1206,8 +1064,8 @@ public class ProductDaoImpl extends GenericDao implements ProductDao {
 			/* 7 +++++++++++++++++++++++++++++++++++ */
 			/* Partie insertion dans la table defect */
 			/* ------------------------------------- */
-			_stmt = c.prepareStatement("INSERT INTO `testerBase`.`defect` (timestamp, state, sequence, testName, function, value, idTesterReport) "
-					+ "SELECT fd.timestamp, fd.state, fd.sequence, fd.testName, fd.function, fd.value, tr.idTesterReport "
+			_stmt = c.prepareStatement("INSERT INTO `testerBase`.`defect` (timestamp, state, sequence, testName, function, value, idTesterReport, idDefectFEDD) "
+					+ "SELECT fd.timestamp, fd.state, fd.sequence, fd.testName, fd.function, fd.value, tr.idTesterReport, fd.idDefect "
 					+ "FROM `FEDDtesterBase`.`defect` fd, `testerBase`.`testerReport` tr "
 					+ "WHERE fd.idTesterReport = tr.idTesterReportFEDD "
 					+ "AND tr.idproduct = ? ");
@@ -1271,16 +1129,17 @@ public class ProductDaoImpl extends GenericDao implements ProductDao {
 			/* -------------------------------------- */
 			_stmt = c.prepareStatement("INSERT INTO `productBase`.`failure` "
 					+ "(timestamp, state, diagnosisDate, failureCause, cardFace, manufacturingTechnique, failureCode, "
-					+ "imputationCode, dismantleCard, idOperator, idProduct, idProductionFailureReport, idFailureFEDD) "
+					+ "imputationCode, dismantleCard, idOperator, idProduct, idProductionFailureReport, idDefect, idFailureFEDD) "
 					+ "SELECT ff.timestamp, ff.state, ff.diagnosisDate, ff.failureCause, ff.cardFace, ff.manufacturingTechnique, ff.failureCode, "
-					+ "ff.imputationCode, ff.dismantleCard, o.idOperator, ?, pfr.idProductionFailureReport, ff.idFailure "
+					+ "ff.imputationCode, ff.dismantleCard, o.idOperator, ?, pfr.idProductionFailureReport, d.idDefect, ff.idFailure "
 					+ "FROM `FEDDproductBase`.`failure` ff, `productBase`.`productionFailureReport` pfr, "
-					+ " `FEDDoperatorBase`.`operator` fo, `operatorBase`.`operator` o "
+					+ " `FEDDoperatorBase`.`operator` fo, `operatorBase`.`operator` o, `testerBase`.`defect` d "
 					+ "WHERE ff.idOperator = fo.idOperator "
 					+ "AND (fo.code = o.code AND fo.firstName = o.firstName AND fo.lastName = o.lastName) "
 					+ "AND pfr.idProductionFailureReportFEDD = ff.idProductionFailureReport "
 					+ "AND ff.idProduct = ? "
-					+ "AND pfr.idProduct = ? ");
+					+ "AND pfr.idProduct = ? "
+					+ "AND ff.idDefect=d.idDefectFEDD ");
 			_stmt.setInt(1, idProductLAI);
 			_stmt.setInt(2, idProductFEDD);
 			_stmt.setInt(3, idProductLAI);
@@ -1313,66 +1172,19 @@ public class ProductDaoImpl extends GenericDao implements ProductDao {
 
 			
 			// suppression des colonnes temporaires
-			modifTempTable = "ALTER TABLE `productBase`.`failure` DROP COLUMN idFailureFEDD";
-			_stmt = c.prepareStatement(modifTempTable);
-			_stmt.executeUpdate();
-			modifTempTable = "ALTER TABLE `productBase`.`productionFailureReport` DROP COLUMN idProductionFailureReportFEDD";
-			_stmt = c.prepareStatement(modifTempTable);
-			_stmt.executeUpdate();
-			modifTempTable = "ALTER TABLE `testerBase`.`testerReport` DROP COLUMN idTesterReportFEDD";
-			_stmt = c.prepareStatement(modifTempTable);
-			_stmt.executeUpdate();
+			_stmt.executeUpdate("ALTER TABLE `productBase`.`failure` DROP COLUMN idFailureFEDD");
+			_stmt.executeUpdate("ALTER TABLE `productBase`.`productionFailureReport` DROP COLUMN idProductionFailureReportFEDD");
+			_stmt.executeUpdate("ALTER TABLE `testerBase`.`testerReport` DROP COLUMN idTesterReportFEDD");
+			_stmt.executeUpdate("ALTER TABLE `testerBase`.`testerReport` DROP COLUMN idTesterReportNextFEDD");
+			_stmt.executeUpdate("ALTER TABLE `testerBase`.`defect` DROP COLUMN idDefectFEDD");
 
 
 			// Retrieve product data // JB : pourquoi ?
-			_stmt = c.prepareStatement("SELECT * FROM product WHERE (idProduct=?)");
-			_stmt.setInt(1, idProductLAI);
-			_rs = _stmt.executeQuery();
-
-			if (_rs.next()) {
-				_product = this.getProduct(_rs);
-			} else {
-				throw new IllegalStateException();
-			}
-		} catch (SQLException e) {
-			handleDAOException(e);
-		} finally {
-			close(_rs);
-			close(_stmt);
-			close(c);
+			_rs = _stmt.executeQuery("SELECT * FROM product WHERE idProduct="+idProductLAI);
+			if (_rs.next()) {_product = this.getProduct(_rs);}
 		}
+		catch (SQLException e) {handleDAOException(e);}
+		finally {close(_rs);close(_stmt);close(c);}
 		return _product;
-	}
-
-	private Boolean ColumnAlreadyExist(String db, String table, String column) {
-		Boolean retour = false;
-		String result = "";
-		Connection c = null;
-		PreparedStatement _stmt = null;
-		ResultSet _rs = null;
-
-		try {
-			c = cnxInfoSchema.getCnx();
-			_stmt = c.prepareStatement(
-							"SELECT COLUMN_NAME FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ? AND COLUMN_NAME = ?;");
-			_stmt.setString(1, db);
-			_stmt.setString(2, table);
-			_stmt.setString(3, column);
-			_rs = _stmt.executeQuery();
-
-			if (_rs.next()) {
-				result = _rs.getString("COLUMN_NAME");
-			}
-			if (result == column) {
-				retour = true;
-			}
-		} catch (SQLException e) {
-			handleDAOException(e);
-		} finally {
-			close(_rs);
-			close(_stmt);
-			close(c);
-		}
-		return retour;
 	}
 }

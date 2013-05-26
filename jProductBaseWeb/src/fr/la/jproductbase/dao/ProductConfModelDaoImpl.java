@@ -123,6 +123,8 @@ public class ProductConfModelDaoImpl extends GenericDao implements ProductConfMo
         PreparedStatement _stmt = null;
         ResultSet _rs = null;
 
+		System.out.println ("je passe par getActiveProductConfModels");
+
         try {
         	c = this.cnxProduct.getCnx();
             _stmt = c.prepareStatement(
