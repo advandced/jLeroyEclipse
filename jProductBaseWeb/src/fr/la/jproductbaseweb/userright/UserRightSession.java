@@ -57,7 +57,7 @@ public class UserRightSession implements Serializable {
 		Ressource _resourceProdType = new Ressource(10, "/param/productType.jsf",	"Types de Produits", "gestProductTypeBean",	"ressource pour Configuration des types de produits", _resource);
 		Ressource _resourcePodSupply = new Ressource(11, "/param/productSupply.jsf",	"Alimentations", "gestProductSupplyBean", "ressource pour Configuration des Alimentations", _resource);
 		Ressource _ressourceFollowing = new Ressource(25, "/param/followingForm.jsf", "Fiches Suiveuses", "FollowingFormBean", _resource);
-		Ressource _ressourceProductConfModel = new Ressource(26, "/param/productConfModel.jsf",	"Modèle Configuration produit", "ProductConfModelBean", _resource);		
+		Ressource _ressourceProductConfModel = new Ressource(26, "/param/productConfModel.jsf",	"Modèle de configurations des produits", "ProductConfModelBean", _resource);		
 
 		Ressource _resourceSaiseProd = new Ressource(12, "/entryPROD/entryPROD.jsf", "Saisie Prod", "entryPRODBean", "ressource pour le parametrage", new Ressource(null));
 		Ressource _resourceSearchProd = new Ressource(13, "/entryPROD/searchProducts.jsf", "Rechercher Produits", "GestSearchProductsBean",	"rechercher un produit", _resourceSaiseProd);
