@@ -2,7 +2,6 @@ package fr.la.jproductbase.metier;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +9,6 @@ import java.util.List;
 import javax.naming.NamingException;
 
 import fr.la.configfilereader.ConfigFileReaderException;
-import fr.la.jproductbase.service.ServiceInterface;
 
 /**
  * Classe m&eacute;tier de produit.
