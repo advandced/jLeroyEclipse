@@ -237,7 +237,7 @@ public class ProductConfDaoImpl extends GenericDao implements ProductConfDao {
 			_stmt = c.prepareStatement(
 							"SELECT pc.* FROM productConf pc, productFamily pf "
 									+ "WHERE pc.idProductFamily = pf.idProductFamily AND (pf.idProductType=?) "
-									+ "ORDER BY pc.reference;");
+									+ "ORDER BY pc.reference, pc.majorIndex, pc.minorIndex;");
 			_stmt.setInt(1, type);
 			_rs = _stmt.executeQuery();
 
